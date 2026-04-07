@@ -10,20 +10,37 @@ __author__ = "MoKangMedical"
 
 from .population import SyntheticPopulation, PopulationProfile
 from .agents import SimulationAgent, AgentPersonality
-from .scenarios import Scenario, ScenarioEngine
-from .products import ConsumerEye, PolicyEye, MarketEye
-from .compliance import ComplianceChecker, DataAuditLog
+from .scenarios import Scenario, ScenarioEngine, SimulationResult
+from .products import ConsumerEye, PolicyEye, MarketEye, PredictionResult
+from .compliance import ComplianceChecker, DataAuditLog, ComplianceError
+from .china_scenarios import ChineseScenarioEngine, KOLPredictionResult, LivestreamPredictionResult
+from .mimo_adapter import MIMOAdapter, MockMIMOAdapter, MIMOConfig
 
 __all__ = [
+    # 核心
     "SyntheticPopulation",
     "PopulationProfile",
     "SimulationAgent",
     "AgentPersonality",
+    # 场景
     "Scenario",
     "ScenarioEngine",
+    "SimulationResult",
+    # 三眼产品
     "ConsumerEye",
     "PolicyEye",
     "MarketEye",
+    "PredictionResult",
+    # 中国特色
+    "ChineseScenarioEngine",
+    "KOLPredictionResult",
+    "LivestreamPredictionResult",
+    # 合规
     "ComplianceChecker",
     "DataAuditLog",
+    "ComplianceError",
+    # AI引擎
+    "MIMOAdapter",
+    "MockMIMOAdapter",
+    "MIMOConfig",
 ]
