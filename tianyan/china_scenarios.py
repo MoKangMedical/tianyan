@@ -192,7 +192,9 @@ class ChineseScenarioEngine:
         2. 模拟直播间冲动消费效应
         3. 考虑平台转化率差异
         """
-        platform_info = ECOMMERCE_PLATFORMS.get(platform, ECOMMERCE_PLATFORMS["抖音"])
+        # 支持"抖音"作为"抖音电商"的别名
+        platform_key = "抖音电商" if platform == "抖音" else platform
+        platform_info = ECOMMERCE_PLATFORMS.get(platform_key, ECOMMERCE_PLATFORMS["抖音电商"])
 
         # 价格敏感人群的转化提升
         price_sensitive = [
