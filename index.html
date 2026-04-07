@@ -3,132 +3,271 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>天眼 Tianyan — 中国版商业预测平台</title>
+    <title>天眼 Tianyan — 商业决策的操作系统</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0a; color: #e0e0e0; }
-        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%); }
-        .hero h1 { font-size: 4rem; margin-bottom: 0.5rem; background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero .subtitle { font-size: 1.5rem; color: #888; margin-bottom: 2rem; }
-        .hero .tagline { font-size: 1.1rem; color: #aaa; max-width: 600px; line-height: 1.8; }
-        .eye-icon { font-size: 6rem; margin-bottom: 1rem; }
-        .section { padding: 80px 20px; max-width: 1200px; margin: 0 auto; }
-        .section h2 { font-size: 2rem; margin-bottom: 2rem; text-align: center; }
-        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
-        .card { background: #1a1a2e; border-radius: 12px; padding: 2rem; border: 1px solid #333; transition: transform 0.3s; }
-        .card:hover { transform: translateY(-5px); border-color: #48dbfb; }
-        .card h3 { color: #48dbfb; margin-bottom: 1rem; font-size: 1.3rem; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #0a0a0a; color: #e0e0e0; }
+
+        /* Hero */
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0a 70%); padding: 2rem; }
+        .eye-icon { font-size: 8rem; margin-bottom: 1.5rem; animation: pulse 3s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.8; } }
+        .hero h1 { font-size: 4.5rem; margin-bottom: 0.5rem; background: linear-gradient(135deg, #ff6b6b, #feca57, #48dbfb, #ff6b6b); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradient 6s ease infinite; }
+        @keyframes gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .hero .subtitle { font-size: 1.8rem; color: #888; margin-bottom: 1rem; letter-spacing: 0.3em; }
+        .hero .tagline { font-size: 1.15rem; color: #aaa; max-width: 700px; line-height: 2; margin-bottom: 2.5rem; }
+        .hero .tagline strong { color: #feca57; }
+        .hero .cta-group { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
+        .cta-btn { display: inline-block; padding: 1rem 2.5rem; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem; transition: all 0.3s; }
+        .cta-primary { background: linear-gradient(135deg, #ff6b6b, #feca57); color: #0a0a0a; }
+        .cta-secondary { background: transparent; border: 2px solid #48dbfb; color: #48dbfb; }
+        .cta-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(72, 219, 251, 0.3); }
+
+        /* Sections */
+        .section { padding: 100px 20px; max-width: 1200px; margin: 0 auto; }
+        .section-title { font-size: 2.5rem; text-align: center; margin-bottom: 0.5rem; color: #fff; }
+        .section-desc { text-align: center; color: #888; font-size: 1.1rem; margin-bottom: 3rem; }
+
+        /* Cards */
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
+        .card { background: linear-gradient(145deg, #1a1a2e, #16213e); border-radius: 16px; padding: 2.5rem; border: 1px solid #2a2a4e; transition: all 0.4s; position: relative; overflow: hidden; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb); opacity: 0; transition: opacity 0.4s; }
+        .card:hover { transform: translateY(-8px); border-color: #48dbfb; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .card:hover::before { opacity: 1; }
+        .card-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .card h3 { color: #48dbfb; margin-bottom: 1rem; font-size: 1.4rem; }
         .card ul { list-style: none; }
-        .card li { padding: 0.3rem 0; color: #bbb; }
-        .card li::before { content: "→ "; color: #48dbfb; }
+        .card li { padding: 0.4rem 0; color: #bbb; font-size: 0.95rem; }
+        .card li::before { content: "▸ "; color: #48dbfb; }
+
+        /* Stats */
         .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; text-align: center; margin: 4rem 0; }
-        .stat { background: #1a1a2e; border-radius: 12px; padding: 2rem; border: 1px solid #333; }
-        .stat .number { font-size: 2.5rem; color: #48dbfb; font-weight: bold; }
-        .stat .label { color: #888; margin-top: 0.5rem; }
+        .stat { background: linear-gradient(145deg, #1a1a2e, #16213e); border-radius: 16px; padding: 2.5rem 1rem; border: 1px solid #2a2a4e; }
+        .stat .number { font-size: 3rem; background: linear-gradient(135deg, #48dbfb, #feca57); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold; }
+        .stat .label { color: #888; margin-top: 0.5rem; font-size: 0.95rem; }
+
+        /* Table */
         .comparison { width: 100%; border-collapse: collapse; margin: 2rem 0; }
-        .comparison th, .comparison td { padding: 1rem; text-align: left; border-bottom: 1px solid #333; }
-        .comparison th { color: #48dbfb; }
+        .comparison th, .comparison td { padding: 1rem 1.5rem; text-align: left; border-bottom: 1px solid #2a2a4e; }
+        .comparison th { color: #48dbfb; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; }
         .comparison .highlight { color: #feca57; font-weight: bold; }
-        .cta { text-align: center; padding: 60px 20px; }
-        .cta a { display: inline-block; background: linear-gradient(90deg, #ff6b6b, #feca57); color: #0a0a0a; padding: 1rem 3rem; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 1.2rem; }
-        footer { text-align: center; padding: 2rem; color: #666; border-top: 1px solid #222; }
+        .comparison tr:hover { background: rgba(72, 219, 251, 0.05); }
+
+        /* Case Study Banner */
+        .case-banner { background: linear-gradient(135deg, #1a1a2e 0%, #2d1b4e 50%, #1a1a2e 100%); border-radius: 20px; padding: 3rem; margin: 2rem 0; border: 1px solid #4a2a6e; text-align: center; }
+        .case-banner h3 { font-size: 2rem; color: #feca57; margin-bottom: 1rem; }
+        .case-banner p { color: #bbb; font-size: 1.1rem; line-height: 1.8; max-width: 700px; margin: 0 auto 1.5rem; }
+        .case-banner .badge { display: inline-block; background: linear-gradient(135deg, #ff6b6b, #feca57); color: #0a0a0a; padding: 0.5rem 1.5rem; border-radius: 30px; font-weight: bold; font-size: 0.9rem; margin-bottom: 1rem; }
+
+        /* CTA */
+        .cta-section { text-align: center; padding: 80px 20px; background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0a 70%); }
+        .cta-section h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .cta-section p { color: #888; font-size: 1.2rem; margin-bottom: 2rem; }
+
+        /* Footer */
+        footer { text-align: center; padding: 3rem; color: #555; border-top: 1px solid #1a1a2e; }
+        footer a { color: #48dbfb; text-decoration: none; }
+
+        /* Flow Diagram */
+        .flow { display: flex; align-items: center; justify-content: center; gap: 1rem; margin: 3rem 0; flex-wrap: wrap; }
+        .flow-step { background: linear-gradient(145deg, #1a1a2e, #16213e); border-radius: 12px; padding: 1.5rem; border: 1px solid #2a2a4e; text-align: center; min-width: 150px; }
+        .flow-step .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .flow-step .text { color: #bbb; font-size: 0.9rem; }
+        .flow-arrow { color: #48dbfb; font-size: 1.5rem; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .flow { flex-direction: column; }
+            .flow-arrow { transform: rotate(90deg); }
+        }
     </style>
 </head>
 <body>
+
+    <!-- Hero -->
     <div class="hero">
         <div class="eye-icon">👁️</div>
         <h1>天眼 Tianyan</h1>
-        <p class="subtitle">中国版商业预测平台</p>
+        <p class="subtitle">商 业 决 策 的 操 作 系 统</p>
         <p class="tagline">
-            基于多Agent人群模拟的商业预测引擎。<br>
-            用AI合成人群替代传统调研，72小时完成6个月的市场洞察。<br>
-            <strong>砍掉政治预测，深耕商业模拟，合规先行。</strong>
+            用AI合成人群替代传统调研<br>
+            <strong>72小时</strong>完成<strong>6个月</strong>的市场洞察<br>
+            10万合成人群替你试错，零隐私风险
         </p>
+        <div class="cta-group">
+            <a href="#case-study" class="cta-btn cta-primary">查看案例 →</a>
+            <a href="https://github.com/MoKangMedical/tianyan" class="cta-btn cta-secondary">GitHub</a>
+        </div>
     </div>
 
+    <!-- Case Study -->
+    <div class="section" id="case-study">
+        <h2 class="section-title">📋 实战案例</h2>
+        <p class="section-desc">用天眼预测真实商业场景</p>
+
+        <div class="case-banner">
+            <div class="badge">🎯 首个案例 · 数据驱动</div>
+            <h3>纤姿GLP-1减重胶囊上市预测</h3>
+            <p>
+                MediSlim旗下国产GLP-1减重产品的全链路商业预测。
+                覆盖产品上市、KOL推广、直播带货、电商渠道、小红书种草五个维度，
+                用3000人合成样本模拟一线城市的市场反应。
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin: 2rem 0; text-align: center;">
+                <div>
+                    <div style="font-size: 2rem; color: #feca57;">3,000</div>
+                    <div style="color: #888; font-size: 0.9rem;">合成人群样本</div>
+                </div>
+                <div>
+                    <div style="font-size: 2rem; color: #48dbfb;">8</div>
+                    <div style="color: #888; font-size: 0.9rem;">预测维度</div>
+                </div>
+                <div>
+                    <div style="font-size: 2rem; color: #ff6b6b;">5</div>
+                    <div style="color: #888; font-size: 0.9rem;">渠道分析</div>
+                </div>
+                <div>
+                    <div style="font-size: 2rem; color: #2ecc71;">72h</div>
+                    <div style="color: #888; font-size: 0.9rem;">分析周期</div>
+                </div>
+            </div>
+            <a href="cases/medislim/report.html" class="cta-btn cta-primary">查看完整报告 →</a>
+        </div>
+    </div>
+
+    <!-- How It Works -->
     <div class="section">
-        <h2>📊 三眼产品矩阵</h2>
+        <h2 class="section-title">⚙️ 工作原理</h2>
+        <p class="section-desc">四步完成商业预测</p>
+
+        <div class="flow">
+            <div class="flow-step">
+                <div class="icon">👥</div>
+                <div class="text"><strong>创建人群</strong><br>基于统计年鉴生成<br>合成目标人群</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+                <div class="icon">🎯</div>
+                <div class="text"><strong>定义场景</strong><br>产品/价格/渠道<br>KOL/直播/种草</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+                <div class="icon">🤖</div>
+                <div class="text"><strong>AI仿真</strong><br>多Agent模拟<br>每个合成人的决策</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+                <div class="icon">📊</div>
+                <div class="text"><strong>预测报告</strong><br>分群洞察 + 建议<br>渠道ROI排名</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Three Eyes -->
+    <div class="section">
+        <h2 class="section-title">👁️ 三眼产品矩阵</h2>
+        <p class="section-desc">覆盖商业决策的核心场景</p>
+
         <div class="cards">
             <div class="card">
-                <h3>🛍️ 消费眼 Consumer Eye</h3>
+                <div class="card-icon">🛍️</div>
+                <h3>消费眼 Consumer Eye</h3>
                 <ul>
-                    <li>产品上市预测</li>
-                    <li>广告创意测试</li>
-                    <li>定价策略优化</li>
-                    <li>用户流失预测</li>
-                    <li>品牌舆情模拟</li>
+                    <li>产品上市预测 — 模拟目标人群的购买意愿</li>
+                    <li>广告创意测试 — 预测不同素材的转化率</li>
+                    <li>定价策略优化 — 找到利润最大化的价格点</li>
+                    <li>用户流失预测 — 识别高风险流失人群</li>
+                    <li>品牌舆情模拟 — 预测危机事件的影响</li>
                 </ul>
             </div>
             <div class="card">
-                <h3>🏛️ 政策眼 Policy Eye</h3>
+                <div class="card-icon">🏛️</div>
+                <h3>政策眼 Policy Eye</h3>
                 <ul>
-                    <li>医保政策影响评估</li>
-                    <li>税收政策模拟</li>
-                    <li>产业政策效果预测</li>
-                    <li>民意温度计</li>
-                    <li>⚠️ 严格去政治化</li>
+                    <li>医保政策影响 — 模拟集采对药企的影响</li>
+                    <li>税收政策效果 — 预测减税对消费的拉动</li>
+                    <li>产业政策评估 — 模拟补贴对行业的影响</li>
+                    <li>民意温度计 — 合成人群对政策的态度</li>
+                    <li>⚠️ 严格去政治化 — 绝不触碰红线</li>
                 </ul>
             </div>
             <div class="card">
-                <h3>📈 市场眼 Market Eye</h3>
+                <div class="card-icon">📈</div>
+                <h3>市场眼 Market Eye</h3>
                 <ul>
-                    <li>行业趋势预测</li>
-                    <li>竞品动态分析</li>
-                    <li>投资风向标</li>
-                    <li>供应链风险评估</li>
+                    <li>行业趋势预测 — 未来12个月的市场走向</li>
+                    <li>竞品动态分析 — 模拟竞品策略调整的影响</li>
+                    <li>投资风向标 — 基于合成人群的消费趋势</li>
+                    <li>供应链风险 — 模拟断供/涨价对终端的影响</li>
+                    <li>区域市场差异 — 一线 vs 下沉市场对比</li>
                 </ul>
             </div>
         </div>
     </div>
 
+    <!-- China Features -->
     <div class="section">
-        <h2>🇨🇳 中国特色能力</h2>
+        <h2 class="section-title">🇨🇳 中国特色能力</h2>
+        <p class="section-desc">深耕中国市场的独特场景</p>
+
         <div class="cards">
             <div class="card">
-                <h3>🌟 KOL效果预测</h3>
+                <div class="card-icon">🌟</div>
+                <h3>KOL效果预测</h3>
                 <ul>
-                    <li>模拟不同KOL对不同人群的影响力</li>
-                    <li>触达/互动/转化三维预测</li>
+                    <li>头部/中腰/垂类/素人 四类KOL对比</li>
+                    <li>触达 × 互动 × 转化 三维预测</li>
                     <li>最优KOL组合推荐</li>
+                    <li>ROI预估（投入产出比）</li>
                 </ul>
             </div>
             <div class="card">
-                <h3>📺 直播带货预测</h3>
+                <div class="card-icon">📺</div>
+                <h3>直播带货预测</h3>
                 <ul>
                     <li>直播间转化率预估</li>
-                    <li>GMV预测</li>
+                    <li>GMV预测（成交总额）</li>
                     <li>最优时段/折扣策略</li>
+                    <li>抖音/快手/小红书直播</li>
                 </ul>
             </div>
             <div class="card">
-                <h3>🛒 电商渠道优化</h3>
+                <div class="card-icon">🛒</div>
+                <h3>电商渠道优化</h3>
                 <ul>
-                    <li>淘宝/京东/拼多多/抖音电商匹配</li>
-                    <li>渠道ROI预估</li>
+                    <li>淘宝/京东/拼多多/抖音电商 匹配</li>
+                    <li>渠道ROI排名</li>
+                    <li>品类 × 平台 匹配度分析</li>
                     <li>多渠道组合策略</li>
                 </ul>
             </div>
             <div class="card">
-                <h3>📕 小红书种草</h3>
+                <div class="card-icon">📕</div>
+                <h3>小红书种草</h3>
                 <ul>
-                    <li>种草笔记效果预测</li>
-                    <li>内容风格优化</li>
+                    <li>5种内容风格效果对比</li>
                     <li>互动率预估</li>
+                    <li>最优受众定位</li>
+                    <li>内容策略建议</li>
                 </ul>
             </div>
         </div>
     </div>
 
+    <!-- Speed Comparison -->
     <div class="section">
-        <h2>⚡ 速度对比</h2>
+        <h2 class="section-title">⚡ 速度与成本</h2>
+        <p class="section-desc">天眼 vs 传统调研</p>
+
         <div class="stats">
             <div class="stat">
                 <div class="number">72h</div>
-                <div class="label">天眼</div>
+                <div class="label">天眼出结果</div>
             </div>
             <div class="stat">
                 <div class="number">3-6月</div>
-                <div class="label">传统调研</div>
+                <div class="label">传统调研周期</div>
             </div>
             <div class="stat">
                 <div class="number">¥5K</div>
@@ -136,33 +275,89 @@
             </div>
             <div class="stat">
                 <div class="number">¥100K+</div>
-                <div class="label">传统/次</div>
+                <div class="label">传统调研/次</div>
             </div>
         </div>
     </div>
 
+    <!-- Comparison Table -->
     <div class="section">
-        <h2>🆚 与Aaru对比</h2>
+        <h2 class="section-title">🆚 与竞品对比</h2>
+        <p class="section-desc">天眼的差异化优势</p>
+
         <table class="comparison">
-            <tr><th>维度</th><th>Aaru</th><th class="highlight">天眼</th></tr>
-            <tr><td>政治预测</td><td>✅ Dynamo</td><td class="highlight">❌ 不碰（红线）</td></tr>
-            <tr><td>商业预测</td><td>✅ Lumen</td><td class="highlight">✅ 消费眼</td></tr>
-            <tr><td>中国市场</td><td>❌</td><td class="highlight">✅ 深耕</td></tr>
-            <tr><td>KOL/直播</td><td>❌</td><td class="highlight">✅ 独有能力</td></tr>
-            <tr><td>AI成本</td><td>按量付费</td><td class="highlight">MIMO无限额度</td></tr>
-            <tr><td>合规</td><td>美国标准</td><td class="highlight">中国标准（PIPL+数安法）</td></tr>
-            <tr><td>估值</td><td>$1B</td><td class="highlight">—</td></tr>
+            <tr>
+                <th>维度</th>
+                <th>Aaru（美国）</th>
+                <th>尼尔森/艾瑞</th>
+                <th class="highlight">天眼</th>
+            </tr>
+            <tr>
+                <td>方法</td>
+                <td>AI仿真</td>
+                <td>人工调研</td>
+                <td class="highlight">AI合成人群仿真</td>
+            </tr>
+            <tr>
+                <td>速度</td>
+                <td>快</td>
+                <td>慢（3-6月）</td>
+                <td class="highlight">快（72h）</td>
+            </tr>
+            <tr>
+                <td>成本</td>
+                <td>高</td>
+                <td>高（¥100K+）</td>
+                <td class="highlight">低（¥5K起）</td>
+            </tr>
+            <tr>
+                <td>样本</td>
+                <td>10万+</td>
+                <td>200-500</td>
+                <td class="highlight">10万+</td>
+            </tr>
+            <tr>
+                <td>中国市场</td>
+                <td>❌</td>
+                <td>✅</td>
+                <td class="highlight">✅ 深耕</td>
+            </tr>
+            <tr>
+                <td>KOL/直播</td>
+                <td>❌</td>
+                <td>部分</td>
+                <td class="highlight">✅ 原生能力</td>
+            </tr>
+            <tr>
+                <td>隐私风险</td>
+                <td>中</td>
+                <td>高（真人数据）</td>
+                <td class="highlight">零（100%合成）</td>
+            </tr>
+            <tr>
+                <td>合规</td>
+                <td>美国标准</td>
+                <td>各有</td>
+                <td class="highlight">PIPL + 数安法</td>
+            </tr>
         </table>
     </div>
 
-    <div class="cta">
-        <h2 style="margin-bottom: 1rem;">天眼观市，洞察先机</h2>
-        <a href="https://github.com/MoKangMedical/tianyan">GitHub →</a>
+    <!-- CTA -->
+    <div class="cta-section">
+        <h2>👁️ 天眼观市，洞察先机</h2>
+        <p>不是预测未来，是让未来在发生之前就被验证</p>
+        <div class="cta-group">
+            <a href="cases/medislim/report.html" class="cta-btn cta-primary">查看MediSlim案例 →</a>
+            <a href="https://github.com/MoKangMedical/tianyan" class="cta-btn cta-secondary">GitHub 仓库</a>
+            <a href="docs/strategic_blueprint.md" class="cta-btn cta-secondary">战略蓝图</a>
+        </div>
     </div>
 
     <footer>
-        <p>天眼 Tianyan v0.1.0 | 基于Harness理论 | MIT License</p>
-        <p>MoKangMedical © 2026</p>
+        <p>天眼 Tianyan v0.1.0 · 商业决策的操作系统 · 基于Harness理论</p>
+        <p>MoKangMedical © 2026 · <a href="https://github.com/MoKangMedical/tianyan">GitHub</a></p>
     </footer>
+
 </body>
 </html>

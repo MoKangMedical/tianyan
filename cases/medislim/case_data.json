@@ -1,0 +1,147 @@
+{
+  "case_name": "MediSlim纤姿GLP-1减重胶囊上市预测",
+  "case_version": "1.0.0",
+  "created_at": "2026-04-07",
+  "platform": "天眼 Tianyan",
+  "disclaimer": "本案例所有数据均为天眼平台基于公开统计数据合成生成，不涉及任何真实个人信息或商业机密。",
+
+  "product": {
+    "name": "纤姿GLP-1减重胶囊",
+    "brand": "MediSlim",
+    "price_monthly": 299,
+    "category": "健康消费品（GLP-1类）",
+    "form": "口服胶囊，每日一粒",
+    "registration": "保健食品备案制",
+    "selling_points": [
+      "国产GLP-1，无需处方",
+      "每日一粒，便捷服用",
+      "植物源GLP-1类似物",
+      "国家级实验室研发背景"
+    ],
+    "advantages": [
+      "无需处方，药店/电商可购",
+      "价格仅为处方药的1/3~1/5",
+      "国产供应链，成本可控",
+      "保健食品备案，准入门槛低"
+    ],
+    "disadvantages": [
+      "品牌知名度为零",
+      "新品牌无信任基础",
+      "GLP-1品类消费者认知有限",
+      "保健食品功效宣传受限"
+    ]
+  },
+
+  "target_market": {
+    "population_size_estimated": 120000000,
+    "age_range": [25, 45],
+    "bmi_range": [24, 32],
+    "city_tiers": ["一线城市", "新一线城市"],
+    "cities": ["北京", "上海", "广州", "深圳", "成都", "杭州", "武汉", "南京", "西安", "长沙"],
+    "gender_split": {"female": 0.65, "male": 0.35},
+    "income_brackets": {
+      "中等收入": {"range": [5000, 15000], "pct": 0.30},
+      "中高收入": {"range": [15000, 30000], "pct": 0.40},
+      "高收入": {"range": [30000, 100000], "pct": 0.25},
+      "超高收入": {"range": [100000, 500000], "pct": 0.05}
+    },
+    "pain_points": [
+      "反复减肥反复反弹",
+      "运动减重效率低",
+      "节食难以坚持",
+      "处方药门槛高价格贵",
+      "担心安全性"
+    ],
+    "decision_factors": [
+      "安全性 > 效果 > 价格 > 便捷性 > 品牌"
+    ]
+  },
+
+  "competitors": [
+    {
+      "name": "司美格鲁肽（处方药）",
+      "price_monthly": 1200,
+      "form": "注射剂（每周一次）",
+      "strengths": ["临床证据充分", "效果显著", "医生推荐"],
+      "weaknesses": ["需处方", "价格高", "注射方式不便", "副作用报告多", "供应紧张"],
+      "market_share_est": 0.45,
+      "brand_awareness": 0.85
+    },
+    {
+      "name": "利拉鲁肽（处方药）",
+      "price_monthly": 800,
+      "form": "注射剂（每日一次）",
+      "strengths": ["临床证据充分", "纳入医保适应症"],
+      "weaknesses": ["需处方", "每日注射", "胃肠道副作用"],
+      "market_share_est": 0.20,
+      "brand_awareness": 0.60
+    },
+    {
+      "name": "奥利司他（OTC）",
+      "price_monthly": 80,
+      "form": "口服胶囊",
+      "strengths": ["无需处方", "价格低", "历史悠久"],
+      "weaknesses": ["效果有限", "脂肪泻副作用", "需配合低脂饮食"],
+      "market_share_est": 0.25,
+      "brand_awareness": 0.90
+    },
+    {
+      "name": "各类减肥茶/酵素",
+      "price_monthly": 50,
+      "form": "冲剂/口服液",
+      "strengths": ["价格极低", "购买方便"],
+      "weaknesses": ["效果存疑", "缺乏科学依据", "合规风险"],
+      "market_share_est": 0.10,
+      "brand_awareness": 0.50
+    }
+  ],
+
+  "channels": {
+    "primary": {
+      "小红书": {
+        "role": "种草/口碑建立",
+        "target_audience": "25-35岁女性",
+        "content_types": ["种草笔记", "测评", "before/after", "知识科普"],
+        "budget_allocation": 0.35
+      },
+      "抖音": {
+        "role": "直播带货/短视频引流",
+        "target_audience": "25-45岁泛人群",
+        "content_types": ["直播", "短视频", "信息流广告"],
+        "budget_allocation": 0.40
+      },
+      "京东健康": {
+        "role": "官方旗舰店/信任背书",
+        "target_audience": "注重品质的消费者",
+        "content_types": ["品牌旗舰店", "健康频道合作"],
+        "budget_allocation": 0.15
+      }
+    },
+    "secondary": {
+      "淘宝": {
+        "role": "补充渠道",
+        "budget_allocation": 0.05
+      },
+      "线下药店": {
+        "role": "信任建设",
+        "budget_allocation": 0.05
+      }
+    }
+  },
+
+  "pricing": {
+    "current": 299,
+    "options": [
+      {"price": 199, "strategy": "低价渗透", "risk": "利润不足/低品质感知"},
+      {"price": 299, "strategy": "中端定位", "risk": "竞争夹缝"},
+      {"price": 399, "strategy": "品质溢价", "risk": "转化率降低"}
+    ]
+  },
+
+  "kol_types": [
+    {"type": "头部美妆博主", "followers": "1000万+", "cost_per_post": 150000, "trust_score": 0.65},
+    {"type": "中腰部健康博主", "followers": "10-50万", "cost_per_post": 8000, "trust_score": 0.80},
+    {"type": "素人种草号", "followers": "1-10万", "cost_per_post": 500, "trust_score": 0.85},
+    {"type": "医生/营养师KOL", "followers": "5-30万", "cost_per_post": 5000, "trust_score": 0.90}
+  ]
+}
