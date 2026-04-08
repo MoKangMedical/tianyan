@@ -2,12 +2,14 @@
 场景引擎 (Scenario Engine)
 
 定义和执行模拟场景，协调多Agent交互。
+支持基于图论的社交网络传播模型（SIR类扩散）。
 """
 
 from __future__ import annotations
 
+import random
 import time
-from collections import Counter
+from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from typing import Any, Optional
 
@@ -30,7 +32,7 @@ class SimulationResult:
     """模拟结果。"""
     scenario: Scenario
     population_size: int
-    decisions: list[AgentDecision] = field(default_factory=dict)  # type: ignore
+    decisions: list[AgentDecision] = field(default_factory=list)
     aggregate: dict[str, Any] = field(default_factory=dict)
     segments: dict[str, dict[str, float]] = field(default_factory=dict)
     execution_time_ms: float = 0.0
@@ -97,11 +99,21 @@ class ScenarioEngine:
     2. 为每个Agent生成决策
     3. 模拟社交传播（Agent间影响）
     4. 汇聚结果，生成报告
+
+    社交传播模型：
+    - 基于图论的社交网络（小世界网络）
+    - SIR类信息扩散模型
+    - 意见领袖效应
     """
 
     def __init__(self, population: SyntheticPopulation):
         self.population = population
         self.agents = [SimulationAgent(p) for p in population.profiles]
+        self._agent_map: dict[str, SimulationAgent] = {
+            a.profile.agent_id: a for a in self.agents
+        }
+        self._social_network: dict[str, list[str]] = {}
+        self._network_built = False
 
     def run(
         self,
@@ -131,8 +143,13 @@ class ScenarioEngine:
 
         # Phase 2: 社交传播
         if social_propagation and rounds > 1:
+            # 构建社交网络（仅首次）
+            if not self._network_built:
+                self._build_social_network()
+                self._network_built = True
+
             for round_num in range(1, rounds):
-                decisions = self._propagate(decisions, scenario)
+                decisions = self._network_propagate(decisions, scenario, round_num)
 
         # Phase 3: 汇聚结果
         aggregate = self._aggregate(decisions, scenario)
@@ -148,6 +165,276 @@ class ScenarioEngine:
             segments=segments,
             execution_time_ms=elapsed,
         )
+
+    # ---- 社交网络构建 ----
+
+    def _build_social_network(self, avg_connections: int = 5):
+        """
+        基于同质性（homophily）构建社交网络。
+
+        连接概率受以下因素影响：
+        - 同城市：+0.3
+        - 同城市等级：+0.1
+        - 年龄差<5岁：+0.15
+        - 共同兴趣：每个+0.1
+        - 社交影响力差小：+0.1
+
+        最终形成小世界网络结构。
+        """
+        n = len(self.agents)
+        if n < 2:
+            return
+
+        # 初始化连接列表
+        for agent in self.agents:
+            agent.connections = []
+            self._social_network[agent.profile.agent_id] = []
+
+        # 分组索引（加速查找）
+        city_agents: dict[str, list[str]] = defaultdict(list)
+        tier_agents: dict[str, list[str]] = defaultdict(list)
+        age_bucket_agents: dict[tuple[int, int], list[str]] = defaultdict(list)
+
+        for agent in self.agents:
+            aid = agent.profile.agent_id
+            city_agents[agent.profile.city].append(aid)
+            tier_agents[agent.profile.city_tier].append(aid)
+            age_bucket = (agent.profile.age // 5) * 5
+            age_bucket_agents[(age_bucket, age_bucket + 5)].append(aid)
+
+        # 为每个Agent建立连接
+        for i, agent in enumerate(self.agents):
+            aid = agent.profile.agent_id
+            candidates: dict[str, float] = {}  # agent_id -> connection_score
+
+            # 候选人来源：同城市 + 同等级 + 同年龄段
+            candidate_set = set()
+            candidate_set.update(city_agents.get(agent.profile.city, []))
+            candidate_set.update(tier_agents.get(agent.profile.city_tier, []))
+            age_bucket = (agent.profile.age // 5) * 5
+            candidate_set.update(age_bucket_agents.get((age_bucket, age_bucket + 5), []))
+            candidate_set.discard(aid)
+
+            # 如果候选不够，随机补充
+            if len(candidate_set) < avg_connections:
+                others = [a.profile.agent_id for a in self.agents if a.profile.agent_id != aid]
+                candidate_set.update(random.sample(others, min(avg_connections * 2, len(others))))
+
+            # 计算连接分数
+            for cid in candidate_set:
+                if cid == aid:
+                    continue
+                peer = self._agent_map.get(cid)
+                if not peer:
+                    continue
+
+                score = 0.0
+                # 同城市
+                if peer.profile.city == agent.profile.city:
+                    score += 0.3
+                # 同城市等级
+                elif peer.profile.city_tier == agent.profile.city_tier:
+                    score += 0.1
+                # 年龄接近
+                age_diff = abs(peer.profile.age - agent.profile.age)
+                if age_diff < 5:
+                    score += 0.15
+                elif age_diff < 10:
+                    score += 0.05
+                # 共同兴趣
+                common_interests = set(peer.profile.interests) & set(agent.profile.interests)
+                score += len(common_interests) * 0.1
+                # 社交影响力接近
+                inf_diff = abs(peer.profile.social_influence - agent.profile.social_influence)
+                if inf_diff < 0.2:
+                    score += 0.1
+
+                if score > 0.05:
+                    candidates[cid] = score
+
+            # 按分数排序，选择连接
+            sorted_candidates = sorted(candidates.items(), key=lambda x: -x[1])
+            target_count = min(avg_connections, len(sorted_candidates))
+            # 带概率的选择：分数越高越可能被选中
+            selected = []
+            for cid, score in sorted_candidates:
+                if random.random() < score * 1.5:  # score越高越容易选中
+                    selected.append(cid)
+                if len(selected) >= target_count * 2:
+                    break
+
+            # 确保至少有连接
+            if not selected and sorted_candidates:
+                selected = [c[0] for c in sorted_candidates[:avg_connections]]
+
+            # 同时添加一些随机弱连接（小世界效应）
+            if n > avg_connections * 2:
+                weak_count = max(1, avg_connections // 3)
+                others = [a.profile.agent_id for a in self.agents
+                          if a.profile.agent_id != aid and a.profile.agent_id not in selected]
+                if others:
+                    weak_links = random.sample(others, min(weak_count, len(others)))
+                    selected.extend(weak_links)
+
+            # 去重
+            selected = list(set(selected))
+
+            agent.connections = selected
+            self._social_network[aid] = selected
+
+    # ---- SIR类信息扩散模型 ----
+
+    def _network_propagate(
+        self,
+        decisions: list[AgentDecision],
+        scenario: Scenario,
+        round_num: int,
+    ) -> list[AgentDecision]:
+        """
+        基于社交网络的SIR类信息扩散模型。
+
+        模型说明：
+        - 每个Agent有三种状态：Susceptible（易感）, Infected（已感染/已接受观点）, Recovered（免疫）
+        - "感染" = 接受了某种决策观点
+        - 高social_influence的Agent作为"超级传播者"
+        - 每轮扩散，未被影响的Agent根据邻居的决策重新评估
+
+        Args:
+            decisions: 当前轮次的决策列表。
+            scenario: 场景。
+            round_num: 当前轮次编号。
+
+        Returns:
+            更新后的决策列表。
+        """
+        if not self._social_network:
+            self._build_social_network()
+
+        # 构建决策映射
+        decision_map: dict[str, AgentDecision] = {
+            d.agent_id: d for d in decisions
+        }
+
+        # 统计当前决策分布
+        decision_counts = Counter(d.decision for d in decisions)
+        total = len(decisions)
+
+        updated_decisions = []
+        for agent in self.agents:
+            aid = agent.profile.agent_id
+            original = decision_map.get(aid)
+            if not original:
+                updated_decisions.append(original)
+                continue
+
+            # 获取邻居
+            neighbors = self._social_network.get(aid, [])
+            if not neighbors:
+                updated_decisions.append(original)
+                continue
+
+            # 统计邻居决策分布（加权）
+            neighbor_decisions: dict[str, float] = defaultdict(float)
+            neighbor_influencers: list[str] = []
+
+            for nid in neighbors:
+                neighbor_decision = decision_map.get(nid)
+                if not neighbor_decision:
+                    continue
+
+                neighbor_agent = self._agent_map.get(nid)
+                if not neighbor_agent:
+                    continue
+
+                # 权重 = 邻居的社交影响力 × 连接强度
+                weight = neighbor_agent.profile.social_influence * 0.8 + 0.2
+
+                # 意见领袖加成（social_influence > 0.8 的节点权重更高）
+                if neighbor_agent.profile.social_influence > 0.8:
+                    weight *= 1.5
+                    neighbor_influencers.append(nid)
+
+                neighbor_decisions[neighbor_decision.decision] += weight
+
+            if not neighbor_decisions:
+                updated_decisions.append(original)
+                continue
+
+            # 找出邻居中最主流的决策
+            most_common_decision = max(neighbor_decisions, key=neighbor_decisions.get)
+            total_neighbor_weight = sum(neighbor_decisions.values())
+            most_common_ratio = neighbor_decisions[most_common_decision] / total_neighbor_weight
+
+            # 决定是否改变决策
+            # 条件：1) 当前决策不是邻居主流  2) 邻居主流占比 > 40%
+            #       3) Agent的agreeableness（从众性）高  4) 置信度低
+            should_change = (
+                original.decision != most_common_decision
+                and most_common_ratio > 0.4
+                and agent.personality.agreeableness > 0.6
+                and original.confidence < 0.7
+            )
+
+            # 意见领袖效应：即使从众性不高，高影响力邻居也能改变决策
+            leader_effect = (
+                len(neighbor_influencers) > 0
+                and original.decision != most_common_decision
+                and original.confidence < 0.6
+                and random.random() < 0.3  # 30%概率被意见领袖影响
+            )
+
+            if should_change or leader_effect:
+                # 衰减置信度（传播过程中信息损耗）
+                decayed_confidence = max(0.3, original.confidence - round_num * 0.05)
+
+                influenced_by = neighbor_influencers if leader_effect else ["network_propagation"]
+
+                updated = AgentDecision(
+                    agent_id=aid,
+                    decision=most_common_decision,
+                    confidence=decayed_confidence,
+                    reasoning=f"第{round_num}轮社交传播：受网络邻居影响转向'{most_common_decision}'",
+                    influenced_by=influenced_by,
+                )
+                updated_decisions.append(updated)
+            else:
+                updated_decisions.append(original)
+
+        return updated_decisions
+
+    # ---- 原始简单传播（保留作为备选）----
+
+    def _propagate(
+        self,
+        decisions: list[AgentDecision],
+        scenario: Scenario,
+    ) -> list[AgentDecision]:
+        """简单从众传播（兼容旧版本）。"""
+        decision_counts = Counter(d.decision for d in decisions)
+        most_common = decision_counts.most_common(1)[0][0]
+        most_common_pct = decision_counts.most_common(1)[0][1] / len(decisions)
+
+        updated_decisions = []
+        for i, agent in enumerate(self.agents):
+            original = decisions[i]
+            if (agent.personality.agreeableness > 0.7 and
+                original.decision != most_common and
+                most_common_pct > 0.4 and
+                original.confidence < 0.6):
+                updated = AgentDecision(
+                    agent_id=original.agent_id,
+                    decision=most_common,
+                    confidence=0.5,
+                    reasoning=f"受社交圈影响，从众倾向高",
+                    influenced_by=["social_propagation"],
+                )
+                updated_decisions.append(updated)
+            else:
+                updated_decisions.append(original)
+
+        return updated_decisions
+
+    # ---- 内部方法 ----
 
     def _build_scenario_prompt(self, scenario: Scenario, agent: SimulationAgent) -> str:
         """为特定Agent构建场景Prompt。"""
@@ -189,38 +476,6 @@ class ScenarioEngine:
 你支持这项政策吗？"""
 
         return prompt
-
-    def _propagate(
-        self,
-        decisions: list[AgentDecision],
-        scenario: Scenario,
-    ) -> list[AgentDecision]:
-        """模拟社交传播：高影响力Agent的观点会影响低影响力Agent。"""
-        # 简化实现：统计当前决策分布，让从众倾向高的Agent调整
-        decision_counts = Counter(d.decision for d in decisions)
-        most_common = decision_counts.most_common(1)[0][0]
-        most_common_pct = decision_counts.most_common(1)[0][1] / len(decisions)
-
-        updated_decisions = []
-        for i, agent in enumerate(self.agents):
-            original = decisions[i]
-            # 从众倾向高 + 当前决策不主流 → 可能改变
-            if (agent.personality.agreeableness > 0.7 and
-                original.decision != most_common and
-                most_common_pct > 0.4 and
-                original.confidence < 0.6):
-                updated = AgentDecision(
-                    agent_id=original.agent_id,
-                    decision=most_common,
-                    confidence=0.5,
-                    reasoning=f"受社交圈影响，从众倾向高",
-                    influenced_by=["social_propagation"],
-                )
-                updated_decisions.append(updated)
-            else:
-                updated_decisions.append(original)
-
-        return updated_decisions
 
     def _aggregate(
         self,

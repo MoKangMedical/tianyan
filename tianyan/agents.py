@@ -2,16 +2,20 @@
 多Agent人群模拟引擎
 
 每个合成人口生成一个SimulationAgent，该Agent根据其画像做出决策。
-多Agent交互模拟社会传播效应。
+支持LLM驱动决策（MIMO API）和规则引擎降级。
 """
 
 from __future__ import annotations
 
+import asyncio
 import json
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Any, Optional, TYPE_CHECKING
 
 from .population import PopulationProfile
+
+if TYPE_CHECKING:
+    from .mimo_adapter import MIMOAdapter
 
 
 @dataclass
@@ -55,6 +59,10 @@ class SimulationAgent:
     - 性格参数（personality）
     - 决策历史（decisions）
     - 社交联系（connections）
+
+    支持两种决策模式：
+    - LLM驱动：通过MIMO API进行深度推理
+    - 规则引擎：MIMO不可用时的降级方案
     """
 
     def __init__(self, profile: PopulationProfile):
@@ -66,12 +74,14 @@ class SimulationAgent:
 
     def evaluate(self, scenario_prompt: str) -> AgentDecision:
         """
-        评估一个场景并做出决策。
+        评估一个场景并做出决策（同步版，规则引擎）。
 
-        实际实现中，这会调用LLM（MIMO API）。
-        这里用规则引擎做简化版模拟。
+        Args:
+            scenario_prompt: 场景描述prompt。
+
+        Returns:
+            AgentDecision决策结果。
         """
-        # 基于画像的规则推理
         decision, confidence, reasoning = self._rule_based_decide(scenario_prompt)
 
         agent_decision = AgentDecision(
@@ -82,6 +92,108 @@ class SimulationAgent:
         )
         self.decisions.append(agent_decision)
         return agent_decision
+
+    async def evaluate_async(
+        self,
+        scenario_prompt: str,
+        mimo_adapter: "MIMOAdapter",
+    ) -> AgentDecision:
+        """
+        异步评估场景 — 使用MIMO LLM进行深度推理。
+
+        如果MIMO调用失败，自动降级到规则引擎。
+
+        Args:
+            scenario_prompt: 场景描述prompt。
+            mimo_adapter: MIMO API适配器实例。
+
+        Returns:
+            AgentDecision决策结果。
+        """
+        llm_prompt = self.get_llm_prompt(scenario_prompt)
+
+        try:
+            result = await mimo_adapter.generate(
+                prompt=llm_prompt,
+                system="你是一个模拟消费者的AI助手。请严格按照JSON格式回答。",
+            )
+
+            # 解析LLM响应
+            decision = result.get("decision", "不确定")
+            confidence = float(result.get("confidence", 0.5))
+            reasoning = result.get("reasoning", "LLM未提供理由")
+
+            # 限制置信度范围
+            if confidence > 1.0:
+                confidence = confidence / 100.0  # 如果返回的是百分比
+            confidence = max(0.1, min(1.0, confidence))
+
+            agent_decision = AgentDecision(
+                agent_id=self.profile.agent_id,
+                decision=decision,
+                confidence=confidence,
+                reasoning=f"[LLM推理] {reasoning}",
+            )
+        except Exception as e:
+            # 降级到规则引擎
+            decision, confidence, reasoning = self._rule_based_decide(scenario_prompt)
+            agent_decision = AgentDecision(
+                agent_id=self.profile.agent_id,
+                decision=decision,
+                confidence=confidence,
+                reasoning=f"[规则引擎降级] {reasoning} (MIMO错误: {e})",
+            )
+
+        self.decisions.append(agent_decision)
+        return agent_decision
+
+    @classmethod
+    async def batch_evaluate(
+        cls,
+        agents: list[SimulationAgent],
+        scenario_prompt: str,
+        mimo_adapter: "MIMOAdapter",
+        batch_size: int = 10,
+    ) -> list[AgentDecision]:
+        """
+        批量评估多个Agent的决策。
+
+        使用分批并发策略，控制MIMO API的并发量。
+
+        Args:
+            agents: Agent列表。
+            scenario_prompt: 场景描述。
+            mimo_adapter: MIMO适配器实例。
+            batch_size: 每批处理数量。
+
+        Returns:
+            所有Agent的决策列表。
+        """
+        all_decisions: list[AgentDecision] = []
+
+        for i in range(0, len(agents), batch_size):
+            batch = agents[i:i + batch_size]
+            tasks = [
+                agent.evaluate_async(scenario_prompt, mimo_adapter)
+                for agent in batch
+            ]
+            batch_decisions = await asyncio.gather(*tasks, return_exceptions=True)
+
+            for j, result in enumerate(batch_decisions):
+                if isinstance(result, Exception):
+                    # 异常时用规则引擎降级
+                    agent = batch[j]
+                    decision, confidence, reasoning = agent._rule_based_decide(scenario_prompt)
+                    all_decisions.append(AgentDecision(
+                        agent_id=agent.profile.agent_id,
+                        decision=decision,
+                        confidence=confidence,
+                        reasoning=f"[批量推理降级] {reasoning}",
+                    ))
+                else:
+                    all_decisions.append(result)
+
+        return all_decisions
 
     def _rule_based_decide(self, scenario: str) -> tuple[str, float, str]:
         """基于画像的规则决策（简化版）。"""
@@ -114,6 +226,15 @@ class SimulationAgent:
             else:
                 return ("淘宝", 0.5, "综合电商平台")
 
+        # 政策相关
+        if "政策" in scenario or "支持" in scenario:
+            if self.profile.health_consciousness > 0.6:
+                return ("支持", 0.7, "健康意识高，支持相关健康政策")
+            elif self.profile.risk_tolerance < 0.3:
+                return ("观望", 0.5, "偏保守，需观察政策实际效果")
+            else:
+                return ("考虑", 0.5, "需要了解政策具体内容")
+
         # 默认
         return ("不确定", 0.3, "需要更多信息来判断")
 
@@ -128,7 +249,7 @@ class SimulationAgent:
 {scenario}
 
 ## 请回答
-1. 你的决策（购买/不购买/观望/考虑）
+1. 你的决策（购买/不购买/观望/考虑/尝试/支持/不支持）
 2. 决策理由（从你的身份角度出发，不超过100字）
 3. 置信度（0-100%）
 
