@@ -88,7 +88,7 @@ class SeedingRequest(BaseModel):
 app = FastAPI(
     title="天眼 Tianyan",
     description="中国版商业预测平台 — 基于多Agent人群模拟的商业预测引擎",
-    version="0.1.0",
+    version="0.3.0",
 )
 
 # CORS 配置
@@ -359,7 +359,7 @@ async def landing_page():
 </div>
 
 <footer>
-  <p>天眼 Tianyan v0.1.0 · <a href="https://github.com/MoKangMedical/tianyan">GitHub</a> · 100% 合成数据 · 零隐私风险</p>
+  <p>天眼 Tianyan v0.3.0 · <a href="https://github.com/MoKangMedical/tianyan">GitHub</a> · 100% 合成数据 · 零隐私风险</p>
 </footer>
 </body>
 </html>"""
@@ -371,7 +371,7 @@ async def health_check():
     return {
         "status": "healthy",
         "service": "tianyan",
-        "version": "0.1.0",
+        "version": "0.3.0",
         "timestamp": time.time(),
     }
 
@@ -534,6 +534,183 @@ async def seeding_prediction(req: SeedingRequest):
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ============================================================
+# 高级端点
+# ============================================================
+
+
+class FullPredictionRequest(BaseModel):
+    """完整预测流程请求。"""
+    product_name: str
+    product_price: float = Field(ge=0)
+    category: str = Field(default="消费医疗")
+    selling_point: str = Field(default="")
+    channels: list[str] = Field(default=["抖音", "小红书"])
+    population_size: int = Field(default=1000, ge=1, le=50000)
+    age_min: int = Field(default=25, ge=0, le=100)
+    age_max: int = Field(default=45, ge=0, le=100)
+    region: str = Field(default="一线城市")
+    include_kol: bool = Field(default=True)
+    include_livestream: bool = Field(default=True)
+    include_seeding: bool = Field(default=True)
+
+
+@app.post("/api/v1/predict/full")
+async def full_prediction(req: FullPredictionRequest):
+    """完整预测流程：人群→消费眼→KOL→直播→种草→渠道。"""
+    try:
+        pop = SyntheticPopulation(
+            size=req.population_size, region=req.region,
+            age_range=(req.age_min, req.age_max), seed=42,
+        )
+        eye = ConsumerEye()
+        launch = eye.predict_product_launch(
+            product_name=req.product_name, price=req.product_price,
+            category=req.category,
+            selling_point=req.selling_point or f"{req.product_name}核心卖点",
+            channels=req.channels, target_population=pop,
+        )
+        pricing = eye.optimize_pricing(
+            product_name=req.product_name,
+            price_low=max(1, req.product_price * 0.5),
+            price_high=req.product_price * 2, target_population=pop,
+        )
+        result = {
+            "success": True, "product": req.product_name,
+            "population": pop.summary(),
+            "product_launch": _serialize_prediction(launch),
+            "pricing": _serialize_prediction(pricing),
+        }
+        if req.include_kol:
+            engine = ChineseScenarioEngine(pop)
+            kol_results = []
+            for kt in ["头部美妆博主", "垂类健康博主", "素人种草号"]:
+                kr = engine.predict_kol_effect(req.product_name, req.product_price, kt)
+                kol_results.append({
+                    "type": kt, "reach": kr.predicted_reach,
+                    "engagement": kr.predicted_engagement,
+                    "conversion": kr.predicted_conversion,
+                    "platform": kr.best_platform,
+                    "roi": round(kr.roi_estimate, 2),
+                })
+            result["kol"] = kol_results
+        if req.include_livestream:
+            engine = ChineseScenarioEngine(pop)
+            ls = engine.predict_livestream(req.product_name, req.product_price, "抖音", 0.15)
+            result["livestream"] = {
+                "platform": ls.platform, "viewers": ls.predicted_viewers,
+                "gmv": round(ls.predicted_gmv, 2),
+                "conversion_rate": round(ls.predicted_conversion_rate, 4),
+                "best_time_slot": ls.best_time_slot,
+            }
+        if req.include_seeding:
+            engine = ChineseScenarioEngine(pop)
+            seeding = engine.predict_xiaohongshu_seeding(req.product_name, req.product_price, "种草笔记", 200)
+            result["seeding"] = {
+                "impressions": seeding["predicted_impressions"],
+                "interactions": seeding["predicted_interactions"],
+                "engagement_rate": round(seeding["predicted_engagement_rate"], 4),
+                "suggestions": seeding["content_suggestions"][:5],
+            }
+        ce = ChineseScenarioEngine(pop)
+        result["channels"] = ce.optimize_ecommerce_channel(req.product_name, req.product_price, req.category)
+        return result
+    except ComplianceError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/v1/report/generate")
+async def generate_report(req: FullPredictionRequest):
+    """生成麦肯锡级报告。"""
+    try:
+        pop = SyntheticPopulation(size=req.population_size, region=req.region, age_range=(req.age_min, req.age_max), seed=42)
+        se = ScenarioEngine(pop)
+        scenario = Scenario(name=f"{req.product_name}上市", description=f"{req.product_name}，定价{req.product_price}元", category="general")
+        sim_result = se.run(scenario, rounds=3, social_propagation=True)
+        gen = McKinseyReportGenerator()
+        report = gen.generate_product_launch_report(product_name=req.product_name, simulation_result=sim_result)
+        return {"success": True, "title": report.title, "sections": [s.to_dict() for s in report.sections], "markdown": report.to_markdown()}
+    except ComplianceError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/v1/templates")
+async def api_list_templates():
+    """获取所有行业模板。"""
+    from tianyan import list_templates as _lt
+    templates = _lt()
+    return {"success": True, "count": len(templates), "templates": [{"name": t.name, "industry": t.industry, "description": t.description, "key_metrics": t.key_metrics} for t in templates]}
+
+
+class TemplateRunRequest(BaseModel):
+    template_key: str
+    product_name: str
+    product_price: float = Field(ge=0)
+    population_size: int = Field(default=1000, ge=1, le=50000)
+
+
+@app.post("/api/v1/template/run")
+async def run_template(req: TemplateRunRequest):
+    """用指定行业模板运行预测。"""
+    try:
+        tpl = get_template(req.template_key)
+        rec = tpl.recommended_population
+        pop = SyntheticPopulation(size=req.population_size, age_range=rec.get("age_range", (25, 45)), gender=rec.get("gender", "all"), seed=42)
+        eye = ConsumerEye()
+        result = eye.predict_product_launch(
+            product_name=req.product_name, price=req.product_price,
+            category=tpl.industry, selling_point=tpl.description,
+            channels=tpl.default_params.get("channels", ["抖音"]), target_population=pop,
+        )
+        return {"success": True, "template": tpl.name, "industry": tpl.industry, "prediction": _serialize_prediction(result), "reference_data": tpl.reference_data, "competitor_hints": tpl.competitor_hints}
+    except KeyError:
+        raise HTTPException(status_code=404, detail=f"模板 '{req.template_key}' 不存在")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/v1/dashboard")
+async def dashboard():
+    """仪表盘概览。"""
+    keys = get_all_template_keys()
+    return {
+        "success": True, "platform": "天眼 Tianyan", "version": "0.3.0",
+        "stats": {"synthetic_population": "1-50000人", "industry_templates": len(keys), "compliance": "PIPL+数安法", "ai_engine": "MIMO API"},
+        "products": [{"name": "消费眼", "status": "active"}, {"name": "政策眼", "status": "active"}, {"name": "市场眼", "status": "active"}],
+        "industry_templates": keys, "total_endpoints": 14,
+    }
+
+
+class CompareRequest(BaseModel):
+    product_a: str
+    product_b: str
+    price_a: float = Field(ge=0)
+    price_b: float = Field(ge=0)
+    category: str = Field(default="消费医疗")
+    population_size: int = Field(default=1000, ge=1, le=50000)
+
+
+@app.post("/api/v1/compare")
+async def compare_products(req: CompareRequest):
+    """对比两个产品。"""
+    try:
+        pop = SyntheticPopulation(size=req.population_size, seed=42)
+        eye = ConsumerEye()
+        ra = eye.predict_product_launch(product_name=req.product_a, price=req.price_a, category=req.category, selling_point="A", channels=["抖音"], target_population=pop)
+        rb = eye.predict_product_launch(product_name=req.product_b, price=req.price_b, category=req.category, selling_point="B", channels=["抖音"], target_population=pop)
+        am = {k: round(v, 4) if isinstance(v, float) else v for k, v in ra.key_metrics.items()}
+        bm = {k: round(v, 4) if isinstance(v, float) else v for k, v in rb.key_metrics.items()}
+        winner = req.product_a if am.get("purchase_intent", 0) >= bm.get("purchase_intent", 0) else req.product_b
+        return {"success": True, "product_a": {"name": req.product_a, "metrics": am}, "product_b": {"name": req.product_b, "metrics": bm}, "winner": winner}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 
 # ============================================================

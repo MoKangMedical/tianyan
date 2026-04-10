@@ -128,7 +128,7 @@ print(f"最优渠道: {result.best_channel}")
 - 年度框架：¥500,000-2,000,000
 - OPC模式：边际成本趋零（MIMO无限额度）
 
-## 🆕 v0.2.0 新增能力
+## 🆕 v0.3.0 新增能力
 
 | 模块 | 文件 | 功能 |
 |------|------|------|
@@ -138,6 +138,71 @@ print(f"最优渠道: {result.best_channel}")
 | 🏭 行业模板 | `industry_templates.py` | 5个预置场景：GLP-1/保健品/护肤/远程医疗/男性健康 |
 | 🧠 Agent升级 | `agents.py` | MIMO LLM推理 + 规则引擎降级 + 批量推理 |
 | 🕸️ 社交传播 | `scenarios.py` | 基于图论的小世界网络 + SIR信息扩散 + 意见领袖效应 |
+
+## 🌐 REST API
+
+天眼提供完整的REST API，14个端点覆盖全流程。
+
+### 核心端点
+
+| 端点 | 方法 | 功能 |
+|------|------|------|
+| `/api/health` | GET | 健康检查 |
+| `/api/population` | POST | 创建合成人群 |
+| `/api/simulate` | POST | 运行通用仿真 |
+| `/api/kol` | POST | KOL效果预测 |
+| `/api/livestream` | POST | 直播带货预测 |
+| `/api/channel` | POST | 电商渠道优化 |
+| `/api/seeding` | POST | 小红书种草预测 |
+
+### 高级端点（v0.3.0新增）
+
+| 端点 | 方法 | 功能 |
+|------|------|------|
+| `/api/v1/predict/full` | POST | 完整预测（人群→消费眼→KOL→直播→种草→渠道） |
+| `/api/v1/report/generate` | POST | 生成麦肯锡级报告 |
+| `/api/v1/templates` | GET | 获取所有行业模板 |
+| `/api/v1/template/run` | POST | 用行业模板运行预测 |
+| `/api/v1/dashboard` | GET | 仪表盘概览 |
+| `/api/v1/compare` | POST | 对比两个产品 |
+
+### 快速调用
+
+```bash
+# 完整预测（一个请求搞定所有分析）
+curl -X POST http://localhost:8000/api/v1/predict/full \
+  -H "Content-Type: application/json" \
+  -d '{"product_name":"GLP-1减重针","product_price":399}'
+
+# 生成麦肯锡报告
+curl -X POST http://localhost:8000/api/v1/report/generate \
+  -H "Content-Type: application/json" \
+  -d '{"product_name":"GLP-1减重针","product_price":399}'
+
+# 用GLP-1行业模板
+curl -X POST http://localhost:8000/api/v1/template/run \
+  -H "Content-Type: application/json" \
+  -d '{"template_key":"glp1_weight_loss","product_name":"SlimGuard","product_price":399}'
+
+# 对比两个产品
+curl -X POST http://localhost:8000/api/v1/compare \
+  -H "Content-Type: application/json" \
+  -d '{"product_a":"产品A","product_b":"产品B","price_a":299,"price_b":399}'
+
+# 仪表盘概览
+curl http://localhost:8000/api/v1/dashboard
+
+# Swagger UI
+open http://localhost:8000/docs
+```
+
+### 启动
+
+```bash
+pip install fastapi uvicorn
+cd tianyan && python3 demo_server.py
+# 访问 http://localhost:8000
+```
 
 ## 🗺️ Roadmap
 
