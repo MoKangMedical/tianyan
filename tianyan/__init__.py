@@ -5,7 +5,7 @@
 核心理念：用AI合成人群替代传统调研，72小时完成6个月的市场洞察。
 """
 
-__version__ = "0.3.0"
+__version__ = "1.0.0"
 __author__ = "MoKangMedical"
 
 from .population import SyntheticPopulation, PopulationProfile

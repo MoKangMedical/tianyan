@@ -24,6 +24,12 @@ from tianyan import (
     ChineseScenarioEngine,
     ComplianceChecker,
     ComplianceError,
+    get_all_template_keys,
+    get_template,
+    list_templates,
+    Scenario,
+    ScenarioEngine,
+    McKinseyReportGenerator,
 )
 
 # ============================================================
@@ -99,6 +105,40 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ============================================================
+# 中间件
+# ============================================================
+
+_rate_limit_store: dict[str, list[float]] = {}
+
+@app.middleware("http")
+async def rate_limit_and_log(request, call_next):
+    """请求限流 + 日志中间件。"""
+    import time as _time
+    from starlette.responses import JSONResponse
+
+    # 简单限流：每IP每分钟60次
+    client_ip = request.client.host if request.client else "unknown"
+    now = _time.time()
+    window = 60
+    max_requests = 60
+
+    if client_ip not in _rate_limit_store:
+        _rate_limit_store[client_ip] = []
+    _rate_limit_store[client_ip] = [t for t in _rate_limit_store[client_ip] if now - t < window]
+
+    if len(_rate_limit_store[client_ip]) >= max_requests:
+        return JSONResponse(status_code=429, content={"detail": "请求过于频繁，请稍后再试"})
+
+    _rate_limit_store[client_ip].append(now)
+
+    # 请求日志
+    start = _time.time()
+    response = await call_next(request)
+    duration = _time.time() - start
+    print(f"[{_time.strftime('%H:%M:%S')}] {request.method} {request.url.path} -> {response.status_code} ({duration:.3f}s)")
+    return response
 
 
 def _serialize_prediction(result) -> dict[str, Any]:
@@ -359,7 +399,7 @@ async def landing_page():
 </div>
 
 <footer>
-  <p>天眼 Tianyan v0.3.0 · <a href="https://github.com/MoKangMedical/tianyan">GitHub</a> · 100% 合成数据 · 零隐私风险</p>
+  <p>天眼 Tianyan v1.0.0 · <a href="https://github.com/MoKangMedical/tianyan">GitHub</a> · 100% 合成数据 · 零隐私风险</p>
 </footer>
 </body>
 </html>"""
@@ -371,7 +411,7 @@ async def health_check():
     return {
         "status": "healthy",
         "service": "tianyan",
-        "version": "0.3.0",
+        "version": "1.0.0",
         "timestamp": time.time(),
     }
 
@@ -645,7 +685,7 @@ async def api_list_templates():
     """获取所有行业模板。"""
     from tianyan import list_templates as _lt
     templates = _lt()
-    return {"success": True, "count": len(templates), "templates": [{"name": t.name, "industry": t.industry, "description": t.description, "key_metrics": t.key_metrics} for t in templates]}
+    return {"success": True, "count": len(templates), "templates": templates}
 
 
 class TemplateRunRequest(BaseModel):
@@ -660,6 +700,8 @@ async def run_template(req: TemplateRunRequest):
     """用指定行业模板运行预测。"""
     try:
         tpl = get_template(req.template_key)
+        if tpl is None:
+            raise HTTPException(status_code=404, detail=f"模板 {req.template_key} 不存在")
         rec = tpl.recommended_population
         pop = SyntheticPopulation(size=req.population_size, age_range=rec.get("age_range", (25, 45)), gender=rec.get("gender", "all"), seed=42)
         eye = ConsumerEye()
@@ -669,6 +711,8 @@ async def run_template(req: TemplateRunRequest):
             channels=tpl.default_params.get("channels", ["抖音"]), target_population=pop,
         )
         return {"success": True, "template": tpl.name, "industry": tpl.industry, "prediction": _serialize_prediction(result), "reference_data": tpl.reference_data, "competitor_hints": tpl.competitor_hints}
+    except HTTPException:
+        raise
     except KeyError:
         raise HTTPException(status_code=404, detail=f"模板 '{req.template_key}' 不存在")
     except Exception as e:
@@ -680,7 +724,7 @@ async def dashboard():
     """仪表盘概览。"""
     keys = get_all_template_keys()
     return {
-        "success": True, "platform": "天眼 Tianyan", "version": "0.3.0",
+        "success": True, "platform": "天眼 Tianyan", "version": "1.0.0",
         "stats": {"synthetic_population": "1-50000人", "industry_templates": len(keys), "compliance": "PIPL+数安法", "ai_engine": "MIMO API"},
         "products": [{"name": "消费眼", "status": "active"}, {"name": "政策眼", "status": "active"}, {"name": "市场眼", "status": "active"}],
         "industry_templates": keys, "total_endpoints": 14,
