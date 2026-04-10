@@ -343,6 +343,57 @@
         </table>
     </div>
 
+
+    <!-- Interactive Demo -->
+    <div class="section" id="api">
+        <h2 class="section-title">🔌 REST API · 14个端点</h2>
+        <p class="section-desc">一个API调用完成全链路商业预测</p>
+
+        <div class="cards">
+            <div class="card">
+                <div class="card-icon">🚀</div>
+                <h3>完整预测</h3>
+                <ul>
+                    <li>POST /api/v1/predict/full</li>
+                    <li>一个请求：人群→消费眼→KOL→直播→种草→渠道</li>
+                    <li>返回全链路预测结果</li>
+                </ul>
+                <pre style="background:#0a0a0a;padding:1rem;border-radius:8px;margin-top:1rem;overflow-x:auto;font-size:0.85rem;color:#48dbfb;">curl -X POST http://localhost:8000/api/v1/predict/full \
+  -H "Content-Type: application/json" \
+  -d '{"product_name":"GLP-1减重针","product_price":399}'</pre>
+            </div>
+            <div class="card">
+                <div class="card-icon">📊</div>
+                <h3>麦肯锡报告</h3>
+                <ul>
+                    <li>POST /api/v1/report/generate</li>
+                    <li>自动生成结构化商业分析报告</li>
+                    <li>Markdown + JSON 双格式输出</li>
+                </ul>
+                <pre style="background:#0a0a0a;padding:1rem;border-radius:8px;margin-top:1rem;overflow-x:auto;font-size:0.85rem;color:#48dbfb;">curl -X POST http://localhost:8000/api/v1/report/generate \
+  -H "Content-Type: application/json" \
+  -d '{"product_name":"GLP-1减重针","product_price":399}'</pre>
+            </div>
+            <div class="card">
+                <div class="card-icon">🏭</div>
+                <h3>行业模板</h3>
+                <ul>
+                    <li>GET /api/v1/templates — 5个预置模板</li>
+                    <li>POST /api/v1/template/run — 一键运行</li>
+                    <li>GLP-1 / 保健品 / 护肤 / 远程医疗 / 男性健康</li>
+                </ul>
+                <pre style="background:#0a0a0a;padding:1rem;border-radius:8px;margin-top:1rem;overflow-x:auto;font-size:0.85rem;color:#48dbfb;">curl -X POST http://localhost:8000/api/v1/template/run \
+  -H "Content-Type: application/json" \
+  -d '{"template_key":"glp1_weight_loss",
+  "product_name":"SlimGuard","product_price":399}'</pre>
+            </div>
+        </div>
+
+        <div style="text-align:center;margin-top:2rem;">
+            <a href="https://github.com/MoKangMedical/tianyan" class="cta-btn cta-secondary">📖 完整API文档 (Swagger UI)</a>
+        </div>
+    </div>
+
     <!-- CTA -->
     <div class="cta-section">
         <h2>👁️ 天眼观市，洞察先机</h2>
@@ -355,7 +406,7 @@
     </div>
 
     <footer>
-        <p>天眼 Tianyan v0.1.0 · 商业决策的操作系统 · 基于Harness理论</p>
+        <p>天眼 Tianyan v0.3.0 · 14 API端点 · 78测试 · 5行业模板</p>
         <p>MoKangMedical © 2026 · <a href="https://github.com/MoKangMedical/tianyan">GitHub</a></p>
     </footer>
 

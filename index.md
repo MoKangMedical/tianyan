@@ -87,4 +87,4 @@ python demo_server.py
 ## 📬 联系
 
 - GitHub: [MoKangMedical/tianyan](https://github.com/MoKangMedical/tianyan)
-- 版本: v0.1.0
+- 版本: v0.3.0
