@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VirtualCell Platform</title>
+  <style>
+    :root {
+      --bg: #08111f;
+      --surface: #0d1a2d;
+      --surface-2: #10233d;
+      --line: rgba(144, 191, 255, 0.18);
+      --line-strong: rgba(144, 191, 255, 0.35);
+      --text: #eaf2ff;
+      --text-muted: #89a2c6;
+      --accent: #53e0ff;
+      --accent-2: #76ffb1;
+      --warn: #ffcc67;
+      --danger: #ff7b88;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: radial-gradient(circle at top, rgba(83, 224, 255, 0.12), transparent 30%), var(--bg); color: var(--text); }
+    body { font-family: "Avenir Next", "PingFang SC", "Helvetica Neue", sans-serif; }
+    button, input, select { font: inherit; }
+    .page { max-width: 1520px; margin: 0 auto; padding: 28px 24px 56px; }
+    .topbar { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 24px; }
+    .brand { display: grid; gap: 8px; }
+    .eyebrow { font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); }
+    h1 { margin: 0; font-size: clamp(34px, 5vw, 60px); line-height: 0.95; letter-spacing: -0.04em; }
+    .subtitle { max-width: 820px; color: var(--text-muted); font-size: 15px; line-height: 1.7; }
+    .top-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .viewer-card {
+      display: grid; gap: 2px; min-height: 40px; padding: 9px 14px; border-radius: 16px;
+      border: 1px solid var(--line); background: rgba(13, 26, 45, 0.72);
+    }
+    .viewer-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); }
+    .viewer-name { font-size: 13px; font-weight: 700; letter-spacing: -0.02em; }
+    .link-btn {
+      display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 0 14px;
+      border: 1px solid var(--line); background: rgba(13, 26, 45, 0.72); color: var(--text); text-decoration: none;
+      border-radius: 999px; transition: transform .18s ease, border-color .18s ease, background .18s ease; cursor: pointer;
+    }
+    .link-btn:hover { transform: translateY(-1px); border-color: var(--line-strong); background: rgba(16, 35, 61, 0.92); }
+    .stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
+    .stat {
+      padding: 18px 18px 16px; border: 1px solid var(--line); border-radius: 18px;
+      background: linear-gradient(180deg, rgba(16, 35, 61, 0.8), rgba(9, 19, 33, 0.84)); box-shadow: var(--shadow);
+      animation: fadeUp .5s ease both;
+    }
+    .stat .value { font-size: 30px; font-weight: 700; letter-spacing: -0.04em; }
+    .stat .label { margin-top: 6px; color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .stat .hint { margin-top: 8px; color: #b9cbee; font-size: 13px; }
+    .workspace { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.95fr); gap: 16px; align-items: start; }
+    .panel {
+      position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 24px;
+      background: linear-gradient(180deg, rgba(16, 35, 61, 0.82), rgba(7, 15, 27, 0.86)); box-shadow: var(--shadow);
+      animation: fadeUp .55s ease both;
+    }
+    .panel::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(120deg, rgba(83, 224, 255, 0.08), transparent 28%, transparent 72%, rgba(118, 255, 177, 0.04));
+    }
+    .panel-body { position: relative; padding: 22px; }
+    .panel-title { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+    .panel-title h2 { margin: 0; font-size: 18px; letter-spacing: -0.03em; }
+    .panel-title p { margin: 6px 0 0; color: var(--text-muted); font-size: 13px; }
+    .task-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip {
+      border: 1px solid var(--line); background: transparent; color: var(--text-muted); border-radius: 999px;
+      min-height: 34px; padding: 0 12px; cursor: pointer; transition: all .18s ease;
+    }
+    .chip.active, .chip:hover { border-color: var(--accent); color: var(--text); background: rgba(83, 224, 255, 0.1); }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+    .toolbar select, .toolbar input {
+      min-height: 40px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--line);
+      background: rgba(8, 17, 31, 0.72); color: var(--text);
+    }
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      padding: 0 0 12px; text-align: left; font-size: 11px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--line);
+    }
+    tbody td { padding: 14px 0; border-bottom: 1px solid rgba(144, 191, 255, 0.08); vertical-align: top; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr { transition: background .18s ease; }
+    tbody tr:hover { background: rgba(83, 224, 255, 0.04); }
+    .rank { width: 54px; color: var(--warn); font-weight: 700; }
+    .model-btn {
+      border: 0; background: transparent; color: var(--text); padding: 0; text-align: left; cursor: pointer;
+      font-weight: 650; letter-spacing: -0.01em;
+    }
+    .model-btn:hover { color: var(--accent); }
+    .task-pill {
+      display: inline-flex; min-height: 24px; align-items: center; padding: 0 9px; border-radius: 999px;
+      background: rgba(83, 224, 255, 0.1); color: var(--accent); font-size: 12px;
+    }
+    .score-wrap { display: grid; gap: 8px; }
+    .score-track { height: 8px; border-radius: 999px; background: rgba(144, 191, 255, 0.14); overflow: hidden; }
+    .score-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+    .score-value { font-family: "JetBrains Mono", "SFMono-Regular", monospace; color: #dff9ff; font-size: 12px; }
+    .muted { color: var(--text-muted); }
+    .insight-list { display: grid; gap: 12px; }
+    .insight {
+      display: grid; gap: 5px; padding: 13px 14px; border-radius: 16px;
+      background: rgba(8, 17, 31, 0.56); border: 1px solid rgba(144, 191, 255, 0.1);
+    }
+    .insight .k { color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: .1em; }
+    .insight .v { font-size: 18px; font-weight: 650; letter-spacing: -0.03em; }
+    .split { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.95fr); gap: 16px; margin-top: 16px; }
+    .visual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+    .canvas-wrap { overflow: auto; }
+    #heatmap, #radar { width: 100%; min-height: 380px; }
+    .heatmap-table th, .heatmap-table td { padding: 10px 10px; font-size: 12px; }
+    .heatmap-table tbody td {
+      text-align: center; font-family: "JetBrains Mono", "SFMono-Regular", monospace; border-bottom: 1px solid rgba(255,255,255,.04);
+    }
+    .compare-summary {
+      display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px;
+      padding: 16px; border-radius: 18px; border: 1px solid rgba(118,255,177,0.18); background: rgba(118,255,177,0.06);
+    }
+    .winner { font-size: 22px; font-weight: 700; letter-spacing: -0.04em; }
+    .runner-form { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; }
+    .runner-form button {
+      min-height: 42px; border: 0; border-radius: 14px; background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      color: #04111e; font-weight: 800; letter-spacing: 0.02em; cursor: pointer;
+    }
+    .runner-form button[disabled] { opacity: 0.6; cursor: progress; }
+    .runner-status { min-height: 20px; color: var(--text-muted); font-size: 13px; margin-bottom: 10px; }
+    .runner-result {
+      padding: 16px; border-radius: 16px; background: rgba(8, 17, 31, 0.6); border: 1px solid rgba(144, 191, 255, 0.12);
+    }
+    .empty { padding: 32px 0; text-align: center; color: var(--text-muted); }
+    .footnote { margin-top: 18px; color: var(--text-muted); font-size: 12px; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 1200px) {
+      .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .workspace, .split, .visual-grid { grid-template-columns: 1fr; }
+      .runner-form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 720px) {
+      .page { padding-inline: 14px; }
+      .topbar { flex-direction: column; }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .runner-form { grid-template-columns: 1fr; }
+      h1 { font-size: 36px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="topbar">
+      <div class="brand">
+        <div class="eyebrow">VirtualCell Platform</div>
+        <h1>统一 Benchmark 平台与可视化控制台</h1>
+        <div class="subtitle">从模型目录、数据集目录、排行榜、模型对比到 CellForge Pipeline 运行入口，全部收敛到一个研究工作台里。</div>
+      </div>
+      <div class="top-actions">
+        <div class="viewer-card">
+          <div class="viewer-label">当前账号</div>
+          <div class="viewer-name">Preview User · @preview</div>
+        </div>
+        <a class="link-btn" href="/docs">OpenAPI</a>
+        <a class="link-btn" href="/health">Health</a>
+        <a class="link-btn" href="/leaderboard">Snapshot API</a>
+        <button class="link-btn" id="logoutButton" type="button">退出登录</button>
+      </div>
+    </section>
+
+    <section class="stats" id="statsRow"></section>
+
+    <section class="split">
+      <div class="panel">
+        <div class="panel-body">
+          <div class="panel-title">
+            <div>
+              <h2>结果源管理</h2>
+              <p>上传 benchmark JSON、切换当前结果源，并导出 JSON / Markdown / HTML 报告。</p>
+            </div>
+          </div>
+          <div class="toolbar">
+            <select id="sourceSelect"></select>
+            <button class="chip active" id="sourceSwitch" type="button">切换结果源</button>
+          </div>
+          <div id="sourceMeta" class="insight-list" style="margin-bottom:12px;"></div>
+          <form id="uploadForm" class="toolbar">
+            <input id="uploadFile" type="file" accept=".json" />
+            <button class="chip" type="submit">上传结果文件</button>
+          </form>
+          <div class="toolbar">
+            <a id="exportJson" class="link-btn" href="#">导出 JSON</a>
+            <a id="exportMd" class="link-btn" href="#">导出 Markdown</a>
+            <a id="exportHtml" class="link-btn" href="#">导出 HTML</a>
+          </div>
+          <div class="runner-status" id="uploadStatus"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-body">
+          <div class="panel-title">
+            <div>
+              <h2>真实数据源</h2>
+              <p>检查本地目录是否已有真实单细胞数据，或按需自动下载后再跑 benchmark。</p>
+            </div>
+          </div>
+          <form id="prepareForm" class="runner-form">
+            <select id="prepareDataset"></select>
+            <select id="prepareMode"></select>
+            <input id="prepareDataDir" type="text" placeholder="data" />
+            <button id="prepareButton" type="submit">检查/下载数据</button>
+            <button id="refreshSources" type="button">刷新目录状态</button>
+          </form>
+          <div class="runner-status" id="prepareStatus"></div>
+          <div id="runtimeDataPanel"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <div class="panel">
+        <div class="panel-body">
+          <div class="panel-title">
+            <div>
+              <h2>排行榜工作区</h2>
+              <p>按任务和数据集过滤，点击模型可切换右侧雷达图分析。</p>
+            </div>
+            <div class="task-chips" id="taskChips"></div>
+          </div>
+          <div class="toolbar">
+            <select id="datasetFilter"></select>
+            <select id="topNFilter">
+              <option value="8">Top 8</option>
+              <option value="12" selected>Top 12</option>
+              <option value="20">Top 20</option>
+              <option value="30">Top 30</option>
+            </select>
+          </div>
+          <div id="leaderboardTable"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-body">
+          <div class="panel-title">
+            <div>
+              <h2>当前模型洞察</h2>
+              <p>按 4 个任务观察单模型的平均表现，定位强项与短板。</p>
+            </div>
+          </div>
+          <div class="insight-list" id="modelInsights"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="visual-grid">
+      <div class="panel">
+        <div class="panel-body">
+          <div class="panel-title">
+            <div>
+              <h2>模型 × 任务热力图</h2>
+              <p>所有 snapshot 结果按任务平均，方便快速判断模型覆盖面。</p>
+            </div>
+          </div>
+          <div class="canvas-wrap" id="heatmap"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-body">
+          <div class="panel-title">
+            <div>
+              <h2>任务雷达图</h2>
+              <p>雷达图围绕当前选中的模型实时更新。</p>
+            </div>
+            <select id="modelSelect"></select>
+          </div>
+          <div id="radar"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="split">
+      <div class="panel">
+        <div class="panel-body">
+          <div class="panel-title">
+            <div>
+              <h2>模型对比</h2>
+              <p>对比两种模型在各任务上的平均得分，快速决定下一轮候选。</p>
+            </div>
+          </div>
+          <div class="toolbar">
+            <select id="compareA"></select>
+            <select id="compareB"></select>
+          </div>
+          <div id="comparePanel"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-body">
+          <div class="panel-title">
+            <div>
+              <h2>Pipeline 运行台</h2>
+              <p>直接调用 `CellForge -> evaluate -> leaderboard` 闭环，结果会回填到当前页面。</p>
+            </div>
+          </div>
+          <form id="runnerForm" class="runner-form">
+            <select id="runTask"></select>
+            <select id="runDataset"></select>
+            <select id="runMode"></select>
+            <select id="runDataMode"></select>
+            <input id="runDataDir" type="text" placeholder="data" />
+            <input id="runArchitectures" type="number" min="1" max="10" value="3" />
+            <button id="runButton" type="submit">运行 Pipeline</button>
+          </form>
+          <div class="runner-status" id="runnerStatus"></div>
+          <div class="runner-result" id="runnerResult"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footnote" id="footnote"></div>
+  </div>
+
+  <script>
+    const BOOTSTRAP = {"meta": {"platform": "VirtualCell", "version": "0.4.0", "generated_at": "2026-04-11 23:11:50"}, "catalog": {"tasks": [{"key": "cell_annotation", "label": "细胞注释", "primary_metric": "accuracy", "n_results": 42}, {"key": "perturbation", "label": "扰动预测", "primary_metric": "pcc", "n_results": 42}, {"key": "integration", "label": "批次整合", "primary_metric": "avg(kbet,lisi,asw,gc)", "n_results": 42}, {"key": "grn", "label": "调控网络", "primary_metric": "auprc", "n_results": 42}], "models": [{"key": "scgpt", "name": "scGPT", "architecture": "gpt_decoder", "year": 2024}, {"key": "geneformer", "name": "Geneformer", "architecture": "encoder", "year": 2023}, {"key": "scbert", "name": "scBERT", "architecture": "bert_encoder", "year": 2022}, {"key": "scfoundation", "name": "scFoundation", "architecture": "foundation", "year": 2024}, {"key": "regformer", "name": "RegFormer", "architecture": "hybrid", "year": 2025}, {"key": "nicheformer", "name": "Nicheformer", "architecture": "spatial", "year": 2024}, {"key": "scprint", "name": "scPRINT", "architecture": "print", "year": 2024}, {"key": "lingshu", "name": "Lingshu-Cell", "architecture": "hybrid", "year": 2025}, {"key": "celllm", "name": "CellLM", "architecture": "bert_encoder", "year": 2024}, {"key": "cellplm", "name": "CellPLM", "architecture": "prefix_lm", "year": 2024}, {"key": "tgpt", "name": "tGPT", "architecture": "gpt_decoder", "year": 2023}, {"key": "cellbert", "name": "CellBert", "architecture": "bert_encoder", "year": 2023}, {"key": "cpa", "name": "CPA", "architecture": "vae", "year": 2023}, {"key": "gears", "name": "GEARS", "architecture": "gnn_transformer", "year": 2023}, {"key": "xtrimosc", "name": "xTrimoSCPerturb", "architecture": "hybrid", "year": 2025}], "datasets": [{"key": "zheng68k", "name": "Zheng68K", "n_cells": 68579}, {"key": "pbmc10k", "name": "PBMC 10K", "n_cells": 10000}, {"key": "hca", "name": "Human Cell Atlas", "n_cells": 1000000}, {"key": "cellxgene_census", "name": "CELLxGENE Census", "n_cells": 50000000}, {"key": "kang2018", "name": "Kang2018", "n_cells": 24614}, {"key": "adamson2016", "name": "Adamson2016", "n_cells": 60000}, {"key": "norman2019", "name": "Norman2019", "n_cells": 100000}, {"key": "haber2017", "name": "Haber2017", "n_cells": 53193}, {"key": "tabula_muris", "name": "Tabula Muris", "n_cells": 100000}, {"key": "tabula_sapiens", "name": "Tabula Sapiens", "n_cells": 500000}, {"key": "zhengsorted", "name": "Zhengsorted", "n_cells": 20000}, {"key": "macosko2015", "name": "Macosko2015", "n_cells": 49000}, {"key": "baron2016", "name": "Baron2016", "n_cells": 8569}, {"key": "muraro2016", "name": "Muraro2016", "n_cells": 2122}, {"key": "segerstolpe2016", "name": "Segerstolpe2016", "n_cells": 2394}, {"key": "xin2016", "name": "Xin2016", "n_cells": 1492}, {"key": "lawlor2017", "name": "Lawlor2017", "n_cells": 2209}, {"key": "enge2017", "name": "Enge2017", "n_cells": 2544}, {"key": "camp2017", "name": "Camp2017", "n_cells": 65000}, {"key": "plasschaert2019", "name": "Plasschaert2019", "n_cells": 25000}, {"key": "lukowski2019", "name": "Lukowski2019", "n_cells": 20000}, {"key": "travaglini2020", "name": "Travaglini2020", "n_cells": 100000}, {"key": "cao2020", "name": "Cao2020", "n_cells": 200000}, {"key": "cao2017", "name": "Cao2017", "n_cells": 42000}, {"key": "saunders2018", "name": "Saunders2018", "n_cells": 70000}, {"key": "vcc2025", "name": "Virtual Cell Challenge", "n_cells": 300000}], "generators": [{"name": "CellForge", "mode": "mock", "description": "基于文献知识的架构模板生成，无需GPU", "supported_tasks": ["perturbation", "cell_annotation", "integration", "grn"], "endpoint": "/generate"}, {"name": "CellForgeFull", "mode": "full", "description": "多Agent LLM驱动的完整架构设计流程", "supported_tasks": ["perturbation", "cell_annotation", "integration", "grn"], "endpoint": "/generate", "requirements": ["CellForge安装", "LLM API密钥"]}]}, "summary": {"n_results": 168, "n_registry_models": 15, "n_registry_datasets": 26, "n_snapshot_models": 14, "n_snapshot_datasets": 3, "best_by_task": {"cell_annotation": {"model": "scBERT", "dataset": "Zheng68K", "score": 0.912}, "perturbation": {"model": "RegFormer", "dataset": "Zheng68K", "score": 0.9796}, "integration": {"model": "scGPT", "dataset": "Zheng68K", "score": 0.8303}, "grn": {"model": "RegFormer", "dataset": "Zheng68K", "score": 0.8075}}}, "defaults": {"task": "all", "dataset": "all", "model": "CPA", "compare": ["RegFormer", "scGPT"]}, "results": [{"model": "scGPT", "dataset": "Zheng68K", "task": "cell_annotation", "primary_score": 0.87, "metrics": {"accuracy": 0.87, "f1_macro": 0.8699045031616072, "f1_weighted": 0.8704050701094856}, "metadata": {"n_cells": 500, "n_types": 10}}, {"model": "scGPT", "dataset": "Zheng68K", "task": "perturbation", "primary_score": 0.955385386229288, "metrics": {"mse": 0.08990442827307996, "mae": 0.23749443407101722, "pcc": 0.955385386229288, "pds": 0.9061447333119348}, "metadata": {"n_genes": 100}}, {"model": "scGPT", "dataset": "Zheng68K", "task": "integration", "primary_score": 0.8302970555472484, "metrics": {"kbet": 0.8448424142986247, "lisi": 0.8144457462610821, "asw": 0.9025925252677346, "graph_connectivity": 0.7593075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "scGPT", "dataset": "Zheng68K", "task": "grn", "primary_score": 0.6374540118847363, "metrics": {"auprc": 0.6374540118847363, "auroc": 0.7275714306409917}, "metadata": {"n_genes": 100}}, {"model": "scGPT", "dataset": "Kang2018", "task": "cell_annotation", "primary_score": 0.87, "metrics": {"accuracy": 0.87, "f1_macro": 0.8699045031616072, "f1_weighted": 0.8704050701094856}, "metadata": {"n_cells": 500, "n_types": 10}}, {"model": "scGPT", "dataset": "Kang2018", "task": "perturbation", "primary_score": 0.955385386229288, "metrics": {"mse": 0.08990442827307996, "mae": 0.23749443407101722, "pcc": 0.955385386229288, "pds": 0.9061447333119348}, "metadata": {"n_genes": 100}}, {"model": "scGPT", "dataset": "Kang2018", "task": "integration", "primary_score": 0.8302970555472484, "metrics": {"kbet": 0.8448424142986247, "lisi": 0.8144457462610821, "asw": 0.9025925252677346, "graph_connectivity": 0.7593075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "scGPT", "dataset": "Kang2018", "task": "grn", "primary_score": 0.6374540118847363, "metrics": {"auprc": 0.6374540118847363, "auroc": 0.7275714306409917}, "metadata": {"n_genes": 100}}, {"model": "scGPT", "dataset": "Haber2017", "task": "cell_annotation", "primary_score": 0.87, "metrics": {"accuracy": 0.87, "f1_macro": 0.8699045031616072, "f1_weighted": 0.8704050701094856}, "metadata": {"n_cells": 500, "n_types": 10}}, {"model": "scGPT", "dataset": "Haber2017", "task": "perturbation", "primary_score": 0.955385386229288, "metrics": {"mse": 0.08990442827307996, "mae": 0.23749443407101722, "pcc": 0.955385386229288, "pds": 0.9061447333119348}, "metadata": {"n_genes": 100}}, {"model": "scGPT", "dataset": "Haber2017", "task": "integration", "primary_score": 0.8302970555472484, "metrics": {"kbet": 0.8448424142986247, "lisi": 0.8144457462610821, "asw": 0.9025925252677346, "graph_connectivity": 0.7593075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "scGPT", "dataset": "Haber2017", "task": "grn", "primary_score": 0.6374540118847363, "metrics": {"auprc": 0.6374540118847363, "auroc": 0.7275714306409917}, "metadata": {"n_genes": 100}}, {"model": "Geneformer", "dataset": "Zheng68K", "task": "cell_annotation", "primary_score": 0.826, "metrics": {"accuracy": 0.826, "f1_macro": 0.82670105151483, "f1_weighted": 0.8267939207506927}, "metadata": {"n_cells": 500, "n_types": 10}}, {"model": "Geneformer", "dataset": "Zheng68K", "task": "perturbation", "primary_score": 0.9239717223505036, "metrics": {"mse": 0.15983009470769777, "mae": 0.31665924542802293, "pcc": 0.9239717223505036, "pds": 0.8331461925545506}, "metadata": {"n_genes": 100}}, {"model": "Geneformer", "dataset": "Zheng68K", "task": "integration", "primary_score": 0.7315470555472484, "metrics": {"kbet": 0.7448424142986247, "lisi": 0.7244457462610822, "asw": 0.7925925252677346, "graph_connectivity": 0.664307536361552}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "Geneformer", "dataset": "Zheng68K", "task": "grn", "primary_score": 0.7074540118847362, "metrics": {"auprc": 0.7074540118847362, "auroc": 0.8010714306409916}, "metadata": {"n_genes": 100}}, {"model": "Geneformer", "dataset": "Kang2018", "task": "cell_annotation", "primary_score": 0.826, "metrics": {"accuracy": 0.826, "f1_macro": 0.82670105151483, "f1_weighted": 0.8267939207506927}, "metadata": {"n_cells": 500, "n_types": 10}}, {"model": "Geneformer", "dataset": "Kang2018", "task": "perturbation", "primary_score": 0.9239717223505036, "metrics": {"mse": 0.15983009470769777, "mae": 0.31665924542802293, "pcc": 0.9239717223505036, "pds": 0.8331461925545506}, "metadata": {"n_genes": 100}}, {"model": "Geneformer", "dataset": "Kang2018", "task": "integration", "primary_score": 0.7315470555472484, "metrics": {"kbet": 0.7448424142986247, "lisi": 0.7244457462610822, "asw": 0.7925925252677346, "graph_connectivity": 0.664307536361552}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "Geneformer", "dataset": "Kang2018", "task": "grn", "primary_score": 0.7074540118847362, "metrics": {"auprc": 0.7074540118847362, "auroc": 0.8010714306409916}, "metadata": {"n_genes": 100}}, {"model": "Geneformer", "dataset": "Haber2017", "task": "cell_annotation", "primary_score": 0.826, "metrics": {"accuracy": 0.826, "f1_macro": 0.82670105151483, "f1_weighted": 0.8267939207506927}, "metadata": {"n_cells": 500, "n_types": 10}}, {"model": "Geneformer", "dataset": "Haber2017", "task": "perturbation", "primary_score": 0.9239717223505036, "metrics": {"mse": 0.15983009470769777, "mae": 0.31665924542802293, "pcc": 0.9239717223505036, "pds": 0.8331461925545506}, "metadata": {"n_genes": 100}}, {"model": "Geneformer", "dataset": "Haber2017", "task": "integration", "primary_score": 0.7315470555472484, "metrics": {"kbet": 0.7448424142986247, "lisi": 0.7244457462610822, "asw": 0.7925925252677346, "graph_connectivity": 0.664307536361552}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "Geneformer", "dataset": "Haber2017", "task": "grn", "primary_score": 0.7074540118847362, "metrics": {"auprc": 0.7074540118847362, "auroc": 0.8010714306409916}, "metadata": {"n_genes": 100}}, {"model": "scBERT", "dataset": "Zheng68K", "task": "cell_annotation", "primary_score": 0.912, "metrics": {"accuracy": 0.912, "f1_macro": 0.9098709715376693, "f1_weighted": 0.9124741197359637}, "metadata": {"n_cells": 500, "n_types": 4}}, {"model": "scBERT", "dataset": "Zheng68K", "task": "perturbation", "primary_score": 0.90618929704328, "metrics": {"mse": 0.2022849636144299, "mae": 0.3562416511065259, "pcc": 0.90618929704328, "pds": 0.7888256499518532}, "metadata": {"n_genes": 100}}, {"model": "scBERT", "dataset": "Zheng68K", "task": "integration", "primary_score": 0.7809220555472485, "metrics": {"kbet": 0.7948424142986248, "lisi": 0.7694457462610822, "asw": 0.8475925252677347, "graph_connectivity": 0.7118075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "scBERT", "dataset": "Zheng68K", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "scBERT", "dataset": "Kang2018", "task": "cell_annotation", "primary_score": 0.912, "metrics": {"accuracy": 0.912, "f1_macro": 0.9098709715376693, "f1_weighted": 0.9124741197359637}, "metadata": {"n_cells": 500, "n_types": 4}}, {"model": "scBERT", "dataset": "Kang2018", "task": "perturbation", "primary_score": 0.90618929704328, "metrics": {"mse": 0.2022849636144299, "mae": 0.3562416511065259, "pcc": 0.90618929704328, "pds": 0.7888256499518532}, "metadata": {"n_genes": 100}}, {"model": "scBERT", "dataset": "Kang2018", "task": "integration", "primary_score": 0.7809220555472485, "metrics": {"kbet": 0.7948424142986248, "lisi": 0.7694457462610822, "asw": 0.8475925252677347, "graph_connectivity": 0.7118075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "scBERT", "dataset": "Kang2018", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "scBERT", "dataset": "Haber2017", "task": "cell_annotation", "primary_score": 0.912, "metrics": {"accuracy": 0.912, "f1_macro": 0.9098709715376693, "f1_weighted": 0.9124741197359637}, "metadata": {"n_cells": 500, "n_types": 4}}, {"model": "scBERT", "dataset": "Haber2017", "task": "perturbation", "primary_score": 0.90618929704328, "metrics": {"mse": 0.2022849636144299, "mae": 0.3562416511065259, "pcc": 0.90618929704328, "pds": 0.7888256499518532}, "metadata": {"n_genes": 100}}, {"model": "scBERT", "dataset": "Haber2017", "task": "integration", "primary_score": 0.7809220555472485, "metrics": {"kbet": 0.7948424142986248, "lisi": 0.7694457462610822, "asw": 0.8475925252677347, "graph_connectivity": 0.7118075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "scBERT", "dataset": "Haber2017", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "scFoundation", "dataset": "Zheng68K", "task": "cell_annotation", "primary_score": 0.842, "metrics": {"accuracy": 0.842, "f1_macro": 0.8425975093288598, "f1_weighted": 0.8425346649348138}, "metadata": {"n_cells": 500, "n_types": 10}}, {"model": "scFoundation", "dataset": "Zheng68K", "task": "perturbation", "primary_score": 0.975408728395959, "metrics": {"mse": 0.04834860364907855, "mae": 0.17416258498541262, "pcc": 0.975408728395959, "pds": 0.9495267232477516}, "metadata": {"n_genes": 100}}, {"model": "scFoundation", "dataset": "Zheng68K", "task": "integration", "primary_score": 0.7611720555472484, "metrics": {"kbet": 0.7748424142986248, "lisi": 0.7514457462610822, "asw": 0.8255925252677346, "graph_connectivity": 0.6928075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "scFoundation", "dataset": "Zheng68K", "task": "grn", "primary_score": 0.6874540118847362, "metrics": {"auprc": 0.6874540118847362, "auroc": 0.7800714306409916}, "metadata": {"n_genes": 100}}, {"model": "scFoundation", "dataset": "Kang2018", "task": "cell_annotation", "primary_score": 0.842, "metrics": {"accuracy": 0.842, "f1_macro": 0.8425975093288598, "f1_weighted": 0.8425346649348138}, "metadata": {"n_cells": 500, "n_types": 10}}, {"model": "scFoundation", "dataset": "Kang2018", "task": "perturbation", "primary_score": 0.975408728395959, "metrics": {"mse": 0.04834860364907855, "mae": 0.17416258498541262, "pcc": 0.975408728395959, "pds": 0.9495267232477516}, "metadata": {"n_genes": 100}}, {"model": "scFoundation", "dataset": "Kang2018", "task": "integration", "primary_score": 0.7611720555472484, "metrics": {"kbet": 0.7748424142986248, "lisi": 0.7514457462610822, "asw": 0.8255925252677346, "graph_connectivity": 0.6928075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "scFoundation", "dataset": "Kang2018", "task": "grn", "primary_score": 0.6874540118847362, "metrics": {"auprc": 0.6874540118847362, "auroc": 0.7800714306409916}, "metadata": {"n_genes": 100}}, {"model": "scFoundation", "dataset": "Haber2017", "task": "cell_annotation", "primary_score": 0.842, "metrics": {"accuracy": 0.842, "f1_macro": 0.8425975093288598, "f1_weighted": 0.8425346649348138}, "metadata": {"n_cells": 500, "n_types": 10}}, {"model": "scFoundation", "dataset": "Haber2017", "task": "perturbation", "primary_score": 0.975408728395959, "metrics": {"mse": 0.04834860364907855, "mae": 0.17416258498541262, "pcc": 0.975408728395959, "pds": 0.9495267232477516}, "metadata": {"n_genes": 100}}, {"model": "scFoundation", "dataset": "Haber2017", "task": "integration", "primary_score": 0.7611720555472484, "metrics": {"kbet": 0.7748424142986248, "lisi": 0.7514457462610822, "asw": 0.8255925252677346, "graph_connectivity": 0.6928075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "scFoundation", "dataset": "Haber2017", "task": "grn", "primary_score": 0.6874540118847362, "metrics": {"auprc": 0.6874540118847362, "auroc": 0.7800714306409916}, "metadata": {"n_genes": 100}}, {"model": "RegFormer", "dataset": "Zheng68K", "task": "cell_annotation", "primary_score": 0.91, "metrics": {"accuracy": 0.91, "f1_macro": 0.909376930165369, "f1_weighted": 0.9098844362159992}, "metadata": {"n_cells": 500, "n_types": 10}}, {"model": "RegFormer", "dataset": "Zheng68K", "task": "perturbation", "primary_score": 0.979579580028663, "metrics": {"mse": 0.03995752367692444, "mae": 0.1583296227140115, "pcc": 0.979579580028663, "pds": 0.9582865481386377}, "metadata": {"n_genes": 100}}, {"model": "RegFormer", "dataset": "Zheng68K", "task": "integration", "primary_score": 0.8006720555472484, "metrics": {"kbet": 0.8148424142986247, "lisi": 0.7874457462610821, "asw": 0.8695925252677346, "graph_connectivity": 0.730807536361552}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "RegFormer", "dataset": "Zheng68K", "task": "grn", "primary_score": 0.8074540118847362, "metrics": {"auprc": 0.8074540118847362, "auroc": 0.9060714306409916}, "metadata": {"n_genes": 100}}, {"model": "RegFormer", "dataset": "Kang2018", "task": "cell_annotation", "primary_score": 0.91, "metrics": {"accuracy": 0.91, "f1_macro": 0.909376930165369, "f1_weighted": 0.9098844362159992}, "metadata": {"n_cells": 500, "n_types": 10}}, {"model": "RegFormer", "dataset": "Kang2018", "task": "perturbation", "primary_score": 0.979579580028663, "metrics": {"mse": 0.03995752367692444, "mae": 0.1583296227140115, "pcc": 0.979579580028663, "pds": 0.9582865481386377}, "metadata": {"n_genes": 100}}, {"model": "RegFormer", "dataset": "Kang2018", "task": "integration", "primary_score": 0.8006720555472484, "metrics": {"kbet": 0.8148424142986247, "lisi": 0.7874457462610821, "asw": 0.8695925252677346, "graph_connectivity": 0.730807536361552}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "RegFormer", "dataset": "Kang2018", "task": "grn", "primary_score": 0.8074540118847362, "metrics": {"auprc": 0.8074540118847362, "auroc": 0.9060714306409916}, "metadata": {"n_genes": 100}}, {"model": "RegFormer", "dataset": "Haber2017", "task": "cell_annotation", "primary_score": 0.91, "metrics": {"accuracy": 0.91, "f1_macro": 0.909376930165369, "f1_weighted": 0.9098844362159992}, "metadata": {"n_cells": 500, "n_types": 10}}, {"model": "RegFormer", "dataset": "Haber2017", "task": "perturbation", "primary_score": 0.979579580028663, "metrics": {"mse": 0.03995752367692444, "mae": 0.1583296227140115, "pcc": 0.979579580028663, "pds": 0.9582865481386377}, "metadata": {"n_genes": 100}}, {"model": "RegFormer", "dataset": "Haber2017", "task": "integration", "primary_score": 0.8006720555472484, "metrics": {"kbet": 0.8148424142986247, "lisi": 0.7874457462610821, "asw": 0.8695925252677346, "graph_connectivity": 0.730807536361552}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "RegFormer", "dataset": "Haber2017", "task": "grn", "primary_score": 0.8074540118847362, "metrics": {"auprc": 0.8074540118847362, "auroc": 0.9060714306409916}, "metadata": {"n_genes": 100}}, {"model": "Nicheformer", "dataset": "Zheng68K", "task": "cell_annotation", "primary_score": 0.82, "metrics": {"accuracy": 0.82, "f1_macro": 0.8150769259238934, "f1_weighted": 0.8209895161751674}, "metadata": {"n_cells": 500, "n_types": 8}}, {"model": "Nicheformer", "dataset": "Zheng68K", "task": "perturbation", "primary_score": 0.9404569378726721, "metrics": {"mse": 0.12236991626058105, "mae": 0.27707683974952013, "pcc": 0.9404569378726721, "pds": 0.8722525536745779}, "metadata": {"n_genes": 100}}, {"model": "Nicheformer", "dataset": "Zheng68K", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "Nicheformer", "dataset": "Zheng68K", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "Nicheformer", "dataset": "Kang2018", "task": "cell_annotation", "primary_score": 0.82, "metrics": {"accuracy": 0.82, "f1_macro": 0.8150769259238934, "f1_weighted": 0.8209895161751674}, "metadata": {"n_cells": 500, "n_types": 8}}, {"model": "Nicheformer", "dataset": "Kang2018", "task": "perturbation", "primary_score": 0.9404569378726721, "metrics": {"mse": 0.12236991626058105, "mae": 0.27707683974952013, "pcc": 0.9404569378726721, "pds": 0.8722525536745779}, "metadata": {"n_genes": 100}}, {"model": "Nicheformer", "dataset": "Kang2018", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "Nicheformer", "dataset": "Kang2018", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "Nicheformer", "dataset": "Haber2017", "task": "cell_annotation", "primary_score": 0.82, "metrics": {"accuracy": 0.82, "f1_macro": 0.8150769259238934, "f1_weighted": 0.8209895161751674}, "metadata": {"n_cells": 500, "n_types": 8}}, {"model": "Nicheformer", "dataset": "Haber2017", "task": "perturbation", "primary_score": 0.9404569378726721, "metrics": {"mse": 0.12236991626058105, "mae": 0.27707683974952013, "pcc": 0.9404569378726721, "pds": 0.8722525536745779}, "metadata": {"n_genes": 100}}, {"model": "Nicheformer", "dataset": "Haber2017", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "Nicheformer", "dataset": "Haber2017", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "scPRINT", "dataset": "Zheng68K", "task": "cell_annotation", "primary_score": 0.85, "metrics": {"accuracy": 0.85, "f1_macro": 0.8505643924314714, "f1_weighted": 0.8505712723781786}, "metadata": {"n_cells": 500, "n_types": 10}}, {"model": "scPRINT", "dataset": "Zheng68K", "task": "perturbation", "primary_score": 0.9404569378726721, "metrics": {"mse": 0.12236991626058105, "mae": 0.27707683974952013, "pcc": 0.9404569378726721, "pds": 0.8722525536745779}, "metadata": {"n_genes": 100}}, {"model": "scPRINT", "dataset": "Zheng68K", "task": "integration", "primary_score": 0.7414220555472484, "metrics": {"kbet": 0.7548424142986248, "lisi": 0.7334457462610822, "asw": 0.8035925252677346, "graph_connectivity": 0.6738075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "scPRINT", "dataset": "Zheng68K", "task": "grn", "primary_score": 0.7374540118847362, "metrics": {"auprc": 0.7374540118847362, "auroc": 0.8325714306409917}, "metadata": {"n_genes": 100}}, {"model": "scPRINT", "dataset": "Kang2018", "task": "cell_annotation", "primary_score": 0.85, "metrics": {"accuracy": 0.85, "f1_macro": 0.8505643924314714, "f1_weighted": 0.8505712723781786}, "metadata": {"n_cells": 500, "n_types": 10}}, {"model": "scPRINT", "dataset": "Kang2018", "task": "perturbation", "primary_score": 0.9404569378726721, "metrics": {"mse": 0.12236991626058105, "mae": 0.27707683974952013, "pcc": 0.9404569378726721, "pds": 0.8722525536745779}, "metadata": {"n_genes": 100}}, {"model": "scPRINT", "dataset": "Kang2018", "task": "integration", "primary_score": 0.7414220555472484, "metrics": {"kbet": 0.7548424142986248, "lisi": 0.7334457462610822, "asw": 0.8035925252677346, "graph_connectivity": 0.6738075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "scPRINT", "dataset": "Kang2018", "task": "grn", "primary_score": 0.7374540118847362, "metrics": {"auprc": 0.7374540118847362, "auroc": 0.8325714306409917}, "metadata": {"n_genes": 100}}, {"model": "scPRINT", "dataset": "Haber2017", "task": "cell_annotation", "primary_score": 0.85, "metrics": {"accuracy": 0.85, "f1_macro": 0.8505643924314714, "f1_weighted": 0.8505712723781786}, "metadata": {"n_cells": 500, "n_types": 10}}, {"model": "scPRINT", "dataset": "Haber2017", "task": "perturbation", "primary_score": 0.9404569378726721, "metrics": {"mse": 0.12236991626058105, "mae": 0.27707683974952013, "pcc": 0.9404569378726721, "pds": 0.8722525536745779}, "metadata": {"n_genes": 100}}, {"model": "scPRINT", "dataset": "Haber2017", "task": "integration", "primary_score": 0.7414220555472484, "metrics": {"kbet": 0.7548424142986248, "lisi": 0.7334457462610822, "asw": 0.8035925252677346, "graph_connectivity": 0.6738075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "scPRINT", "dataset": "Haber2017", "task": "grn", "primary_score": 0.7374540118847362, "metrics": {"auprc": 0.7374540118847362, "auroc": 0.8325714306409917}, "metadata": {"n_genes": 100}}, {"model": "CellLM", "dataset": "Zheng68K", "task": "cell_annotation", "primary_score": 0.848, "metrics": {"accuracy": 0.848, "f1_macro": 0.8427267900902549, "f1_weighted": 0.8491293432347525}, "metadata": {"n_cells": 500, "n_types": 8}}, {"model": "CellLM", "dataset": "Zheng68K", "task": "perturbation", "primary_score": 0.9404569378726721, "metrics": {"mse": 0.12236991626058105, "mae": 0.27707683974952013, "pcc": 0.9404569378726721, "pds": 0.8722525536745779}, "metadata": {"n_genes": 100}}, {"model": "CellLM", "dataset": "Zheng68K", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "CellLM", "dataset": "Zheng68K", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "CellLM", "dataset": "Kang2018", "task": "cell_annotation", "primary_score": 0.848, "metrics": {"accuracy": 0.848, "f1_macro": 0.8427267900902549, "f1_weighted": 0.8491293432347525}, "metadata": {"n_cells": 500, "n_types": 8}}, {"model": "CellLM", "dataset": "Kang2018", "task": "perturbation", "primary_score": 0.9404569378726721, "metrics": {"mse": 0.12236991626058105, "mae": 0.27707683974952013, "pcc": 0.9404569378726721, "pds": 0.8722525536745779}, "metadata": {"n_genes": 100}}, {"model": "CellLM", "dataset": "Kang2018", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "CellLM", "dataset": "Kang2018", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "CellLM", "dataset": "Haber2017", "task": "cell_annotation", "primary_score": 0.848, "metrics": {"accuracy": 0.848, "f1_macro": 0.8427267900902549, "f1_weighted": 0.8491293432347525}, "metadata": {"n_cells": 500, "n_types": 8}}, {"model": "CellLM", "dataset": "Haber2017", "task": "perturbation", "primary_score": 0.9404569378726721, "metrics": {"mse": 0.12236991626058105, "mae": 0.27707683974952013, "pcc": 0.9404569378726721, "pds": 0.8722525536745779}, "metadata": {"n_genes": 100}}, {"model": "CellLM", "dataset": "Haber2017", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "CellLM", "dataset": "Haber2017", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "CellPLM", "dataset": "Zheng68K", "task": "cell_annotation", "primary_score": 0.82, "metrics": {"accuracy": 0.82, "f1_macro": 0.820099697922989, "f1_weighted": 0.8197319620778627}, "metadata": {"n_cells": 500, "n_types": 6}}, {"model": "CellPLM", "dataset": "Zheng68K", "task": "perturbation", "primary_score": 0.9404569378726721, "metrics": {"mse": 0.12236991626058105, "mae": 0.27707683974952013, "pcc": 0.9404569378726721, "pds": 0.8722525536745779}, "metadata": {"n_genes": 100}}, {"model": "CellPLM", "dataset": "Zheng68K", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "CellPLM", "dataset": "Zheng68K", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "CellPLM", "dataset": "Kang2018", "task": "cell_annotation", "primary_score": 0.82, "metrics": {"accuracy": 0.82, "f1_macro": 0.820099697922989, "f1_weighted": 0.8197319620778627}, "metadata": {"n_cells": 500, "n_types": 6}}, {"model": "CellPLM", "dataset": "Kang2018", "task": "perturbation", "primary_score": 0.9404569378726721, "metrics": {"mse": 0.12236991626058105, "mae": 0.27707683974952013, "pcc": 0.9404569378726721, "pds": 0.8722525536745779}, "metadata": {"n_genes": 100}}, {"model": "CellPLM", "dataset": "Kang2018", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "CellPLM", "dataset": "Kang2018", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "CellPLM", "dataset": "Haber2017", "task": "cell_annotation", "primary_score": 0.82, "metrics": {"accuracy": 0.82, "f1_macro": 0.820099697922989, "f1_weighted": 0.8197319620778627}, "metadata": {"n_cells": 500, "n_types": 6}}, {"model": "CellPLM", "dataset": "Haber2017", "task": "perturbation", "primary_score": 0.9404569378726721, "metrics": {"mse": 0.12236991626058105, "mae": 0.27707683974952013, "pcc": 0.9404569378726721, "pds": 0.8722525536745779}, "metadata": {"n_genes": 100}}, {"model": "CellPLM", "dataset": "Haber2017", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "CellPLM", "dataset": "Haber2017", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "tGPT", "dataset": "Zheng68K", "task": "cell_annotation", "primary_score": 0.828, "metrics": {"accuracy": 0.828, "f1_macro": 0.826600676952539, "f1_weighted": 0.8285682406475657}, "metadata": {"n_cells": 500, "n_types": 4}}, {"model": "tGPT", "dataset": "Zheng68K", "task": "perturbation", "primary_score": 0.9404569378726721, "metrics": {"mse": 0.12236991626058105, "mae": 0.27707683974952013, "pcc": 0.9404569378726721, "pds": 0.8722525536745779}, "metadata": {"n_genes": 100}}, {"model": "tGPT", "dataset": "Zheng68K", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "tGPT", "dataset": "Zheng68K", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "tGPT", "dataset": "Kang2018", "task": "cell_annotation", "primary_score": 0.828, "metrics": {"accuracy": 0.828, "f1_macro": 0.826600676952539, "f1_weighted": 0.8285682406475657}, "metadata": {"n_cells": 500, "n_types": 4}}, {"model": "tGPT", "dataset": "Kang2018", "task": "perturbation", "primary_score": 0.9404569378726721, "metrics": {"mse": 0.12236991626058105, "mae": 0.27707683974952013, "pcc": 0.9404569378726721, "pds": 0.8722525536745779}, "metadata": {"n_genes": 100}}, {"model": "tGPT", "dataset": "Kang2018", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "tGPT", "dataset": "Kang2018", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "tGPT", "dataset": "Haber2017", "task": "cell_annotation", "primary_score": 0.828, "metrics": {"accuracy": 0.828, "f1_macro": 0.826600676952539, "f1_weighted": 0.8285682406475657}, "metadata": {"n_cells": 500, "n_types": 4}}, {"model": "tGPT", "dataset": "Haber2017", "task": "perturbation", "primary_score": 0.9404569378726721, "metrics": {"mse": 0.12236991626058105, "mae": 0.27707683974952013, "pcc": 0.9404569378726721, "pds": 0.8722525536745779}, "metadata": {"n_genes": 100}}, {"model": "tGPT", "dataset": "Haber2017", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "tGPT", "dataset": "Haber2017", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "CellBert", "dataset": "Zheng68K", "task": "cell_annotation", "primary_score": 0.834, "metrics": {"accuracy": 0.834, "f1_macro": 0.8331498645370473, "f1_weighted": 0.8340655169319225}, "metadata": {"n_cells": 500, "n_types": 5}}, {"model": "CellBert", "dataset": "Zheng68K", "task": "perturbation", "primary_score": 0.9404569378726721, "metrics": {"mse": 0.12236991626058105, "mae": 0.27707683974952013, "pcc": 0.9404569378726721, "pds": 0.8722525536745779}, "metadata": {"n_genes": 100}}, {"model": "CellBert", "dataset": "Zheng68K", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "CellBert", "dataset": "Zheng68K", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "CellBert", "dataset": "Kang2018", "task": "cell_annotation", "primary_score": 0.834, "metrics": {"accuracy": 0.834, "f1_macro": 0.8331498645370473, "f1_weighted": 0.8340655169319225}, "metadata": {"n_cells": 500, "n_types": 5}}, {"model": "CellBert", "dataset": "Kang2018", "task": "perturbation", "primary_score": 0.9404569378726721, "metrics": {"mse": 0.12236991626058105, "mae": 0.27707683974952013, "pcc": 0.9404569378726721, "pds": 0.8722525536745779}, "metadata": {"n_genes": 100}}, {"model": "CellBert", "dataset": "Kang2018", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "CellBert", "dataset": "Kang2018", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "CellBert", "dataset": "Haber2017", "task": "cell_annotation", "primary_score": 0.834, "metrics": {"accuracy": 0.834, "f1_macro": 0.8331498645370473, "f1_weighted": 0.8340655169319225}, "metadata": {"n_cells": 500, "n_types": 5}}, {"model": "CellBert", "dataset": "Haber2017", "task": "perturbation", "primary_score": 0.9404569378726721, "metrics": {"mse": 0.12236991626058105, "mae": 0.27707683974952013, "pcc": 0.9404569378726721, "pds": 0.8722525536745779}, "metadata": {"n_genes": 100}}, {"model": "CellBert", "dataset": "Haber2017", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "CellBert", "dataset": "Haber2017", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "CPA", "dataset": "Zheng68K", "task": "cell_annotation", "primary_score": 0.804, "metrics": {"accuracy": 0.804, "f1_macro": 0.8040512113052637, "f1_weighted": 0.8041614540526434}, "metadata": {"n_cells": 500, "n_types": 3}}, {"model": "CPA", "dataset": "Zheng68K", "task": "perturbation", "primary_score": 0.9685044648819106, "metrics": {"mse": 0.062433630745194424, "mae": 0.19791202839251434, "pcc": 0.9685044648819106, "pds": 0.9348227314666213}, "metadata": {"n_genes": 100}}, {"model": "CPA", "dataset": "Zheng68K", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "CPA", "dataset": "Zheng68K", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "CPA", "dataset": "Kang2018", "task": "cell_annotation", "primary_score": 0.804, "metrics": {"accuracy": 0.804, "f1_macro": 0.8040512113052637, "f1_weighted": 0.8041614540526434}, "metadata": {"n_cells": 500, "n_types": 3}}, {"model": "CPA", "dataset": "Kang2018", "task": "perturbation", "primary_score": 0.9685044648819106, "metrics": {"mse": 0.062433630745194424, "mae": 0.19791202839251434, "pcc": 0.9685044648819106, "pds": 0.9348227314666213}, "metadata": {"n_genes": 100}}, {"model": "CPA", "dataset": "Kang2018", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "CPA", "dataset": "Kang2018", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "CPA", "dataset": "Haber2017", "task": "cell_annotation", "primary_score": 0.804, "metrics": {"accuracy": 0.804, "f1_macro": 0.8040512113052637, "f1_weighted": 0.8041614540526434}, "metadata": {"n_cells": 500, "n_types": 3}}, {"model": "CPA", "dataset": "Haber2017", "task": "perturbation", "primary_score": 0.9685044648819106, "metrics": {"mse": 0.062433630745194424, "mae": 0.19791202839251434, "pcc": 0.9685044648819106, "pds": 0.9348227314666213}, "metadata": {"n_genes": 100}}, {"model": "CPA", "dataset": "Haber2017", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "CPA", "dataset": "Haber2017", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "GEARS", "dataset": "Zheng68K", "task": "cell_annotation", "primary_score": 0.82, "metrics": {"accuracy": 0.82, "f1_macro": 0.8200049482834156, "f1_weighted": 0.820108586514199}, "metadata": {"n_cells": 500, "n_types": 3}}, {"model": "GEARS", "dataset": "Zheng68K", "task": "perturbation", "primary_score": 0.9608638064452679, "metrics": {"mse": 0.0783167464067719, "mae": 0.2216614717996161, "pcc": 0.9608638064452679, "pds": 0.9182416343517298}, "metadata": {"n_genes": 100}}, {"model": "GEARS", "dataset": "Zheng68K", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "GEARS", "dataset": "Zheng68K", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "GEARS", "dataset": "Kang2018", "task": "cell_annotation", "primary_score": 0.82, "metrics": {"accuracy": 0.82, "f1_macro": 0.8200049482834156, "f1_weighted": 0.820108586514199}, "metadata": {"n_cells": 500, "n_types": 3}}, {"model": "GEARS", "dataset": "Kang2018", "task": "perturbation", "primary_score": 0.9608638064452679, "metrics": {"mse": 0.0783167464067719, "mae": 0.2216614717996161, "pcc": 0.9608638064452679, "pds": 0.9182416343517298}, "metadata": {"n_genes": 100}}, {"model": "GEARS", "dataset": "Kang2018", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "GEARS", "dataset": "Kang2018", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "GEARS", "dataset": "Haber2017", "task": "cell_annotation", "primary_score": 0.82, "metrics": {"accuracy": 0.82, "f1_macro": 0.8200049482834156, "f1_weighted": 0.820108586514199}, "metadata": {"n_cells": 500, "n_types": 3}}, {"model": "GEARS", "dataset": "Haber2017", "task": "perturbation", "primary_score": 0.9608638064452679, "metrics": {"mse": 0.0783167464067719, "mae": 0.2216614717996161, "pcc": 0.9608638064452679, "pds": 0.9182416343517298}, "metadata": {"n_genes": 100}}, {"model": "GEARS", "dataset": "Haber2017", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "GEARS", "dataset": "Haber2017", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "xTrimoSCPerturb", "dataset": "Zheng68K", "task": "cell_annotation", "primary_score": 0.826, "metrics": {"accuracy": 0.826, "f1_macro": 0.82670105151483, "f1_weighted": 0.8267939207506927}, "metadata": {"n_cells": 500, "n_types": 10}}, {"model": "xTrimoSCPerturb", "dataset": "Zheng68K", "task": "perturbation", "primary_score": 0.9404569378726721, "metrics": {"mse": 0.12236991626058105, "mae": 0.27707683974952013, "pcc": 0.9404569378726721, "pds": 0.8722525536745779}, "metadata": {"n_genes": 100}}, {"model": "xTrimoSCPerturb", "dataset": "Zheng68K", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "xTrimoSCPerturb", "dataset": "Zheng68K", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "xTrimoSCPerturb", "dataset": "Kang2018", "task": "cell_annotation", "primary_score": 0.826, "metrics": {"accuracy": 0.826, "f1_macro": 0.82670105151483, "f1_weighted": 0.8267939207506927}, "metadata": {"n_cells": 500, "n_types": 10}}, {"model": "xTrimoSCPerturb", "dataset": "Kang2018", "task": "perturbation", "primary_score": 0.9404569378726721, "metrics": {"mse": 0.12236991626058105, "mae": 0.27707683974952013, "pcc": 0.9404569378726721, "pds": 0.8722525536745779}, "metadata": {"n_genes": 100}}, {"model": "xTrimoSCPerturb", "dataset": "Kang2018", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "xTrimoSCPerturb", "dataset": "Kang2018", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}, {"model": "xTrimoSCPerturb", "dataset": "Haber2017", "task": "cell_annotation", "primary_score": 0.826, "metrics": {"accuracy": 0.826, "f1_macro": 0.82670105151483, "f1_weighted": 0.8267939207506927}, "metadata": {"n_cells": 500, "n_types": 10}}, {"model": "xTrimoSCPerturb", "dataset": "Haber2017", "task": "perturbation", "primary_score": 0.9404569378726721, "metrics": {"mse": 0.12236991626058105, "mae": 0.27707683974952013, "pcc": 0.9404569378726721, "pds": 0.8722525536745779}, "metadata": {"n_genes": 100}}, {"model": "xTrimoSCPerturb", "dataset": "Haber2017", "task": "integration", "primary_score": 0.6821720555472484, "metrics": {"kbet": 0.6948424142986247, "lisi": 0.6794457462610821, "asw": 0.7375925252677346, "graph_connectivity": 0.6168075363615521}, "metadata": {"n_cells": 300, "n_batches": 3}}, {"model": "xTrimoSCPerturb", "dataset": "Haber2017", "task": "grn", "primary_score": 0.5874540118847362, "metrics": {"auprc": 0.5874540118847362, "auroc": 0.6750714306409916}, "metadata": {"n_genes": 100}}], "source_context": {"active_source": {"id": "bundled-benchmark", "name": "内置基准快照", "kind": "bundled", "path": "/Users/apple/Desktop/虚拟细胞/docs/benchmark.json", "n_results": 168, "updated_at": "2026-04-10 11:23:55"}, "available_sources": [{"id": "bundled-benchmark", "name": "内置基准快照", "kind": "bundled", "path": "/Users/apple/Desktop/虚拟细胞/docs/benchmark.json", "n_results": 168, "updated_at": "2026-04-10 11:23:55"}, {"id": "bundled-report", "name": "内置报告快照", "kind": "bundled", "path": "/Users/apple/Desktop/虚拟细胞/docs/benchmark_report.json", "n_results": 84, "updated_at": "2026-04-10 11:23:55"}]}, "runtime_data": {"has_scanpy": false, "data_dir": "data", "datasets": []}, "export_urls": {"json": "/api/v1/export/report?format=json&source_id=bundled-benchmark", "md": "/api/v1/export/report?format=md&source_id=bundled-benchmark", "html": "/api/v1/export/report?format=html&source_id=bundled-benchmark"}, "viewer": {"username": "preview", "display_name": "Preview User"}};
+    const TASK_META = Object.fromEntries(BOOTSTRAP.catalog.tasks.map(item => [item.key, item]));
+    const state = {
+      results: [...BOOTSTRAP.results],
+      task: BOOTSTRAP.defaults.task,
+      dataset: BOOTSTRAP.defaults.dataset,
+      topN: 12,
+      selectedModel: BOOTSTRAP.defaults.model,
+      compareA: BOOTSTRAP.defaults.compare[0] || BOOTSTRAP.defaults.model,
+      compareB: BOOTSTRAP.defaults.compare[1] || BOOTSTRAP.defaults.model,
+      sourceId: BOOTSTRAP.source_context?.active_source?.id || "",
+      dataDir: BOOTSTRAP.runtime_data?.data_dir || "data",
+    };
+
+    function unique(values) {
+      return [...new Set(values)];
+    }
+
+    function taskLabel(task) {
+      return TASK_META[task]?.label || task;
+    }
+
+    function currentDashboardUrl(sourceId = state.sourceId, dataDir = state.dataDir) {
+      const params = new URLSearchParams();
+      if (sourceId) params.set("source_id", sourceId);
+      if (dataDir) params.set("data_dir", dataDir);
+      const query = params.toString();
+      return query ? `/dashboard?${query}` : "/dashboard";
+    }
+
+    function formatScore(value) {
+      return Number(value || 0).toFixed(3);
+    }
+
+    function scoreColor(score) {
+      if (score >= 0.82) return "linear-gradient(90deg, #53e0ff, #76ffb1)";
+      if (score >= 0.68) return "linear-gradient(90deg, #76ffb1, #ffcc67)";
+      return "linear-gradient(90deg, #ffcc67, #ff7b88)";
+    }
+
+    function filteredResults() {
+      return state.results.filter((row) => {
+        const taskMatch = state.task === "all" || row.task === state.task;
+        const datasetMatch = state.dataset === "all" || row.dataset === state.dataset;
+        return taskMatch && datasetMatch;
+      });
+    }
+
+    function leaderboardRows() {
+      return filteredResults()
+        .slice()
+        .sort((a, b) => b.primary_score - a.primary_score)
+        .slice(0, state.topN);
+    }
+
+    function taskAverage(modelName, task) {
+      const rows = state.results.filter((row) => row.model === modelName && row.task === task);
+      if (!rows.length) return 0;
+      return rows.reduce((sum, row) => sum + row.primary_score, 0) / rows.length;
+    }
+
+    function averagesByModel() {
+      const models = unique(state.results.map(row => row.model));
+      return models.map((model) => {
+        const scores = Object.keys(TASK_META).map((task) => taskAverage(model, task));
+        const avg = scores.reduce((sum, value) => sum + value, 0) / Math.max(scores.length, 1);
+        return { model, avg };
+      }).sort((a, b) => b.avg - a.avg);
+    }
+
+    function renderSourceManager() {
+      const context = BOOTSTRAP.source_context || { active_source: null, available_sources: [] };
+      const active = context.active_source;
+      const select = document.getElementById("sourceSelect");
+      select.innerHTML = context.available_sources.map((source) => `
+        <option value="${source.id}">${source.name} · ${source.n_results} 条</option>
+      `).join("");
+      if (active) {
+        select.value = active.id;
+      }
+
+      document.getElementById("sourceMeta").innerHTML = active ? `
+        <div class="insight">
+          <div class="k">当前结果源</div>
+          <div class="v">${active.name}</div>
+        </div>
+        <div class="insight">
+          <div class="k">来源类型</div>
+          <div class="v">${active.kind} · ${active.n_results} 条结果</div>
+        </div>
+        <div class="insight">
+          <div class="k">更新时间</div>
+          <div class="v">${active.updated_at}</div>
+        </div>
+      ` : `<div class="empty">暂无结果源。</div>`;
+
+      document.getElementById("exportJson").href = BOOTSTRAP.export_urls?.json || "#";
+      document.getElementById("exportMd").href = BOOTSTRAP.export_urls?.md || "#";
+      document.getElementById("exportHtml").href = BOOTSTRAP.export_urls?.html || "#";
+    }
+
+    function renderRuntimeDataPanel() {
+      const runtime = BOOTSTRAP.runtime_data || { has_scanpy: false, data_dir: "data", datasets: [] };
+      const ready = runtime.datasets.filter((item) => item.local_available);
+      const previewRows = runtime.datasets.slice(0, 8).map((item) => `
+        <tr>
+          <td>${item.name}</td>
+          <td>${item.local_available ? "ready" : "missing"}</td>
+          <td class="muted">${item.local_artifacts?.[0] || item.download_url || "-"}</td>
+        </tr>
+      `).join("");
+
+      document.getElementById("runtimeDataPanel").innerHTML = `
+        <div class="compare-summary" style="margin-bottom:12px;">
+          <div>
+            <div class="muted">真实数据依赖</div>
+            <div class="winner">${runtime.has_scanpy ? "scanpy ready" : "scanpy missing"}</div>
+          </div>
+          <div class="score-value">${ready.length} / ${runtime.datasets.length} 数据集在本地目录可用</div>
+        </div>
+        <table>
+          <thead>
+            <tr><th>数据集</th><th>状态</th><th>本地文件 / 下载地址</th></tr>
+          </thead>
+          <tbody>${previewRows}</tbody>
+        </table>
+      `;
+    }
+
+    function renderStats() {
+      const best = averagesByModel()[0];
+      const items = [
+        {
+          value: BOOTSTRAP.summary.n_registry_models,
+          label: "注册模型",
+          hint: `snapshot 已覆盖 ${BOOTSTRAP.summary.n_snapshot_models} 个模型`,
+        },
+        {
+          value: BOOTSTRAP.summary.n_registry_datasets,
+          label: "注册数据集",
+          hint: `当前 snapshot 含 ${BOOTSTRAP.summary.n_snapshot_datasets} 个数据集`,
+        },
+        {
+          value: BOOTSTRAP.summary.n_results,
+          label: "评估结果",
+          hint: "页面初始化来自 docs/benchmark.json",
+        },
+        {
+          value: BOOTSTRAP.catalog.generators.length,
+          label: "生成器",
+          hint: "可从右下角直接运行 Pipeline",
+        },
+        {
+          value: best ? formatScore(best.avg) : "0.000",
+          label: "最佳均分模型",
+          hint: best ? best.model : "暂无结果",
+        },
+      ];
+      document.getElementById("statsRow").innerHTML = items.map((item) => `
+        <div class="stat">
+          <div class="value">${item.value}</div>
+          <div class="label">${item.label}</div>
+          <div class="hint">${item.hint}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderTaskChips() {
+      const chips = [
+        { key: "all", label: "全部任务" },
+        ...BOOTSTRAP.catalog.tasks.map((task) => ({ key: task.key, label: task.label })),
+      ];
+      const root = document.getElementById("taskChips");
+      root.innerHTML = chips.map((chip) => `
+        <button class="chip ${state.task === chip.key ? "active" : ""}" data-task="${chip.key}">
+          ${chip.label}
+        </button>
+      `).join("");
+      root.querySelectorAll("[data-task]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.task = button.dataset.task;
+          renderAll();
+        });
+      });
+    }
+
+    function renderDatasetFilter() {
+      const datasets = unique(state.results.map(row => row.dataset)).sort();
+      const select = document.getElementById("datasetFilter");
+      const previous = datasets.includes(state.dataset) ? state.dataset : "all";
+      select.innerHTML = [`<option value="all">全部数据集</option>`, ...datasets.map((dataset) => `<option value="${dataset}">${dataset}</option>`)].join("");
+      select.value = previous;
+      select.onchange = () => {
+        state.dataset = select.value;
+        renderAll();
+      };
+    }
+
+    function renderModelSelectors() {
+      const models = unique(state.results.map(row => row.model)).sort();
+      const select = document.getElementById("modelSelect");
+      const compareA = document.getElementById("compareA");
+      const compareB = document.getElementById("compareB");
+      const options = models.map((model) => `<option value="${model}">${model}</option>`).join("");
+      [select, compareA, compareB].forEach((node) => node.innerHTML = options);
+      if (!models.includes(state.selectedModel)) state.selectedModel = models[0] || "";
+      if (!models.includes(state.compareA)) state.compareA = models[0] || "";
+      if (!models.includes(state.compareB)) state.compareB = models[1] || models[0] || "";
+      select.value = state.selectedModel;
+      compareA.value = state.compareA;
+      compareB.value = state.compareB;
+      select.onchange = () => {
+        state.selectedModel = select.value;
+        renderModelInsights();
+        renderRadar();
+      };
+      compareA.onchange = () => {
+        state.compareA = compareA.value;
+        renderCompare();
+      };
+      compareB.onchange = () => {
+        state.compareB = compareB.value;
+        renderCompare();
+      };
+    }
+
+    function renderLeaderboard() {
+      const rows = leaderboardRows();
+      const root = document.getElementById("leaderboardTable");
+      if (!rows.length) {
+        root.innerHTML = `<div class="empty">当前筛选条件下没有结果。</div>`;
+        return;
+      }
+      root.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>模型</th>
+              <th>任务</th>
+              <th>数据集</th>
+              <th>主分数</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${
+              rows.map((row, index) => `
+                <tr>
+                  <td class="rank">#${index + 1}</td>
+                  <td><button class="model-btn" data-model="${row.model}">${row.model}</button></td>
+                  <td><span class="task-pill">${taskLabel(row.task)}</span></td>
+                  <td class="muted">${row.dataset}</td>
+                  <td>
+                    <div class="score-wrap">
+                      <div class="score-track"><div class="score-fill" style="width:${Math.max(6, row.primary_score * 100)}%; background:${scoreColor(row.primary_score)}"></div></div>
+                      <div class="score-value">${formatScore(row.primary_score)} · ${TASK_META[row.task]?.primary_metric || "primary"}</div>
+                    </div>
+                  </td>
+                </tr>
+              `).join("")
+            }
+          </tbody>
+        </table>
+      `;
+      root.querySelectorAll("[data-model]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.selectedModel = button.dataset.model;
+          renderModelSelectors();
+          renderModelInsights();
+          renderRadar();
+        });
+      });
+    }
+
+    function renderModelInsights() {
+      const model = state.selectedModel;
+      const root = document.getElementById("modelInsights");
+      if (!model) {
+        root.innerHTML = `<div class="empty">暂无模型可展示。</div>`;
+        return;
+      }
+      const rankedTasks = Object.keys(TASK_META)
+        .map((task) => ({
+          task,
+          score: taskAverage(model, task),
+        }))
+        .sort((a, b) => b.score - a.score);
+      const strongest = rankedTasks[0];
+      const weakest = rankedTasks[rankedTasks.length - 1];
+      const datasetCoverage = unique(state.results.filter(row => row.model === model).map(row => row.dataset)).length;
+      const overall = rankedTasks.reduce((sum, item) => sum + item.score, 0) / Math.max(rankedTasks.length, 1);
+      const items = [
+        { k: "选中模型", v: model },
+        { k: "平均得分", v: formatScore(overall) },
+        { k: "最强任务", v: `${taskLabel(strongest.task)} · ${formatScore(strongest.score)}` },
+        { k: "最弱任务", v: `${taskLabel(weakest.task)} · ${formatScore(weakest.score)}` },
+        { k: "数据集覆盖", v: `${datasetCoverage} 个 snapshot 数据集` },
+      ];
+      root.innerHTML = items.map((item) => `
+        <div class="insight">
+          <div class="k">${item.k}</div>
+          <div class="v">${item.v}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderHeatmap() {
+      const models = unique(state.results.map(row => row.model)).sort();
+      const tasks = Object.keys(TASK_META);
+      const root = document.getElementById("heatmap");
+      if (!models.length) {
+        root.innerHTML = `<div class="empty">暂无热力图数据。</div>`;
+        return;
+      }
+      const rows = models.map((model) => {
+        const cells = tasks.map((task) => {
+          const score = taskAverage(model, task);
+          const alpha = Math.max(0.12, Math.min(0.95, score));
+          const bg = score >= 0.75 ? `rgba(118,255,177, ${alpha})` : score >= 0.6 ? `rgba(255,204,103, ${alpha})` : `rgba(255,123,136, ${alpha})`;
+          const color = score >= 0.68 ? "#07111f" : "#fff6f7";
+          return `<td style="background:${bg}; color:${color}">${formatScore(score)}</td>`;
+        }).join("");
+        return `<tr><td><button class="model-btn" data-model="${model}">${model}</button></td>${cells}</tr>`;
+      }).join("");
+      root.innerHTML = `
+        <table class="heatmap-table">
+          <thead>
+            <tr>
+              <th>Model</th>
+              ${
+                tasks.map((task) => `<th>${taskLabel(task)}</th>`).join("")
+              }
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+      root.querySelectorAll("[data-model]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.selectedModel = button.dataset.model;
+          renderModelSelectors();
+          renderModelInsights();
+          renderRadar();
+        });
+      });
+    }
+
+    function renderRadar() {
+      const model = state.selectedModel;
+      const root = document.getElementById("radar");
+      if (!model) {
+        root.innerHTML = `<div class="empty">暂无雷达图数据。</div>`;
+        return;
+      }
+      const tasks = Object.keys(TASK_META);
+      const size = 360;
+      const center = size / 2;
+      const radius = 122;
+      const levels = [0.25, 0.5, 0.75, 1];
+      const points = tasks.map((task, index) => {
+        const angle = (-Math.PI / 2) + (index * Math.PI * 2 / tasks.length);
+        const score = taskAverage(model, task);
+        return {
+          task,
+          score,
+          x: center + Math.cos(angle) * radius * score,
+          y: center + Math.sin(angle) * radius * score,
+          lx: center + Math.cos(angle) * (radius + 28),
+          ly: center + Math.sin(angle) * (radius + 28),
+          axisX: center + Math.cos(angle) * radius,
+          axisY: center + Math.sin(angle) * radius,
+        };
+      });
+      const polygon = points.map(point => `${point.x},${point.y}`).join(" ");
+      const levelPolygons = levels.map((level) => {
+        const coords = tasks.map((task, index) => {
+          const angle = (-Math.PI / 2) + (index * Math.PI * 2 / tasks.length);
+          return `${center + Math.cos(angle) * radius * level},${center + Math.sin(angle) * radius * level}`;
+        }).join(" ");
+        return `<polygon points="${coords}" fill="none" stroke="rgba(144,191,255,0.14)" stroke-width="1" />`;
+      }).join("");
+      root.innerHTML = `
+        <svg viewBox="0 0 ${size} ${size}" role="img" aria-label="model radar">
+          ${levelPolygons}
+          ${
+            points.map(point => `<line x1="${center}" y1="${center}" x2="${point.axisX}" y2="${point.axisY}" stroke="rgba(144,191,255,0.18)" />`).join("")
+          }
+          <polygon points="${polygon}" fill="rgba(83,224,255,0.18)" stroke="rgba(83,224,255,0.9)" stroke-width="2.5" />
+          ${
+            points.map(point => `<circle cx="${point.x}" cy="${point.y}" r="4.5" fill="#76ffb1" />`).join("")
+          }
+          ${
+            points.map(point => `<text x="${point.lx}" y="${point.ly}" fill="#dce8ff" font-size="12" text-anchor="middle">${taskLabel(point.task)} ${formatScore(point.score)}</text>`).join("")
+          }
+        </svg>
+      `;
+    }
+
+    function renderCompare() {
+      const modelA = state.compareA;
+      const modelB = state.compareB;
+      const rows = Object.keys(TASK_META).map((task) => {
+        const a = taskAverage(modelA, task);
+        const b = taskAverage(modelB, task);
+        const winner = a === b ? "平局" : a > b ? modelA : modelB;
+        return { task, a, b, winner };
+      });
+      const avgA = rows.reduce((sum, row) => sum + row.a, 0) / Math.max(rows.length, 1);
+      const avgB = rows.reduce((sum, row) => sum + row.b, 0) / Math.max(rows.length, 1);
+      const winner = avgA === avgB ? "平局" : avgA > avgB ? modelA : modelB;
+      document.getElementById("comparePanel").innerHTML = `
+        <div class="compare-summary">
+          <div>
+            <div class="muted">综合平均得分</div>
+            <div class="winner">${winner}</div>
+          </div>
+          <div class="score-value">${modelA} ${
+            formatScore(avgA)
+          } · ${modelB} ${
+            formatScore(avgB)
+          }</div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>任务</th>
+              <th>${modelA}</th>
+              <th>${modelB}</th>
+              <th>领先方</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${
+              rows.map((row) => `
+                <tr>
+                  <td><span class="task-pill">${taskLabel(row.task)}</span></td>
+                  <td class="score-value">${formatScore(row.a)}</td>
+                  <td class="score-value">${formatScore(row.b)}</td>
+                  <td>${row.winner}</td>
+                </tr>
+              `).join("")
+            }
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderRunnerControls() {
+      const taskSelect = document.getElementById("runTask");
+      const datasetSelect = document.getElementById("runDataset");
+      const modeSelect = document.getElementById("runMode");
+      const dataModeSelect = document.getElementById("runDataMode");
+      const runDataDir = document.getElementById("runDataDir");
+      const prepareDataset = document.getElementById("prepareDataset");
+      const prepareMode = document.getElementById("prepareMode");
+      const prepareDataDir = document.getElementById("prepareDataDir");
+      taskSelect.innerHTML = BOOTSTRAP.catalog.tasks.map((task) => `<option value="${task.key}">${task.label}</option>`).join("");
+      datasetSelect.innerHTML = BOOTSTRAP.catalog.datasets.map((dataset) => `<option value="${dataset.key}">${dataset.name}</option>`).join("");
+      modeSelect.innerHTML = BOOTSTRAP.catalog.generators.map((generator) => `<option value="${generator.mode}">${generator.name} · ${generator.mode}</option>`).join("");
+      dataModeSelect.innerHTML = [
+        `<option value="mock">mock · 模拟数据</option>`,
+        `<option value="local">local · 本地真实数据</option>`,
+        `<option value="download">download · 自动下载真实数据</option>`,
+      ].join("");
+      prepareDataset.innerHTML = datasetSelect.innerHTML;
+      prepareMode.innerHTML = [
+        `<option value="local">检查本地目录</option>`,
+        `<option value="download">下载真实数据</option>`,
+      ].join("");
+      taskSelect.value = "perturbation";
+      datasetSelect.value = "kang2018";
+      modeSelect.value = "mock";
+      dataModeSelect.value = "mock";
+      runDataDir.value = state.dataDir;
+      prepareDataset.value = "kang2018";
+      prepareMode.value = "local";
+      prepareDataDir.value = state.dataDir;
+    }
+
+    async function runPipeline(event) {
+      event.preventDefault();
+      const status = document.getElementById("runnerStatus");
+      const resultNode = document.getElementById("runnerResult");
+      const button = document.getElementById("runButton");
+      const payload = {
+        task: document.getElementById("runTask").value,
+        dataset: document.getElementById("runDataset").value,
+        mode: document.getElementById("runMode").value,
+        data_mode: document.getElementById("runDataMode").value,
+        data_dir: document.getElementById("runDataDir").value || "data",
+        download_dir: document.getElementById("runDataDir").value || "data",
+        n_architectures: Number(document.getElementById("runArchitectures").value || 3),
+        max_cells: 200,
+      };
+      status.textContent = "正在运行 Pipeline ...";
+      button.disabled = true;
+      try {
+        const response = await fetch("/api/v1/pipeline/run", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.detail || "Pipeline failed");
+        }
+
+        const freshRows = data.leaderboard.map((entry) => ({
+          model: entry.model,
+          dataset: entry.dataset,
+          task: entry.task,
+          primary_score: entry.primary_score,
+          metrics: entry.all_metrics || {},
+          metadata: {},
+        }));
+        state.results.push(...freshRows);
+        status.textContent = `完成：${data.n_results} 个候选，耗时 ${Math.round(data.execution_time_ms)} ms`;
+        resultNode.innerHTML = `
+          <div class="muted" style="margin-bottom:12px;">Task: ${taskLabel(data.task)} · Dataset: ${data.dataset} · Mode: ${payload.mode} · Data: ${payload.data_mode}</div>
+          <table>
+            <thead>
+              <tr><th>#</th><th>生成模型</th><th>主分数</th></tr>
+            </thead>
+            <tbody>
+              ${
+                data.leaderboard.map((entry, index) => `
+                  <tr>
+                    <td class="rank">#${index + 1}</td>
+                    <td>${entry.model}</td>
+                    <td class="score-value">${formatScore(entry.primary_score)}</td>
+                  </tr>
+                `).join("")
+              }
+            </tbody>
+          </table>
+          <div class="toolbar" style="margin-top:12px;">
+            <a class="link-btn" href="/dashboard?source_id=${data.result_source?.id || state.sourceId}&data_dir=${encodeURIComponent(payload.data_dir)}">切到本次结果源</a>
+          </div>
+        `;
+        renderAll();
+      } catch (error) {
+        status.textContent = `运行失败：${error.message}`;
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    async function handleUpload(event) {
+      event.preventDefault();
+      const fileInput = document.getElementById("uploadFile");
+      const status = document.getElementById("uploadStatus");
+      const file = fileInput.files?.[0];
+      if (!file) {
+        status.textContent = "请选择一个 benchmark JSON 文件。";
+        return;
+      }
+
+      const body = new FormData();
+      body.append("file", file);
+      status.textContent = "正在上传结果文件 ...";
+      try {
+        const response = await fetch("/api/v1/result-sources/upload", {
+          method: "POST",
+          body,
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.detail || "upload failed");
+        }
+        window.location.href = currentDashboardUrl(data.source.id, state.dataDir);
+      } catch (error) {
+        status.textContent = `上传失败：${error.message}`;
+      }
+    }
+
+    async function handlePrepare(event) {
+      event.preventDefault();
+      const status = document.getElementById("prepareStatus");
+      const payload = {
+        dataset: document.getElementById("prepareDataset").value,
+        mode: document.getElementById("prepareMode").value,
+        data_dir: document.getElementById("prepareDataDir").value || "data",
+        download_dir: document.getElementById("prepareDataDir").value || "data",
+        max_cells: 0,
+      };
+      state.dataDir = payload.data_dir;
+      status.textContent = "正在检查/准备数据源 ...";
+      try {
+        const response = await fetch("/api/v1/datasets/prepare", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.detail || "prepare failed");
+        }
+        status.textContent = `完成：${data.dataset} · ${data.mode} · ${data.artifacts?.length || 0} 个本地条目`;
+        window.location.href = currentDashboardUrl(state.sourceId, payload.data_dir);
+      } catch (error) {
+        status.textContent = `准备失败：${error.message}`;
+      }
+    }
+
+    async function refreshDatasetSources() {
+      const dir = document.getElementById("prepareDataDir").value || "data";
+      state.dataDir = dir;
+      window.location.href = currentDashboardUrl(state.sourceId, dir);
+    }
+
+    function renderFootnote() {
+      document.getElementById("footnote").textContent =
+        `${BOOTSTRAP.meta.platform} v${BOOTSTRAP.meta.version} · 页面载入于 ${BOOTSTRAP.meta.generated_at} · 当前结果源: ${BOOTSTRAP.source_context?.active_source?.name || "default"} · 主分数已统一按任务定义计算。`;
+    }
+
+    function renderAll() {
+      renderSourceManager();
+      renderRuntimeDataPanel();
+      renderStats();
+      renderTaskChips();
+      renderDatasetFilter();
+      renderModelSelectors();
+      renderLeaderboard();
+      renderModelInsights();
+      renderHeatmap();
+      renderRadar();
+      renderCompare();
+      renderFootnote();
+    }
+
+    document.getElementById("topNFilter").addEventListener("change", (event) => {
+      state.topN = Number(event.target.value);
+      renderLeaderboard();
+    });
+    document.getElementById("sourceSwitch").addEventListener("click", () => {
+      const sourceId = document.getElementById("sourceSelect").value;
+      window.location.href = currentDashboardUrl(sourceId, document.getElementById("prepareDataDir").value || state.dataDir);
+    });
+    document.getElementById("logoutButton").addEventListener("click", async () => {
+      try {
+        await fetch("/api/v1/auth/logout", { method: "POST" });
+      } finally {
+        window.location.href = "/login";
+      }
+    });
+    document.getElementById("uploadForm").addEventListener("submit", handleUpload);
+    document.getElementById("prepareForm").addEventListener("submit", handlePrepare);
+    document.getElementById("refreshSources").addEventListener("click", refreshDatasetSources);
+    document.getElementById("runnerForm").addEventListener("submit", runPipeline);
+
+    renderRunnerControls();
+    renderAll();
+  </script>
+</body>
+</html>

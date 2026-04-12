@@ -3,412 +3,389 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>天眼 Tianyan — 商业决策的操作系统</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #0a0a0a; color: #e0e0e0; }
-
-        /* Hero */
-        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0a 70%); padding: 2rem; }
-        .eye-icon { font-size: 8rem; margin-bottom: 1.5rem; animation: pulse 3s ease-in-out infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.8; } }
-        .hero h1 { font-size: 4.5rem; margin-bottom: 0.5rem; background: linear-gradient(135deg, #ff6b6b, #feca57, #48dbfb, #ff6b6b); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradient 6s ease infinite; }
-        @keyframes gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        .hero .subtitle { font-size: 1.8rem; color: #888; margin-bottom: 1rem; letter-spacing: 0.3em; }
-        .hero .tagline { font-size: 1.15rem; color: #aaa; max-width: 700px; line-height: 2; margin-bottom: 2.5rem; }
-        .hero .tagline strong { color: #feca57; }
-        .hero .cta-group { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
-        .cta-btn { display: inline-block; padding: 1rem 2.5rem; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem; transition: all 0.3s; }
-        .cta-primary { background: linear-gradient(135deg, #ff6b6b, #feca57); color: #0a0a0a; }
-        .cta-secondary { background: transparent; border: 2px solid #48dbfb; color: #48dbfb; }
-        .cta-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(72, 219, 251, 0.3); }
-
-        /* Sections */
-        .section { padding: 100px 20px; max-width: 1200px; margin: 0 auto; }
-        .section-title { font-size: 2.5rem; text-align: center; margin-bottom: 0.5rem; color: #fff; }
-        .section-desc { text-align: center; color: #888; font-size: 1.1rem; margin-bottom: 3rem; }
-
-        /* Cards */
-        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
-        .card { background: linear-gradient(145deg, #1a1a2e, #16213e); border-radius: 16px; padding: 2.5rem; border: 1px solid #2a2a4e; transition: all 0.4s; position: relative; overflow: hidden; }
-        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb); opacity: 0; transition: opacity 0.4s; }
-        .card:hover { transform: translateY(-8px); border-color: #48dbfb; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-        .card:hover::before { opacity: 1; }
-        .card-icon { font-size: 3rem; margin-bottom: 1rem; }
-        .card h3 { color: #48dbfb; margin-bottom: 1rem; font-size: 1.4rem; }
-        .card ul { list-style: none; }
-        .card li { padding: 0.4rem 0; color: #bbb; font-size: 0.95rem; }
-        .card li::before { content: "▸ "; color: #48dbfb; }
-
-        /* Stats */
-        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; text-align: center; margin: 4rem 0; }
-        .stat { background: linear-gradient(145deg, #1a1a2e, #16213e); border-radius: 16px; padding: 2.5rem 1rem; border: 1px solid #2a2a4e; }
-        .stat .number { font-size: 3rem; background: linear-gradient(135deg, #48dbfb, #feca57); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold; }
-        .stat .label { color: #888; margin-top: 0.5rem; font-size: 0.95rem; }
-
-        /* Table */
-        .comparison { width: 100%; border-collapse: collapse; margin: 2rem 0; }
-        .comparison th, .comparison td { padding: 1rem 1.5rem; text-align: left; border-bottom: 1px solid #2a2a4e; }
-        .comparison th { color: #48dbfb; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; }
-        .comparison .highlight { color: #feca57; font-weight: bold; }
-        .comparison tr:hover { background: rgba(72, 219, 251, 0.05); }
-
-        /* Case Study Banner */
-        .case-banner { background: linear-gradient(135deg, #1a1a2e 0%, #2d1b4e 50%, #1a1a2e 100%); border-radius: 20px; padding: 3rem; margin: 2rem 0; border: 1px solid #4a2a6e; text-align: center; }
-        .case-banner h3 { font-size: 2rem; color: #feca57; margin-bottom: 1rem; }
-        .case-banner p { color: #bbb; font-size: 1.1rem; line-height: 1.8; max-width: 700px; margin: 0 auto 1.5rem; }
-        .case-banner .badge { display: inline-block; background: linear-gradient(135deg, #ff6b6b, #feca57); color: #0a0a0a; padding: 0.5rem 1.5rem; border-radius: 30px; font-weight: bold; font-size: 0.9rem; margin-bottom: 1rem; }
-
-        /* CTA */
-        .cta-section { text-align: center; padding: 80px 20px; background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0a 70%); }
-        .cta-section h2 { font-size: 2.5rem; margin-bottom: 1rem; }
-        .cta-section p { color: #888; font-size: 1.2rem; margin-bottom: 2rem; }
-
-        /* Footer */
-        footer { text-align: center; padding: 3rem; color: #555; border-top: 1px solid #1a1a2e; }
-        footer a { color: #48dbfb; text-decoration: none; }
-
-        /* Flow Diagram */
-        .flow { display: flex; align-items: center; justify-content: center; gap: 1rem; margin: 3rem 0; flex-wrap: wrap; }
-        .flow-step { background: linear-gradient(145deg, #1a1a2e, #16213e); border-radius: 12px; padding: 1.5rem; border: 1px solid #2a2a4e; text-align: center; min-width: 150px; }
-        .flow-step .icon { font-size: 2rem; margin-bottom: 0.5rem; }
-        .flow-step .text { color: #bbb; font-size: 0.9rem; }
-        .flow-arrow { color: #48dbfb; font-size: 1.5rem; }
-
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            .stats { grid-template-columns: repeat(2, 1fr); }
-            .flow { flex-direction: column; }
-            .flow-arrow { transform: rotate(90deg); }
-        }
-    </style>
+    <title>天眼 Tianyan — 中国商业预测 GitHub Pages</title>
+    <meta name="description" content="天眼 Tianyan GitHub Pages：展示多Agent商业预测、16个API端点、行业模板、Mimo音视频接入与MediSlim案例详情。">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/github-pages.css">
 </head>
-<body>
+<body class="page-home">
+    <div class="page-aura page-aura-one"></div>
+    <div class="page-aura page-aura-two"></div>
 
-    <!-- Hero -->
-    <div class="hero">
-        <div class="eye-icon">👁️</div>
-        <h1>天眼 Tianyan</h1>
-        <p class="subtitle">商 业 决 策 的 操 作 系 统</p>
-        <p class="tagline">
-            用AI合成人群替代传统调研<br>
-            <strong>72小时</strong>完成<strong>6个月</strong>的市场洞察<br>
-            10万合成人群替你试错，零隐私风险
-        </p>
-        <div class="cta-group">
-            <a href="#case-study" class="cta-btn cta-primary">查看案例 →</a>
-            <a href="https://github.com/MoKangMedical/tianyan" class="cta-btn cta-secondary">GitHub</a>
-        </div>
-    </div>
+    <header class="site-nav">
+        <a class="nav-brand" href="#top">
+            <span class="nav-brand-mark">◉</span>
+            <span>
+                <strong>天眼 Tianyan</strong>
+                <em>Commercial Intelligence for China</em>
+            </span>
+        </a>
+        <nav class="nav-links">
+            <a href="#snapshot">平台概览</a>
+            <a href="#domains">研究域</a>
+            <a href="#pipeline">报告流</a>
+            <a href="#report-skills">能力库</a>
+            <a href="#api-explorer">API Explorer</a>
+            <a href="#templates">行业模板</a>
+            <a href="#case-study">案例详情</a>
+        </nav>
+        <a class="nav-cta" href="cases/medislim/report.html">打开完整案例</a>
+    </header>
 
-    <!-- Case Study -->
-    <div class="section" id="case-study">
-        <h2 class="section-title">📋 实战案例</h2>
-        <p class="section-desc">用天眼预测真实商业场景</p>
-
-        <div class="case-banner">
-            <div class="badge">🎯 首个案例 · 数据驱动</div>
-            <h3>纤姿GLP-1减重胶囊上市预测</h3>
-            <p>
-                MediSlim旗下国产GLP-1减重产品的全链路商业预测。
-                覆盖产品上市、KOL推广、直播带货、电商渠道、小红书种草五个维度，
-                用3000人合成样本模拟一线城市的市场反应。
-            </p>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin: 2rem 0; text-align: center;">
-                <div>
-                    <div style="font-size: 2rem; color: #feca57;">3,000</div>
-                    <div style="color: #888; font-size: 0.9rem;">合成人群样本</div>
+    <main id="top">
+        <section class="hero hero-home">
+            <div class="hero-copy reveal">
+                <p class="kicker">Synthetic Population Intelligence for Launches, Pricing, Channels, and Growth</p>
+                <h1>先模拟市场，再执行策略。</h1>
+                <p class="hero-text">
+                    天眼把合成人群建模、渠道推演、KOL测试、直播预测、政策环境判断、经济趋势研判与麦肯锡式报告输出压缩进同一套工作流。
+                    这个 GitHub Pages 版本不只是宣传页，它能直接展示真实案例、宏观研究能力、API入口与策略结构。
+                </p>
+                <div class="hero-actions">
+                    <a class="button button-primary" href="cases/medislim/report.html">查看完整案例报告</a>
+                    <a class="button button-secondary" href="#api-explorer">浏览 16 个 API</a>
                 </div>
-                <div>
-                    <div style="font-size: 2rem; color: #48dbfb;">8</div>
-                    <div style="color: #888; font-size: 0.9rem;">预测维度</div>
-                </div>
-                <div>
-                    <div style="font-size: 2rem; color: #ff6b6b;">5</div>
-                    <div style="color: #888; font-size: 0.9rem;">渠道分析</div>
-                </div>
-                <div>
-                    <div style="font-size: 2rem; color: #2ecc71;">72h</div>
-                    <div style="color: #888; font-size: 0.9rem;">分析周期</div>
+                <div class="hero-meta">
+                    <span>v1.0.0</span>
+                    <span>119 tests</span>
+                    <span>16 endpoints</span>
+                    <span>5 templates</span>
                 </div>
             </div>
-            <a href="cases/medislim/report.html" class="cta-btn cta-primary">查看完整报告 →</a>
+
+            <div class="hero-visual reveal">
+                <div class="signal-stage">
+                    <div class="signal-ring signal-ring-1"></div>
+                    <div class="signal-ring signal-ring-2"></div>
+                    <div class="signal-ring signal-ring-3"></div>
+                    <div class="signal-core">
+                        <span>天眼</span>
+                        <small>Decision Engine</small>
+                    </div>
+                    <div class="signal-node node-a">
+                        <strong>人群</strong>
+                        <span>Population</span>
+                    </div>
+                    <div class="signal-node node-b">
+                        <strong>KOL</strong>
+                        <span>Influence</span>
+                    </div>
+                    <div class="signal-node node-c">
+                        <strong>渠道</strong>
+                        <span>Channel Mix</span>
+                    </div>
+                    <div class="signal-node node-d">
+                        <strong>报告</strong>
+                        <span>Board Memo</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section reveal" id="snapshot">
+            <div class="section-head">
+                <p class="section-kicker">Platform Snapshot</p>
+                <h2>一个 GitHub Pages，把产品能力讲清楚。</h2>
+                <p class="section-body">
+                    这里直接读取仓库内案例数据，展示购买意愿、渠道排序、直播转化和执行计划。页面本身就是产品说明书。
+                </p>
+            </div>
+
+            <div class="metric-grid">
+                <article class="metric-panel">
+                    <span class="metric-label">案例产品</span>
+                    <strong class="metric-value" id="case-product-name">加载中</strong>
+                    <p class="metric-note" id="case-product-note">读取 MediSlim 案例...</p>
+                </article>
+                <article class="metric-panel">
+                    <span class="metric-label">综合购买意愿</span>
+                    <strong class="metric-value" id="case-purchase-intent">--</strong>
+                    <p class="metric-note" id="case-confidence">置信度 --</p>
+                </article>
+                <article class="metric-panel">
+                    <span class="metric-label">首推渠道</span>
+                    <strong class="metric-value" id="case-top-channel">--</strong>
+                    <p class="metric-note" id="case-top-channel-note">策略建议载入中</p>
+                </article>
+                <article class="metric-panel">
+                    <span class="metric-label">首年收入预测</span>
+                    <strong class="metric-value" id="case-y1-revenue">--</strong>
+                    <p class="metric-note" id="case-y1-customers">目标客户数 --</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section reveal" id="domains">
+            <div class="section-head">
+                <p class="section-kicker">Research Domains</p>
+                <h2>把政策、经济、文化和国家发展能力做成同一套研究界面。</h2>
+                <p class="section-body">
+                    网站展示的不是抽象能力词，而是四类可交付的研究工作台。每个域都明确输入材料、分析问题、输出形态和合规边界。
+                </p>
+            </div>
+
+            <div class="explorer-shell domain-shell">
+                <aside class="endpoint-list" id="domain-list" aria-label="research domains"></aside>
+                <section class="endpoint-detail domain-detail">
+                    <div class="panel-row">
+                        <span class="panel-label" id="domain-kicker">研究域</span>
+                        <span class="tag-pill" id="domain-boundary-tag">合规边界</span>
+                    </div>
+                    <h3 id="domain-title">加载中</h3>
+                    <p class="endpoint-description" id="domain-description"></p>
+
+                    <div class="detail-grid">
+                        <article class="detail-panel">
+                            <span class="panel-label">核心问题</span>
+                            <div class="bullet-stack" id="domain-questions"></div>
+                        </article>
+                        <article class="detail-panel">
+                            <span class="panel-label">输入材料</span>
+                            <div class="bullet-stack" id="domain-materials"></div>
+                        </article>
+                    </div>
+
+                    <div class="detail-grid">
+                        <article class="detail-panel">
+                            <span class="panel-label">客户输出</span>
+                            <div class="bullet-stack" id="domain-outputs"></div>
+                        </article>
+                        <article class="detail-panel">
+                            <span class="panel-label">分析边界</span>
+                            <p id="domain-boundary"></p>
+                        </article>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <section class="section reveal" id="pipeline">
+            <div class="section-head">
+                <p class="section-kicker">Material to McKinsey</p>
+                <h2>任何一份材料进来，都要被转成可判断未来预期的项目材料。</h2>
+                <p class="section-body">
+                    客户给的原始材料可以是政策文件、行业研究、招股书、会议纪要、访谈和舆情。网站要展示我们如何把这些东西变成一个完整的项目工作流。
+                </p>
+            </div>
+
+            <div class="explorer-shell pipeline-shell">
+                <aside class="endpoint-list" id="material-list" aria-label="material pipeline"></aside>
+                <section class="endpoint-detail">
+                    <div class="panel-row">
+                        <span class="panel-label" id="material-kicker">材料类型</span>
+                        <button class="button button-small button-ghost" id="copy-deliverable-button" type="button">复制交付摘要</button>
+                    </div>
+                    <h3 id="material-title">加载中</h3>
+                    <p class="endpoint-description" id="material-description"></p>
+
+                    <div class="detail-grid">
+                        <article class="detail-panel">
+                            <span class="panel-label">抽取信号</span>
+                            <div class="bullet-stack" id="material-signals"></div>
+                        </article>
+                        <article class="detail-panel">
+                            <span class="panel-label">分析动作</span>
+                            <div class="bullet-stack" id="material-analysis"></div>
+                        </article>
+                    </div>
+
+                    <div class="code-grid">
+                        <article class="code-panel">
+                            <span class="panel-label">未来预期输出</span>
+                            <pre id="material-outlook"></pre>
+                        </article>
+                        <article class="code-panel">
+                            <span class="panel-label">麦肯锡式交付</span>
+                            <pre id="material-deliverable"></pre>
+                        </article>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <section class="section reveal">
+            <div class="section-head">
+                <p class="section-kicker">Deliverables</p>
+                <h2>客户看到的应该是项目级材料，不是零散结论。</h2>
+                <p class="section-body">
+                    我们要把每次研究做成一套完整交付：高层摘要、核心洞察、未来预期、风险清单、行动路线和附录证据。
+                </p>
+            </div>
+
+            <div class="deliverable-grid" id="deliverable-grid"></div>
+        </section>
+
+        <section class="section reveal" id="report-skills">
+            <div class="section-head">
+                <p class="section-kicker">Report and Skills Library</p>
+                <h2>把报告沉淀成能力库，把能力库继续做成可复用 skills。</h2>
+                <p class="section-body">
+                    现有材料会被沉淀成两层资产。第一层是可展示的报告库，面向客户与合作方；第二层是可复用的 skills，面向后续分析、报告生产与项目交付。
+                </p>
+            </div>
+
+            <div class="library-shell">
+                <article class="report-panel">
+                    <div class="panel-row">
+                        <span class="panel-label">Report Library</span>
+                        <span class="tag-pill" id="report-library-count">0 reports</span>
+                    </div>
+                    <div class="library-grid" id="report-library-grid"></div>
+                </article>
+
+                <article class="report-panel">
+                    <div class="panel-row">
+                        <span class="panel-label">Skills Library</span>
+                        <span class="tag-pill" id="skill-library-count">0 skills</span>
+                    </div>
+                    <div class="library-grid" id="skill-library-grid"></div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section reveal" id="api-explorer">
+            <div class="section-head">
+                <p class="section-kicker">API Explorer</p>
+                <h2>把 16 个接口做成可浏览的产品面。</h2>
+                <p class="section-body">
+                    GitHub Pages 不能直接跑 FastAPI，但完全可以提前把请求结构、响应形态和落地场景展示出来。
+                </p>
+            </div>
+
+            <div class="explorer-shell">
+                <aside class="endpoint-list" id="endpoint-list" aria-label="API endpoints"></aside>
+                <section class="endpoint-detail">
+                    <div class="endpoint-topline">
+                        <div class="endpoint-badges">
+                            <span class="method-pill" id="endpoint-method">GET</span>
+                            <span class="tag-pill" id="endpoint-tag">core</span>
+                        </div>
+                        <button class="button button-small button-ghost" id="copy-request-button" type="button">复制 cURL</button>
+                    </div>
+                    <h3 id="endpoint-path">/api/health</h3>
+                    <p class="endpoint-description" id="endpoint-description"></p>
+
+                    <div class="detail-grid">
+                        <article class="detail-panel">
+                            <span class="panel-label">适用场景</span>
+                            <p id="endpoint-use-case"></p>
+                        </article>
+                        <article class="detail-panel">
+                            <span class="panel-label">关键返回</span>
+                            <p id="endpoint-returns"></p>
+                        </article>
+                    </div>
+
+                    <div class="code-grid">
+                        <article class="code-panel">
+                            <div class="panel-row">
+                                <span class="panel-label">Request</span>
+                                <button class="inline-copy" id="copy-json-button" type="button">复制 JSON</button>
+                            </div>
+                            <pre id="endpoint-request"></pre>
+                        </article>
+                        <article class="code-panel">
+                            <span class="panel-label">Response Preview</span>
+                            <pre id="endpoint-response"></pre>
+                        </article>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <section class="section reveal" id="templates">
+            <div class="section-head">
+                <p class="section-kicker">Industry Templates</p>
+                <h2>把代码里的预置模板映射成页面能力。</h2>
+                <p class="section-body">
+                    模板不是装饰性的卡片，而是用户从 GitHub Pages 理解“这个平台已经能跑什么”的最短路径。
+                </p>
+            </div>
+
+            <div class="template-grid" id="template-grid"></div>
+        </section>
+
+        <section class="section reveal" id="case-study">
+            <div class="section-head">
+                <p class="section-kicker">Case Detail</p>
+                <h2>MediSlim 案例在主页给预览，在详情页给结论。</h2>
+                <p class="section-body">
+                    主页只展示最值得看的部分：定价曲线、最优内容形态、KOL建议和 16 周执行计划。完整分析单独进报告页。
+                </p>
+            </div>
+
+            <div class="case-preview-shell">
+                <article class="case-summary-panel">
+                    <span class="panel-label">最佳组合</span>
+                    <h3 id="case-best-combo">加载中</h3>
+                    <p id="case-best-combo-note"></p>
+                    <div class="micro-stat-grid">
+                        <div>
+                            <strong id="case-best-price">--</strong>
+                            <span>建议定价</span>
+                        </div>
+                        <div>
+                            <strong id="case-best-style">--</strong>
+                            <span>最佳小红书内容</span>
+                        </div>
+                        <div>
+                            <strong id="case-best-livestream">--</strong>
+                            <span>最佳直播平台</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="case-plan-panel">
+                    <div class="panel-row">
+                        <span class="panel-label">16 周执行计划</span>
+                        <a class="text-link" href="cases/medislim/report.html">打开完整案例</a>
+                    </div>
+                    <div class="timeline-list" id="action-plan-list"></div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section reveal">
+            <div class="section-head">
+                <p class="section-kicker">Workflow</p>
+                <h2>这不是单页宣传，而是静态交付的产品骨架。</h2>
+            </div>
+
+            <div class="workflow-grid">
+                <article>
+                    <span class="step-index">01</span>
+                    <h3>参数化人群</h3>
+                    <p>根据年龄、收入、城市等级、性别与消费行为生成目标市场样本，而不是停留在行业平均数。</p>
+                </article>
+                <article>
+                    <span class="step-index">02</span>
+                    <h3>组合场景</h3>
+                    <p>把定价、渠道、KOL、直播和小红书内容放进同一套推演，而不是分散在多个报告里。</p>
+                </article>
+                <article>
+                    <span class="step-index">03</span>
+                    <h3>生成决策材料</h3>
+                    <p>输出的不只是数值，还包括可执行的阶段动作、预算建议、风险缓释和财务回收周期。</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div>
+            <strong>天眼 Tianyan v1.0.0</strong>
+            <p>119 tests · 16 endpoints · Docker + pyproject + docs</p>
         </div>
-    </div>
-
-    <!-- How It Works -->
-    <div class="section">
-        <h2 class="section-title">⚙️ 工作原理</h2>
-        <p class="section-desc">四步完成商业预测</p>
-
-        <div class="flow">
-            <div class="flow-step">
-                <div class="icon">👥</div>
-                <div class="text"><strong>创建人群</strong><br>基于统计年鉴生成<br>合成目标人群</div>
-            </div>
-            <div class="flow-arrow">→</div>
-            <div class="flow-step">
-                <div class="icon">🎯</div>
-                <div class="text"><strong>定义场景</strong><br>产品/价格/渠道<br>KOL/直播/种草</div>
-            </div>
-            <div class="flow-arrow">→</div>
-            <div class="flow-step">
-                <div class="icon">🤖</div>
-                <div class="text"><strong>AI仿真</strong><br>多Agent模拟<br>每个合成人的决策</div>
-            </div>
-            <div class="flow-arrow">→</div>
-            <div class="flow-step">
-                <div class="icon">📊</div>
-                <div class="text"><strong>预测报告</strong><br>分群洞察 + 建议<br>渠道ROI排名</div>
-            </div>
+        <div class="footer-links">
+            <a href="cases/medislim/report.html">案例详情</a>
+            <a href="docs/strategic_blueprint.md">战略蓝图</a>
+            <a href="https://github.com/MoKangMedical/tianyan">GitHub</a>
         </div>
-    </div>
-
-    <!-- Three Eyes -->
-    <div class="section">
-        <h2 class="section-title">👁️ 三眼产品矩阵</h2>
-        <p class="section-desc">覆盖商业决策的核心场景</p>
-
-        <div class="cards">
-            <div class="card">
-                <div class="card-icon">🛍️</div>
-                <h3>消费眼 Consumer Eye</h3>
-                <ul>
-                    <li>产品上市预测 — 模拟目标人群的购买意愿</li>
-                    <li>广告创意测试 — 预测不同素材的转化率</li>
-                    <li>定价策略优化 — 找到利润最大化的价格点</li>
-                    <li>用户流失预测 — 识别高风险流失人群</li>
-                    <li>品牌舆情模拟 — 预测危机事件的影响</li>
-                </ul>
-            </div>
-            <div class="card">
-                <div class="card-icon">🏛️</div>
-                <h3>政策眼 Policy Eye</h3>
-                <ul>
-                    <li>医保政策影响 — 模拟集采对药企的影响</li>
-                    <li>税收政策效果 — 预测减税对消费的拉动</li>
-                    <li>产业政策评估 — 模拟补贴对行业的影响</li>
-                    <li>民意温度计 — 合成人群对政策的态度</li>
-                    <li>⚠️ 严格去政治化 — 绝不触碰红线</li>
-                </ul>
-            </div>
-            <div class="card">
-                <div class="card-icon">📈</div>
-                <h3>市场眼 Market Eye</h3>
-                <ul>
-                    <li>行业趋势预测 — 未来12个月的市场走向</li>
-                    <li>竞品动态分析 — 模拟竞品策略调整的影响</li>
-                    <li>投资风向标 — 基于合成人群的消费趋势</li>
-                    <li>供应链风险 — 模拟断供/涨价对终端的影响</li>
-                    <li>区域市场差异 — 一线 vs 下沉市场对比</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <!-- China Features -->
-    <div class="section">
-        <h2 class="section-title">🇨🇳 中国特色能力</h2>
-        <p class="section-desc">深耕中国市场的独特场景</p>
-
-        <div class="cards">
-            <div class="card">
-                <div class="card-icon">🌟</div>
-                <h3>KOL效果预测</h3>
-                <ul>
-                    <li>头部/中腰/垂类/素人 四类KOL对比</li>
-                    <li>触达 × 互动 × 转化 三维预测</li>
-                    <li>最优KOL组合推荐</li>
-                    <li>ROI预估（投入产出比）</li>
-                </ul>
-            </div>
-            <div class="card">
-                <div class="card-icon">📺</div>
-                <h3>直播带货预测</h3>
-                <ul>
-                    <li>直播间转化率预估</li>
-                    <li>GMV预测（成交总额）</li>
-                    <li>最优时段/折扣策略</li>
-                    <li>抖音/快手/小红书直播</li>
-                </ul>
-            </div>
-            <div class="card">
-                <div class="card-icon">🛒</div>
-                <h3>电商渠道优化</h3>
-                <ul>
-                    <li>淘宝/京东/拼多多/抖音电商 匹配</li>
-                    <li>渠道ROI排名</li>
-                    <li>品类 × 平台 匹配度分析</li>
-                    <li>多渠道组合策略</li>
-                </ul>
-            </div>
-            <div class="card">
-                <div class="card-icon">📕</div>
-                <h3>小红书种草</h3>
-                <ul>
-                    <li>5种内容风格效果对比</li>
-                    <li>互动率预估</li>
-                    <li>最优受众定位</li>
-                    <li>内容策略建议</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <!-- Speed Comparison -->
-    <div class="section">
-        <h2 class="section-title">⚡ 速度与成本</h2>
-        <p class="section-desc">天眼 vs 传统调研</p>
-
-        <div class="stats">
-            <div class="stat">
-                <div class="number">72h</div>
-                <div class="label">天眼出结果</div>
-            </div>
-            <div class="stat">
-                <div class="number">3-6月</div>
-                <div class="label">传统调研周期</div>
-            </div>
-            <div class="stat">
-                <div class="number">¥5K</div>
-                <div class="label">天眼/次</div>
-            </div>
-            <div class="stat">
-                <div class="number">¥100K+</div>
-                <div class="label">传统调研/次</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Comparison Table -->
-    <div class="section">
-        <h2 class="section-title">🆚 与竞品对比</h2>
-        <p class="section-desc">天眼的差异化优势</p>
-
-        <table class="comparison">
-            <tr>
-                <th>维度</th>
-                <th>Aaru（美国）</th>
-                <th>尼尔森/艾瑞</th>
-                <th class="highlight">天眼</th>
-            </tr>
-            <tr>
-                <td>方法</td>
-                <td>AI仿真</td>
-                <td>人工调研</td>
-                <td class="highlight">AI合成人群仿真</td>
-            </tr>
-            <tr>
-                <td>速度</td>
-                <td>快</td>
-                <td>慢（3-6月）</td>
-                <td class="highlight">快（72h）</td>
-            </tr>
-            <tr>
-                <td>成本</td>
-                <td>高</td>
-                <td>高（¥100K+）</td>
-                <td class="highlight">低（¥5K起）</td>
-            </tr>
-            <tr>
-                <td>样本</td>
-                <td>10万+</td>
-                <td>200-500</td>
-                <td class="highlight">10万+</td>
-            </tr>
-            <tr>
-                <td>中国市场</td>
-                <td>❌</td>
-                <td>✅</td>
-                <td class="highlight">✅ 深耕</td>
-            </tr>
-            <tr>
-                <td>KOL/直播</td>
-                <td>❌</td>
-                <td>部分</td>
-                <td class="highlight">✅ 原生能力</td>
-            </tr>
-            <tr>
-                <td>隐私风险</td>
-                <td>中</td>
-                <td>高（真人数据）</td>
-                <td class="highlight">零（100%合成）</td>
-            </tr>
-            <tr>
-                <td>合规</td>
-                <td>美国标准</td>
-                <td>各有</td>
-                <td class="highlight">PIPL + 数安法</td>
-            </tr>
-        </table>
-    </div>
-
-
-    <!-- Interactive Demo -->
-    <div class="section" id="api">
-        <h2 class="section-title">🔌 REST API · 14个端点</h2>
-        <p class="section-desc">一个API调用完成全链路商业预测</p>
-
-        <div class="cards">
-            <div class="card">
-                <div class="card-icon">🚀</div>
-                <h3>完整预测</h3>
-                <ul>
-                    <li>POST /api/v1/predict/full</li>
-                    <li>一个请求：人群→消费眼→KOL→直播→种草→渠道</li>
-                    <li>返回全链路预测结果</li>
-                </ul>
-                <pre style="background:#0a0a0a;padding:1rem;border-radius:8px;margin-top:1rem;overflow-x:auto;font-size:0.85rem;color:#48dbfb;">curl -X POST http://localhost:8000/api/v1/predict/full \
-  -H "Content-Type: application/json" \
-  -d '{"product_name":"GLP-1减重针","product_price":399}'</pre>
-            </div>
-            <div class="card">
-                <div class="card-icon">📊</div>
-                <h3>麦肯锡报告</h3>
-                <ul>
-                    <li>POST /api/v1/report/generate</li>
-                    <li>自动生成结构化商业分析报告</li>
-                    <li>Markdown + JSON 双格式输出</li>
-                </ul>
-                <pre style="background:#0a0a0a;padding:1rem;border-radius:8px;margin-top:1rem;overflow-x:auto;font-size:0.85rem;color:#48dbfb;">curl -X POST http://localhost:8000/api/v1/report/generate \
-  -H "Content-Type: application/json" \
-  -d '{"product_name":"GLP-1减重针","product_price":399}'</pre>
-            </div>
-            <div class="card">
-                <div class="card-icon">🏭</div>
-                <h3>行业模板</h3>
-                <ul>
-                    <li>GET /api/v1/templates — 5个预置模板</li>
-                    <li>POST /api/v1/template/run — 一键运行</li>
-                    <li>GLP-1 / 保健品 / 护肤 / 远程医疗 / 男性健康</li>
-                </ul>
-                <pre style="background:#0a0a0a;padding:1rem;border-radius:8px;margin-top:1rem;overflow-x:auto;font-size:0.85rem;color:#48dbfb;">curl -X POST http://localhost:8000/api/v1/template/run \
-  -H "Content-Type: application/json" \
-  -d '{"template_key":"glp1_weight_loss",
-  "product_name":"SlimGuard","product_price":399}'</pre>
-            </div>
-        </div>
-
-        <div style="text-align:center;margin-top:2rem;">
-            <a href="https://github.com/MoKangMedical/tianyan" class="cta-btn cta-secondary">📖 完整API文档 (Swagger UI)</a>
-        </div>
-    </div>
-
-    <!-- CTA -->
-    <div class="cta-section">
-        <h2>👁️ 天眼观市，洞察先机</h2>
-        <p>不是预测未来，是让未来在发生之前就被验证</p>
-        <div class="cta-group">
-            <a href="cases/medislim/report.html" class="cta-btn cta-primary">查看MediSlim案例 →</a>
-            <a href="https://github.com/MoKangMedical/tianyan" class="cta-btn cta-secondary">GitHub 仓库</a>
-            <a href="docs/strategic_blueprint.md" class="cta-btn cta-secondary">战略蓝图</a>
-        </div>
-    </div>
-
-    <footer>
-        <p>天眼 Tianyan v1.0.0 · 14 API端点 · 78测试 · 5行业模板</p>
-        <p>MoKangMedical © 2026 · <a href="https://github.com/MoKangMedical/tianyan">GitHub</a></p>
     </footer>
 
+    <script src="assets/home.js" defer></script>
 </body>
 </html>
