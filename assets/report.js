@@ -24,6 +24,7 @@ function escapeHtml(value) {
 }
 
 const AUDIO_SETTINGS_KEY = "tianyan-report-audio-settings";
+const DEFAULT_PUBLIC_AUDIO_API_BASE = "https://tianyan-api.mokangmedical-dev.workers.dev";
 let narrationMaterials = [];
 
 function createBarRow(label, valueText, width) {
@@ -51,11 +52,18 @@ function createFactItem(title, body, note = "") {
 }
 
 function inferDefaultAudioApiBase() {
+  const isGitHubPagesHost = window.location.hostname.endsWith("github.io");
   const saved = window.localStorage.getItem(AUDIO_SETTINGS_KEY);
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
       if (parsed.apiBase) {
+        if (
+          isGitHubPagesHost
+          && /^https?:\/\/(127\.0\.0\.1|localhost):8000$/i.test(parsed.apiBase)
+        ) {
+          return DEFAULT_PUBLIC_AUDIO_API_BASE;
+        }
         return parsed.apiBase;
       }
     } catch {
@@ -70,7 +78,7 @@ function inferDefaultAudioApiBase() {
     return window.location.origin;
   }
 
-  return "http://127.0.0.1:8000";
+  return DEFAULT_PUBLIC_AUDIO_API_BASE;
 }
 
 function loadAudioSettings() {

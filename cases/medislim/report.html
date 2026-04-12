@@ -96,7 +96,7 @@
                     <div class="studio-form">
                         <label class="studio-field">
                             <span>音频接口地址</span>
-                            <input id="audio-api-base" class="studio-input" type="text" placeholder="http://127.0.0.1:8000">
+                            <input id="audio-api-base" class="studio-input" type="text" placeholder="https://tianyan-api.mokangmedical-dev.workers.dev">
                         </label>
                         <label class="studio-field">
                             <span>音色</span>
@@ -116,7 +116,7 @@
                         <button class="button button-small button-ghost" id="copy-audio-endpoint" type="button">复制接口地址</button>
                     </div>
                     <p class="endpoint-description" id="audio-config-note">
-                        正在探测音频服务健康状态。默认会连接本地 `http://127.0.0.1:8000`，如果你把天眼后端部署到别处，在这里改掉即可。
+                        正在探测音频服务健康状态。GitHub Pages 默认会连接公网 Tianyan API；如果你在本地调试，可改回 `http://127.0.0.1:8000`。
                     </p>
                     <div class="viewer-facts studio-facts">
                         <article class="viewer-fact">
