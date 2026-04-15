@@ -7,9 +7,19 @@
 
 from __future__ import annotations
 
+import logging
 import time
 import traceback
+from contextlib import asynccontextmanager
 from typing import Any, Optional
+
+# 日志配置
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+logger = logging.getLogger("tianyan.server")
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -103,10 +113,17 @@ class SeedingRequest(BaseModel):
 # FastAPI 应用
 # ============================================================
 
+@asynccontextmanager
+async def _lifespan(app):
+    logger.info("天眼 Tianyan v0.3.0 启动, 端点数: 14")
+    yield
+    logger.info("天眼 Tianyan 已关闭")
+
 app = FastAPI(
     title="天眼 Tianyan",
     description="中国版商业预测平台 — 基于多Agent人群模拟的商业预测引擎",
     version="0.3.0",
+    lifespan=_lifespan,
 )
 
 # CORS 配置
@@ -141,15 +158,21 @@ async def rate_limit_and_log(request, call_next):
     _rate_limit_store[client_ip] = [t for t in _rate_limit_store[client_ip] if now - t < window]
 
     if len(_rate_limit_store[client_ip]) >= max_requests:
+        logger.warning("限流触发: ip=%s path=%s", client_ip, request.url.path)
         return JSONResponse(status_code=429, content={"detail": "请求过于频繁，请稍后再试"})
 
     _rate_limit_store[client_ip].append(now)
 
     # 请求日志
     start = _time.time()
-    response = await call_next(request)
+    try:
+        response = await call_next(request)
+    except Exception:
+        logger.exception("请求处理异常: %s %s", request.method, request.url.path)
+        raise
     duration = _time.time() - start
-    print(f"[{_time.strftime('%H:%M:%S')}] {request.method} {request.url.path} -> {response.status_code} ({duration:.3f}s)")
+    log_fn = logger.warning if response.status_code >= 400 else logger.info
+    log_fn("请求: %s %s -> %s (%.3fs)", request.method, request.url.path, response.status_code, duration)
     return response
 
 
@@ -685,6 +708,7 @@ class FullPredictionRequest(BaseModel):
 @app.post("/api/v1/predict/full")
 async def full_prediction(req: FullPredictionRequest):
     """完整预测流程：人群→消费眼→KOL→直播→种草→渠道。"""
+    logger.info("完整预测开始: product=%s price=%.0f size=%d", req.product_name, req.product_price, req.population_size)
     # 决策检查点：预览所有子操作
     sub_ops = ["消费眼(产品上市)", "消费眼(定价优化)"]
     if req.include_kol:
@@ -787,10 +811,13 @@ async def full_prediction(req: FullPredictionRequest):
             parameters=req.model_dump(),
             checkpoint_results=[checkpoint.to_dict()],
         ))
+        logger.info("完整预测完成: product=%s", req.product_name)
         return result
     except ComplianceError as e:
+        logger.warning("合规拦截: %s", e)
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
+        logger.exception("完整预测异常: %s", req.product_name)
         raise HTTPException(status_code=500, detail=str(e))
 
 
