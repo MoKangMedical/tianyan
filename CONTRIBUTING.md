@@ -1,56 +1,36 @@
-# Contributing to Tianyan
+# Contributing
 
-感谢你对天眼平台的兴趣！
+Thank you for your interest in contributing! 🎉
 
-## 开发环境
+## How to Contribute
+
+1. **Fork** the repository
+2. **Create** a feature branch: `git checkout -b feat/amazing-feature`
+3. **Commit** your changes: `git commit -m 'feat: add amazing feature'`
+4. **Push** to the branch: `git push origin feat/amazing-feature`
+5. **Open** a Pull Request
+
+## Development Setup
 
 ```bash
 git clone https://github.com/MoKangMedical/tianyan.git
 cd tianyan
-pip install -e ".[dev]"
-python -m pytest tests/ -v
+# Follow README.md for specific setup instructions
 ```
 
-## 代码规范
+## Code Standards
 
-- Python 3.11+，使用类型注解
-- 所有新功能必须有测试
-- 测试覆盖率达到80%以上
-- 遵循PEP 8代码风格
+- Follow existing code style
+- Add tests for new features
+- Update documentation as needed
+- Write clear commit messages (Conventional Commits)
 
-## 提交规范
+## Issues
 
-```
-feat: 新功能
-fix: 修复bug
-docs: 文档更新
-test: 测试相关
-refactor: 重构
-```
+- Use [GitHub Issues](../../issues) for bug reports and feature requests
+- Check existing issues before creating new ones
+- Provide reproduction steps for bugs
 
-## 测试
+## License
 
-```bash
-# 运行全部测试
-python -m pytest tests/ -v
-
-# 运行特定测试文件
-python -m pytest tests/test_demo_server.py -v
-
-# 带覆盖率
-python -m pytest tests/ --cov=tianyan --cov-report=html
-```
-
-## 部署
-
-```bash
-# Docker
-docker-compose up -d
-
-# 手动
-python demo_server.py
-```
-
-## 许可证
-
-MIT License
+By contributing, you agree that your contributions will be licensed under the MIT License.
