@@ -226,3 +226,17 @@ cd tianyan && python3 demo_server.py
 ## 📄 License
 
 MIT License
+
+---
+
+## ⭐ Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=MoKangMedical/tianyan&type=Date)](https://star-history.com/#MoKangMedical/tianyan&Date)
+
+## 🤝 Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## 📄 License
+
+MIT License
