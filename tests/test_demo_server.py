@@ -222,3 +222,31 @@ class TestCompliance:
             "population_size": 10,
         })
         assert r.status_code in [200, 400]
+
+
+class TestCheckpoints:
+    def test_audit_log(self):
+        """审计日志端点返回正确结构。"""
+        r = client.get("/api/v1/checkpoints/audit")
+        assert r.status_code == 200
+        d = r.json()
+        assert d["success"] is True
+        assert "stats" in d
+
+    def test_preview_population(self):
+        """dry-run预览人口生成操作。"""
+        r = client.post("/api/v1/checkpoints/preview", json={
+            "operation": "population", "population_size": 5000,
+        })
+        assert r.status_code == 200
+        assert r.json()["mode"] == "dry_run"
+
+    def test_compare_dry_run(self):
+        """产品对比支持dry-run模式。"""
+        r = client.post("/api/v1/compare", json={
+            "product_a": "A", "product_b": "B",
+            "price_a": 299, "price_b": 399,
+            "population_size": 50, "dry_run": True,
+        })
+        assert r.status_code == 200
+        assert r.json()["mode"] == "dry_run"
