@@ -1,8 +1,29 @@
-__pycache__/\n*.pyc\n*.egg-info/\n.venv/\n.DS_Store\n
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+
+# IDE & OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Testing
 .pytest_cache/
-__pycache__/
+.coverage
+htmlcov/
+
+# Data
 data/*.db
-__pycache__/
-.github/
+*.log
+.github/workflows/
