@@ -18,6 +18,12 @@ from .mimo_adapter import MIMOAdapter, MockMIMOAdapter, MIMOConfig
 from .report_generator import McKinseyReportGenerator, McKinseyReport, ReportSection
 from .persistence import PersistenceLayer, SimulationRun
 from .realtime_feeds import RealtimeFeedManager, StockFeedAdapter, NewsFeedAdapter, PolicyFeedAdapter
+from .checkpoints import (
+    CheckpointResult, OperationAudit, AuditLog,
+    validate_population_params, validate_prediction_params, validate_batch_operation,
+    dry_run_population, dry_run_prediction,
+    audit_log,
+)
 from .industry_templates import (
     get_template, list_templates, get_all_template_keys,
     IndustryTemplate, TEMPLATES,
@@ -65,6 +71,16 @@ __all__ = [
     "StockFeedAdapter",
     "NewsFeedAdapter",
     "PolicyFeedAdapter",
+    # 决策检查点
+    "CheckpointResult",
+    "OperationAudit",
+    "AuditLog",
+    "validate_population_params",
+    "validate_prediction_params",
+    "validate_batch_operation",
+    "dry_run_population",
+    "dry_run_prediction",
+    "audit_log",
     # 行业模板
     "get_template",
     "list_templates",

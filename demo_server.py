@@ -30,6 +30,12 @@ from tianyan import (
     Scenario,
     ScenarioEngine,
     McKinseyReportGenerator,
+    validate_population_params,
+    validate_prediction_params,
+    dry_run_population,
+    dry_run_prediction,
+    OperationAudit,
+    audit_log,
 )
 
 # ============================================================
@@ -44,6 +50,7 @@ class PopulationRequest(BaseModel):
     age_max: int = Field(default=65, ge=0, le=100)
     gender: str = Field(default="all", description="性别筛选: all/male/female")
     seed: Optional[int] = Field(default=None, description="随机种子")
+    dry_run: bool = Field(default=False, description="仅预览，不实际执行")
 
 
 class SimulationRequest(BaseModel):
@@ -51,6 +58,7 @@ class SimulationRequest(BaseModel):
     scenario_description: str = Field(..., description="场景描述")
     population_size: int = Field(default=500, ge=1, le=10000)
     rounds: int = Field(default=1, ge=1, le=5)
+    dry_run: bool = Field(default=False, description="仅预览，不实际执行")
 
 
 class KOLRequest(BaseModel):
@@ -59,6 +67,7 @@ class KOLRequest(BaseModel):
     product_price: float = Field(ge=0)
     kol_type: str = Field(default="素人种草号", description="KOL类型")
     population_size: int = Field(default=1000, ge=1, le=10000)
+    dry_run: bool = Field(default=False, description="仅预览，不实际执行")
 
 
 class LivestreamRequest(BaseModel):
@@ -68,6 +77,7 @@ class LivestreamRequest(BaseModel):
     platform: str = Field(default="抖音", description="直播平台")
     discount_rate: float = Field(default=0.2, ge=0, le=1)
     population_size: int = Field(default=1000, ge=1, le=10000)
+    dry_run: bool = Field(default=False, description="仅预览，不实际执行")
 
 
 class ChannelRequest(BaseModel):
@@ -76,6 +86,7 @@ class ChannelRequest(BaseModel):
     product_price: float = Field(ge=0)
     product_category: str
     population_size: int = Field(default=1000, ge=1, le=10000)
+    dry_run: bool = Field(default=False, description="仅预览，不实际执行")
 
 
 class SeedingRequest(BaseModel):
@@ -85,6 +96,7 @@ class SeedingRequest(BaseModel):
     content_style: str = Field(default="种草笔记")
     num_notes: int = Field(default=100, ge=1, le=10000)
     population_size: int = Field(default=1000, ge=1, le=10000)
+    dry_run: bool = Field(default=False, description="仅预览，不实际执行")
 
 
 # ============================================================
@@ -419,6 +431,32 @@ async def health_check():
 @app.post("/api/population")
 async def create_population(req: PopulationRequest):
     """创建合成人群。"""
+    # 决策检查点：参数确认
+    checkpoint = validate_population_params(
+        size=req.size, region=req.region,
+        age_range=(req.age_min, req.age_max),
+    )
+    if not checkpoint.approved:
+        raise HTTPException(status_code=400, detail={
+            "checkpoint_failed": True,
+            "errors": checkpoint.errors,
+        })
+
+    # Dry-run 模式：仅返回预览
+    if req.dry_run:
+        audit_log.record(OperationAudit(
+            operation="create_population",
+            parameters=req.model_dump(),
+            dry_run=True,
+            checkpoint_results=[checkpoint.to_dict()],
+        ))
+        return {
+            "success": True,
+            "mode": "dry_run",
+            "checkpoint": checkpoint.to_dict(),
+            "message": f"预览：将生成 {req.size} 人（地区: {req.region}），预计耗时 {checkpoint.estimated_cost.get('time_seconds', 0)}s",
+        }
+
     try:
         pop = SyntheticPopulation(
             size=req.size,
@@ -443,6 +481,11 @@ async def create_population(req: PopulationRequest):
             }
             for p in pop.profiles[:5]
         ]
+        audit_log.record(OperationAudit(
+            operation="create_population",
+            parameters=req.model_dump(),
+            checkpoint_results=[checkpoint.to_dict()],
+        ))
         return {
             "success": True,
             "summary": summary,
@@ -484,6 +527,17 @@ async def run_simulation(req: SimulationRequest):
 @app.post("/api/kol")
 async def kol_prediction(req: KOLRequest):
     """KOL效果预测。"""
+    # 决策检查点：参数确认
+    checkpoint = validate_prediction_params(
+        product_name=req.product_name, price=req.product_price,
+        population_size=req.population_size,
+        sub_operations=[f"KOL效果预测({req.kol_type})"],
+    )
+    if not checkpoint.approved:
+        raise HTTPException(status_code=400, detail={"checkpoint_failed": True, "errors": checkpoint.errors})
+    if req.dry_run:
+        return {"success": True, "mode": "dry_run", "checkpoint": checkpoint.to_dict()}
+
     try:
         pop = SyntheticPopulation(size=req.population_size, seed=42)
         engine = ChineseScenarioEngine(pop)
@@ -513,6 +567,16 @@ async def kol_prediction(req: KOLRequest):
 @app.post("/api/livestream")
 async def livestream_prediction(req: LivestreamRequest):
     """直播带货预测。"""
+    checkpoint = validate_prediction_params(
+        product_name=req.product_name, price=req.product_price,
+        population_size=req.population_size,
+        sub_operations=[f"直播带货预测({req.platform})"],
+    )
+    if not checkpoint.approved:
+        raise HTTPException(status_code=400, detail={"checkpoint_failed": True, "errors": checkpoint.errors})
+    if req.dry_run:
+        return {"success": True, "mode": "dry_run", "checkpoint": checkpoint.to_dict()}
+
     try:
         pop = SyntheticPopulation(size=req.population_size, seed=42)
         engine = ChineseScenarioEngine(pop)
@@ -542,6 +606,16 @@ async def livestream_prediction(req: LivestreamRequest):
 @app.post("/api/channel")
 async def channel_optimization(req: ChannelRequest):
     """电商渠道优化。"""
+    checkpoint = validate_prediction_params(
+        product_name=req.product_name, price=req.product_price,
+        population_size=req.population_size,
+        sub_operations=["电商渠道优化"],
+    )
+    if not checkpoint.approved:
+        raise HTTPException(status_code=400, detail={"checkpoint_failed": True, "errors": checkpoint.errors})
+    if req.dry_run:
+        return {"success": True, "mode": "dry_run", "checkpoint": checkpoint.to_dict()}
+
     try:
         pop = SyntheticPopulation(size=req.population_size, seed=42)
         engine = ChineseScenarioEngine(pop)
@@ -560,6 +634,16 @@ async def channel_optimization(req: ChannelRequest):
 @app.post("/api/seeding")
 async def seeding_prediction(req: SeedingRequest):
     """小红书种草预测。"""
+    checkpoint = validate_prediction_params(
+        product_name=req.product_name, price=req.product_price,
+        population_size=req.population_size,
+        sub_operations=[f"小红书种草({req.content_style}, {req.num_notes}篇)"],
+    )
+    if not checkpoint.approved:
+        raise HTTPException(status_code=400, detail={"checkpoint_failed": True, "errors": checkpoint.errors})
+    if req.dry_run:
+        return {"success": True, "mode": "dry_run", "checkpoint": checkpoint.to_dict()}
+
     try:
         pop = SyntheticPopulation(size=req.population_size, seed=42)
         engine = ChineseScenarioEngine(pop)
@@ -595,11 +679,52 @@ class FullPredictionRequest(BaseModel):
     include_kol: bool = Field(default=True)
     include_livestream: bool = Field(default=True)
     include_seeding: bool = Field(default=True)
+    dry_run: bool = Field(default=False, description="仅预览，不实际执行")
 
 
 @app.post("/api/v1/predict/full")
 async def full_prediction(req: FullPredictionRequest):
     """完整预测流程：人群→消费眼→KOL→直播→种草→渠道。"""
+    # 决策检查点：预览所有子操作
+    sub_ops = ["消费眼(产品上市)", "消费眼(定价优化)"]
+    if req.include_kol:
+        sub_ops.extend(["KOL(头部博主)", "KOL(垂类博主)", "KOL(素人种草)"])
+    if req.include_livestream:
+        sub_ops.append("直播带货预测")
+    if req.include_seeding:
+        sub_ops.append("小红书种草预测")
+    sub_ops.append("电商渠道优化")
+
+    checkpoint = validate_prediction_params(
+        product_name=req.product_name,
+        price=req.product_price,
+        population_size=req.population_size,
+        sub_operations=sub_ops,
+    )
+    if not checkpoint.approved:
+        raise HTTPException(status_code=400, detail={
+            "checkpoint_failed": True,
+            "errors": checkpoint.errors,
+        })
+
+    # Dry-run 模式：返回完整预览
+    if req.dry_run:
+        audit_log.record(OperationAudit(
+            operation="full_prediction",
+            parameters=req.model_dump(),
+            dry_run=True,
+            checkpoint_results=[checkpoint.to_dict()],
+        ))
+        return {
+            "success": True,
+            "mode": "dry_run",
+            "checkpoint": checkpoint.to_dict(),
+            "message": (
+                f"预览：将对「{req.product_name}」(¥{req.product_price:,.0f}) 执行 {len(sub_ops)} 项子操作，"
+                f"人群 {req.population_size} 人，预计耗时 {checkpoint.estimated_cost.get('time_seconds', 0)}s"
+            ),
+        }
+
     try:
         pop = SyntheticPopulation(
             size=req.population_size, region=req.region,
@@ -656,6 +781,12 @@ async def full_prediction(req: FullPredictionRequest):
             }
         ce = ChineseScenarioEngine(pop)
         result["channels"] = ce.optimize_ecommerce_channel(req.product_name, req.product_price, req.category)
+
+        audit_log.record(OperationAudit(
+            operation="full_prediction",
+            parameters=req.model_dump(),
+            checkpoint_results=[checkpoint.to_dict()],
+        ))
         return result
     except ComplianceError as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -738,11 +869,20 @@ class CompareRequest(BaseModel):
     price_b: float = Field(ge=0)
     category: str = Field(default="消费医疗")
     population_size: int = Field(default=1000, ge=1, le=50000)
+    dry_run: bool = Field(default=False, description="仅预览，不实际执行")
 
 
 @app.post("/api/v1/compare")
 async def compare_products(req: CompareRequest):
     """对比两个产品。"""
+    cp_a = validate_prediction_params(req.product_a, req.price_a, req.population_size, ["产品A对比"])
+    cp_b = validate_prediction_params(req.product_b, req.price_b, req.population_size, ["产品B对比"])
+    if not (cp_a.approved and cp_b.approved):
+        raise HTTPException(status_code=400, detail={"checkpoint_failed": True, "errors": cp_a.errors + cp_b.errors})
+    if req.dry_run:
+        return {"success": True, "mode": "dry_run",
+                "checkpoint": {"product_a": cp_a.to_dict(), "product_b": cp_b.to_dict()}}
+
     try:
         pop = SyntheticPopulation(size=req.population_size, seed=42)
         eye = ConsumerEye()
@@ -755,6 +895,56 @@ async def compare_products(req: CompareRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+
+# ============================================================
+# 决策检查点 & 审计端点
+# ============================================================
+
+
+@app.get("/api/v1/checkpoints/audit")
+async def get_audit_log(n: int = 20):
+    """获取操作审计日志。"""
+    return {
+        "success": True,
+        "stats": audit_log.stats(),
+        "recent": audit_log.recent(n),
+    }
+
+
+class DryRunRequest(BaseModel):
+    """通用 Dry-run 预览请求。"""
+    operation: str = Field(..., description="操作类型: population / full_prediction / kol / livestream / channel / seeding")
+    product_name: str = Field(default="")
+    product_price: float = Field(default=0, ge=0)
+    population_size: int = Field(default=1000, ge=1, le=50000)
+    include_kol: bool = Field(default=False)
+    include_livestream: bool = Field(default=False)
+    include_seeding: bool = Field(default=False)
+
+
+@app.post("/api/v1/checkpoints/preview")
+async def preview_operation(req: DryRunRequest):
+    """通用预览端点 — Dry-run 任意操作，返回参数校验 + 资源预估。"""
+    if req.operation == "population":
+        result = dry_run_population(req.population_size)
+    elif req.operation == "full_prediction":
+        result = dry_run_prediction(
+            product_name=req.product_name,
+            price=req.product_price,
+            population_size=req.population_size,
+            include_kol=req.include_kol,
+            include_livestream=req.include_livestream,
+            include_seeding=req.include_seeding,
+        )
+    else:
+        result = {
+            "mode": "dry_run",
+            "operation": req.operation,
+            "message": f"操作类型 '{req.operation}' 的预览暂未实现",
+            "will_execute": False,
+        }
+    return {"success": True, **result}
 
 
 # ============================================================
