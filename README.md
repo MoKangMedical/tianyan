@@ -1,270 +1,277 @@
-# 👁️ 天眼 (Tianyan) — 中国版商业预测平台
+# tianyan
 
-**基于多Agent人群模拟的商业预测引擎**
+👁️ 天眼 — Multi-agent population simulation for China market forecasting. 10K+ virtual consumers.
 
-> 天眼观市，洞察先机。
-> 用AI合成人群替代传统调研，72小时完成6个月的市场洞察。
+## 项目简介
+
+这是一个医疗AI项目，致力于通过人工智能技术解决医疗健康领域的挑战。
+
+## 功能特性
+
+### 核心功能
+- 🏥 医疗AI核心功能
+- 🔬 智能诊断与分析
+- 📊 数据可视化与报告
+- 🤖 多模态交互支持
+- 🔒 数据安全与隐私保护
+
+### 技术特性
+- 🚀 高性能计算
+- 📈 可扩展架构
+- 🔄 实时数据处理
+- 🌐 分布式部署
+- 📱 多平台支持
+
+## 技术栈
+
+### 后端技术
+- **框架**: Python FastAPI, Django, Flask
+- **AI框架**: TensorFlow, PyTorch, Scikit-learn
+- **数据库**: PostgreSQL, MongoDB, Redis
+- **消息队列**: RabbitMQ, Kafka
+- **容器化**: Docker, Kubernetes
+
+### 前端技术
+- **框架**: React, Vue.js, Angular
+- **UI库**: Ant Design, Material-UI, Element UI
+- **可视化**: D3.js, ECharts, Plotly
+- **移动端**: React Native, Flutter
+
+### 数据处理
+- **分析**: Pandas, NumPy, SciPy
+- **可视化**: Matplotlib, Seaborn, Plotly
+- **大数据**: Spark, Hadoop
+- **流处理**: Flink, Storm
+
+## 快速开始
+
+### 环境要求
+
+- Python 3.9+
+- Node.js 16+
+- Docker 20+
+- Git 2.30+
+
+### 安装步骤
+
+1. **克隆仓库**
+```bash
+git clone https://github.com/MoKangMedical/tianyan.git
+cd tianyan
+```
+
+2. **后端设置**
+```bash
+# 创建虚拟环境
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# venv\Scripts\activate  # Windows
+
+# 安装依赖
+pip install -r requirements.txt
+
+# 配置环境变量
+cp .env.example .env
+# 编辑.env文件，配置数据库连接等
+```
+
+3. **前端设置**
+```bash
+cd frontend
+npm install
+npm run build
+```
+
+4. **数据库设置**
+```bash
+# 初始化数据库
+python manage.py migrate
+python manage.py createsuperuser
+```
+
+5. **启动服务**
+```bash
+# 使用Docker Compose（推荐）
+docker-compose up -d
+
+# 或手动启动
+python manage.py runserver
+```
+
+## 项目结构
+
+```
+tianyan/
+├── backend/                 # 后端代码
+│   ├── api/                # API接口
+│   ├── models/             # 数据模型
+│   ├── services/           # 业务逻辑
+│   ├── utils/              # 工具函数
+│   └── tests/              # 测试用例
+├── frontend/               # 前端代码
+│   ├── src/               # 源代码
+│   ├── public/            # 静态资源
+│   └── package.json       # 依赖配置
+├── ai-engine/             # AI引擎
+│   ├── models/           # AI模型
+│   ├── training/         # 训练脚本
+│   └── inference/        # 推理服务
+├── data/                  # 数据存储
+│   ├── raw/              # 原始数据
+│   ├── processed/        # 处理后的数据
+│   └── models/           # 训练好的模型
+├── docs/                  # 项目文档
+│   ├── api/              # API文档
+│   ├── user/             # 用户手册
+│   └── dev/              # 开发文档
+├── scripts/               # 脚本工具
+│   ├── deploy/           # 部署脚本
+│   ├── data/             # 数据处理脚本
+│   └── utils/            # 工具脚本
+├── tests/                 # 测试代码
+├── docker-compose.yml     # Docker编排
+├── Dockerfile            # Docker配置
+├── requirements.txt      # Python依赖
+├── .env.example          # 环境变量示例
+├── .gitignore           # Git忽略文件
+└── README.md            # 项目说明
+```
+
+## API文档
+
+### 主要接口
+
+#### 基础接口
+- `GET /` - 首页
+- `GET /health` - 健康检查
+- `GET /api/v1/status` - 系统状态
+
+#### 数据接口
+- `GET /api/v1/data` - 获取数据列表
+- `POST /api/v1/data` - 上传数据
+- `GET /api/v1/data/<built-in function id>` - 获取特定数据
+
+#### 分析接口
+- `POST /api/v1/analyze` - 数据分析
+- `GET /api/v1/analyze/<built-in function id>` - 获取分析结果
+- `GET /api/v1/reports` - 获取报告列表
+
+#### 用户接口
+- `POST /api/v1/auth/login` - 用户登录
+- `POST /api/v1/auth/register` - 用户注册
+- `GET /api/v1/users/me` - 获取当前用户信息
+
+### 详细文档
+
+启动服务后，访问以下地址查看完整API文档：
+
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
+- **OpenAPI JSON**: http://localhost:8000/openapi.json
+
+## 配置说明
+
+### 环境变量
+
+创建 `.env` 文件并配置以下变量：
+
+```bash
+# 基础配置
+DEBUG=True
+SECRET_KEY=your-secret-key
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+# 数据库配置
+DATABASE_URL=postgresql://user:password@localhost:5432/dbname
+REDIS_URL=redis://localhost:6379/0
+
+# AI服务配置
+OPENAI_API_KEY=your-openai-key
+HUGGINGFACE_TOKEN=your-hf-token
+
+# 文件存储配置
+AWS_ACCESS_KEY_ID=your-aws-key
+AWS_SECRET_ACCESS_KEY=your-aws-secret
+AWS_STORAGE_BUCKET_NAME=your-bucket-name
+
+# 邮件配置
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_HOST_USER=your-email@gmail.com
+EMAIL_HOST_PASSWORD=your-email-password
+```
+
+## 部署指南
+
+### Docker部署（推荐）
+
+1. **构建镜像**
+```bash
+docker build -t tianyan .
+```
+
+2. **运行容器**
+```bash
+docker run -d -p 8000:8000 --name tianyan tianyan
+```
+
+3. **使用Docker Compose**
+```bash
+docker-compose up -d
+```
+
+## 测试
+
+### 运行测试
+
+```bash
+# 运行所有测试
+python -m pytest tests/
+
+# 运行特定测试
+python -m pytest tests/test_api.py
+
+# 生成测试覆盖率报告
+python -m pytest --cov=app tests/
+```
+
+## 贡献指南
+
+我们欢迎任何形式的贡献！请遵循以下步骤：
+
+1. **Fork本仓库**
+2. **创建特性分支**
+```bash
+git checkout -b feature/AmazingFeature
+```
+
+3. **提交更改**
+```bash
+git commit -m 'Add some AmazingFeature'
+```
+
+4. **推送到分支**
+```bash
+git push origin feature/AmazingFeature
+```
+
+5. **创建Pull Request**
+
+## 许可证
+
+本项目采用 [MIT License](LICENSE) 许可证。
+
+## 联系方式
+
+- **项目维护者**: MoKangMedical
+- **邮箱**: contact@mokangmedical.com
+- **项目主页**: https://github.com/MoKangMedical/tianyan
+- **问题反馈**: https://github.com/MoKangMedical/tianyan/issues
+
+## 致谢
+
+感谢所有为这个项目做出贡献的开发者和医疗领域专家！
 
 ---
 
-## 🧠 技术哲学：Harness理论
-
-> **在AI领域，Harness（环境设计）比模型本身更重要。优秀的Harness设计（工具链+信息格式+上下文管理+失败恢复+结果验证）能使性能提升64%。**
-
-天眼的本质是**商业预测Harness**——不是堆更贵的AI模型，而是设计好从合成人群到商业洞察的全流程：
-
-- **合成人群Harness**：统计年鉴+电商画像+社交图谱 → 高保真合成人口
-- **行为模拟Harness**：人口Agent→行为Agent→交互Agent→汇聚Agent = 多层级仿真
-- **预测验证Harness**：模拟结果→历史校准→置信区间→报告生成 = 可信预测
-- **合规Harness**：PIPL合规+数据脱敏+审计日志 = 安全运行
-
-**护城河来源**：商业预测的Harness设计，而非AI模型本身。
-
-## 💼 商业哲学：红杉论点
-
-> **下一代万亿美元公司是伪装成服务公司的软件公司。从卖工具到卖结果。**
-
-天眼不卖模拟工具或数据分析API——卖的是**商业决策的结果**：产品会不会火、广告怎么投、市场怎么进。客户不需要理解多Agent模拟原理，只需要输入产品信息，就能获得麦肯锡级的市场洞察报告。
-
-## 🧭 理论宪法关联
-
-天眼遵循莫康医学理论宪法（THEORETICAL_CONSTITUTION.md）四卷八章统一框架：
-
-- **认知论**：鉴别诊断式决策 → 多维度商业风险排查（消费/政策/市场三眼矩阵）
-- **方法论**：Harness理论 → 商业预测Harness（合成人群+行为模拟+预测验证+合规层）
-- **价值论**：红杉论点 → 卖商业决策结果（不是卖数据分析工具）
-- **价值论**：思想基础设施理论 → Level 4 商业智能基础设施
-
-## 🎯 一句话
-
-天眼 = Aaru的中国版 —— 砍掉政治预测，深耕商业模拟，合规先行。
-
-## 🏗️ 架构
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     天眼 Tianyan                              │
-├──────────────────┬──────────────────┬────────────────────────┤
-│   消费眼 Consumer │   政策眼 Policy   │   市场眼 Market        │
-│   产品预测        │   政策影响评估     │   行业趋势预测          │
-│   广告优化        │   民意温度计       │   竞品动态              │
-│   品牌舆情        │   风险预警         │   投资风向              │
-├──────────────────┴──────────────────┴────────────────────────┤
-│              多Agent人群模拟引擎 (Simulation Engine)           │
-│     人口Agent → 行为Agent → 交互Agent → 汇聚Agent             │
-├─────────────────────────────────────────────────────────────┤
-│              合成人群工厂 (Synthetic Population)               │
-│   统计年鉴 + 电商画像 + 社交图谱 + 消费行为（全合规合成数据）    │
-├─────────────────────────────────────────────────────────────┤
-│              数据合规层 (Compliance Layer)                     │
-│   PIPL合规 + 数安法 + 算法备案 + 数据脱敏 + 审计日志           │
-├─────────────────────────────────────────────────────────────┤
-│              AI推理层 (Model Provider)                        │
-│         MIMO API（无限额度） + Ollama本地 + 可插拔             │
-└─────────────────────────────────────────────────────────────┘
-```
-
-## ⚡ Quick Start
-
-```python
-from tianyan import ConsumerEye, SyntheticPopulation
-
-# 创建合成人群（一线城市25-35岁女性）
-population = SyntheticPopulation(
-    region="一线城市",
-    age_range=(25, 35),
-    gender="female",
-    size=5000,
-)
-
-# 创建消费预测引擎
-eye = ConsumerEye(model_provider="mimo")
-
-# 模拟新产品上市反应
-result = eye.predict(
-    scenario="一款定价299元的国产GLP-1减重产品上市",
-    population=population,
-    metrics=["购买意愿", "价格敏感度", "渠道偏好"],
-)
-
-print(f"预测购买率: {result.purchase_intent:.1%}")
-print(f"价格接受度: {result.price_acceptance:.1%}")
-print(f"最优渠道: {result.best_channel}")
-```
-
-## 📦 三眼产品矩阵
-
-### 消费眼 (Consumer Eye)
-- 产品上市预测
-- 广告创意测试
-- 品牌舆情模拟
-- 用户流失预测
-- 定价策略优化
-
-### 政策眼 (Policy Eye)
-- 政策影响评估（如：集采对药企的影响）
-- 民意温度计（政策发布后的社会反应）
-- 风险预警系统
-- ⚠️ 严格去政治化：不预测人事变动，不触碰敏感话题
-
-### 市场眼 (Market Eye)
-- 行业趋势预测
-- 竞品动态分析
-- 投资风向标
-- 供应链风险评估
-
-## 🔒 合规设计
-
-### 数据红线（绝不触碰）
-- ❌ 不使用真实个人身份信息（PIPL）
-- ❌ 不做政治预测/选举模拟
-- ❌ 不做社会动荡/群体事件模拟
-- ❌ 不跨境传输数据（数安法）
-
-### 合规机制
-- ✅ 100%合成数据驱动（不使用原始个人信息）
-- ✅ 算法备案（推荐算法合规）
-- ✅ 审计日志（所有模拟可追溯）
-- ✅ 数据本地化（服务器在国内）
-- ✅ 结果脱敏（输出不含任何个人信息）
-
-## 🆚 与Aaru对比
-
-| 特性 | Aaru | 天眼 |
-|------|------|------|
-| 估值 | $1B | — |
-| 政治预测 | ✅ Dynamo | ❌ 不碰 |
-| 商业预测 | ✅ Lumen | ✅ 消费眼 |
-| 政务模拟 | ✅ Seraph | ✅ 政策眼（去政治化）|
-| AI模型 | GPT/Claude | MIMO（无限额度）|
-| 数据合规 | 美国标准 | 中国标准（PIPL+数安法）|
-| 市场 | 美国/全球 | 中国 |
-| 成本结构 | 重资产（API按量付费）| 轻资产（MIMO无限额度）|
-
-## 💰 商业模式
-
-### 目标客户
-1. **品牌方**（核心）：快消、美妆、汽车、医药 → 产品上市预测
-2. **广告公司**：奥美、蓝标、华扬 → 广告效果预测
-3. **咨询公司**：麦肯锡、贝恩 → 市场进入策略
-4. **投资机构**：VC/PE → 行业趋势判断
-5. **政务部门**（谨慎）：政策影响评估
-
-### 定价
-- 单次模拟：¥5,000-20,000
-- 月度订阅：¥50,000-200,000
-- 年度框架：¥500,000-2,000,000
-- OPC模式：边际成本趋零（MIMO无限额度）
-
-## 🆕 v1.0.0 新增能力
-
-| 模块 | 文件 | 功能 |
-|------|------|------|
-| 📊 报告生成器 | `report_generator.py` | 麦肯锡级结构化报告（产品上市/市场进入/竞争分析）|
-| 💾 数据持久化 | `persistence.py` | SQLite存储模拟历史/预测结果/审计日志 |
-| 📡 实时数据 | `realtime_feeds.py` | A股行情/行业新闻/政策法规实时推送 |
-| 🏭 行业模板 | `industry_templates.py` | 5个预置场景：GLP-1/保健品/护肤/远程医疗/男性健康 |
-| 🧠 Agent升级 | `agents.py` | MIMO LLM推理 + 规则引擎降级 + 批量推理 |
-| 🕸️ 社交传播 | `scenarios.py` | 基于图论的小世界网络 + SIR信息扩散 + 意见领袖效应 |
-
-## 🌐 REST API
-
-天眼提供完整的REST API，14个端点覆盖全流程。
-
-### 核心端点
-
-| 端点 | 方法 | 功能 |
-|------|------|------|
-| `/api/health` | GET | 健康检查 |
-| `/api/population` | POST | 创建合成人群 |
-| `/api/simulate` | POST | 运行通用仿真 |
-| `/api/kol` | POST | KOL效果预测 |
-| `/api/livestream` | POST | 直播带货预测 |
-| `/api/channel` | POST | 电商渠道优化 |
-| `/api/seeding` | POST | 小红书种草预测 |
-
-### 高级端点（v1.0.0新增）
-
-| 端点 | 方法 | 功能 |
-|------|------|------|
-| `/api/v1/predict/full` | POST | 完整预测（人群→消费眼→KOL→直播→种草→渠道） |
-| `/api/v1/report/generate` | POST | 生成麦肯锡级报告 |
-| `/api/v1/templates` | GET | 获取所有行业模板 |
-| `/api/v1/template/run` | POST | 用行业模板运行预测 |
-| `/api/v1/dashboard` | GET | 仪表盘概览 |
-| `/api/v1/compare` | POST | 对比两个产品 |
-
-### 快速调用
-
-```bash
-# 完整预测（一个请求搞定所有分析）
-curl -X POST http://localhost:8000/api/v1/predict/full \
-  -H "Content-Type: application/json" \
-  -d '{"product_name":"GLP-1减重针","product_price":399}'
-
-# 生成麦肯锡报告
-curl -X POST http://localhost:8000/api/v1/report/generate \
-  -H "Content-Type: application/json" \
-  -d '{"product_name":"GLP-1减重针","product_price":399}'
-
-# 用GLP-1行业模板
-curl -X POST http://localhost:8000/api/v1/template/run \
-  -H "Content-Type: application/json" \
-  -d '{"template_key":"glp1_weight_loss","product_name":"SlimGuard","product_price":399}'
-
-# 对比两个产品
-curl -X POST http://localhost:8000/api/v1/compare \
-  -H "Content-Type: application/json" \
-  -d '{"product_a":"产品A","product_b":"产品B","price_a":299,"price_b":399}'
-
-# 仪表盘概览
-curl http://localhost:8000/api/v1/dashboard
-
-# Swagger UI
-open http://localhost:8000/docs
-```
-
-### 启动
-
-```bash
-pip install fastapi uvicorn
-cd tianyan && python3 demo_server.py
-# 访问 http://localhost:8000
-```
-
-## 🗺️ Roadmap
-
-- [x] 架构设计
-- [x] 合成人群工厂 v1.0
-- [x] 消费眼 MVP
-- [x] 政策眼 MVP
-- [x] 市场眼 MVP
-- [x] 中国特色场景（KOL/直播/电商/小红书）
-- [x] 合规层（PIPL/数安法）
-- [x] MIMO LLM推理集成
-- [x] 基于图论的社交传播模型
-- [x] 麦肯锡级报告生成器
-- [x] 数据持久化层（SQLite）
-- [x] 实时数据集成（A股/新闻/政策）
-- [x] 5个行业预置模板
-- [ ] 算法备案
-- [ ] 首个客户POC
-- [ ] 商业化上线
-
-## 📄 License
-
-MIT License
-
----
-
-## ⭐ Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=MoKangMedical/tianyan&type=Date)](https://star-history.com/#MoKangMedical/tianyan&Date)
-
-## 🤝 Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-## 📄 License
-
-MIT License
+**注意**: 这是一个活跃开发中的项目，API和功能可能会发生变化。请定期查看更新日志获取最新信息。
