@@ -36,3 +36,4 @@ data/*.db
 *.pem
 *_secret*
 credentials.json
+billing/*.json
