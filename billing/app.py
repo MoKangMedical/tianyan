@@ -1,9 +1,9 @@
 """天眼 Tianyan — 商业洞察报告付费服务"""
-from flask import Flask, render_template_string, jsonify, request
+from flask import Flask, render_template_string, render_template, jsonify, request
 import json, os, time
 from datetime import datetime
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="templates")
 DB_FILE = os.path.join(os.path.dirname(__file__), "reports.json")
 
 def load_db():
@@ -66,6 +66,7 @@ select,input{width:100%;padding:8px;border:1px solid #ddd;border-radius:8px;marg
 <div class="hdr">
   <h1>👁️ 天眼 Tianyan</h1>
   <p>AI商业洞察平台 · 72小时完成6个月市场洞察 · 按报告付费</p>
+  <div style="margin-top:8px"><a href="/" style="color:rgba(255,255,255,.8);font-size:12px;text-decoration:none;padding:3px 8px;background:rgba(255,255,255,.15);border-radius:4px;margin:0 4px">📋 定价</a><a href="/report" style="color:rgba(255,255,255,.8);font-size:12px;text-decoration:none;padding:3px 8px;background:rgba(255,255,255,.15);border-radius:4px;margin:0 4px">📊 生成报告</a></div>
 </div>
 
 <div class="section">
@@ -160,6 +161,10 @@ def api_reports(): return jsonify(REPORT_TYPES)
 def api_stats():
     db = get_db()
     return jsonify({"orders": len(db["orders"]), "total_revenue": db.get("revenue", 0)})
+
+@app.route("/report")
+def report():
+    return render_template("report.html")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5007, debug=True)
