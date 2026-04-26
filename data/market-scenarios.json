@@ -1,0 +1,62 @@
+[
+  {
+    "id": "new_product_launch",
+    "name": "新产品上市",
+    "description": "模拟新产品进入市场的表现",
+    "parameters": {
+      "initial_awareness": 0.1,
+      "adoption_rate": 0.05,
+      "price_elasticity": -1.5,
+      "competition_intensity": 0.7
+    },
+    "key_metrics": ["市场份额", "用户增长", "收入", "满意度"]
+  },
+  {
+    "id": "price_war",
+    "name": "价格战",
+    "description": "模拟竞争对手发起价格战的场景",
+    "parameters": {
+      "price_reduction": 0.2,
+      "market_response_delay": 30,
+      "customer_loyalty_impact": -0.1,
+      "recovery_time": 90
+    },
+    "key_metrics": ["价格水平", "市场份额", "利润率", "客户流失"]
+  },
+  {
+    "id": "market_expansion",
+    "name": "市场扩张",
+    "description": "模拟进入新地域市场的场景",
+    "parameters": {
+      "target_market_size": 1000000,
+      "penetration_rate": 0.05,
+      "localization_cost": 500000,
+      "time_to_break_even": 180
+    },
+    "key_metrics": ["市场渗透率", "收入增长", "成本", "ROI"]
+  },
+  {
+    "id": "technology_disruption",
+    "name": "技术颠覆",
+    "description": "模拟新技术对现有市场的冲击",
+    "parameters": {
+      "disruption_level": 0.8,
+      "market_shift_speed": 0.3,
+      "incumbent_response": 0.5,
+      "new_entrants": 5
+    },
+    "key_metrics": ["技术采用率", "市场集中度", "创新指数", "淘汰率"]
+  },
+  {
+    "id": "regulatory_change",
+    "name": "政策变化",
+    "description": "模拟监管政策变化对市场的影响",
+    "parameters": {
+      "policy_impact": 0.6,
+      "compliance_cost": 200000,
+      "transition_period": 180,
+      "market_reaction": -0.15
+    },
+    "key_metrics": ["合规成本", "市场反应", "调整时间", "长期影响"]
+  }
+]

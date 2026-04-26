@@ -1,0 +1,122 @@
+[
+  {
+    "id": "young_professional",
+    "name": "年轻白领",
+    "type": "trend_follower",
+    "age_range": "22-35",
+    "income_range": "8000-20000",
+    "characteristics": ["追求时尚", "注重体验", "社交媒体活跃", "品牌意识强"],
+    "preferences": {"price": 0.3, "quality": 0.6, "brand": 0.8, "convenience": 0.7},
+    "channels": ["社交媒体", "电商平台", "线下体验店"],
+    "purchase_frequency": "高频",
+    "influence_score": 0.7
+  },
+  {
+    "id": "middle_class_family",
+    "name": "中年家庭",
+    "type": "quality_seeker",
+    "age_range": "35-50",
+    "income_range": "15000-40000",
+    "characteristics": ["家庭决策者", "注重性价比", "品质优先", "信息搜索型"],
+    "preferences": {"price": 0.6, "quality": 0.9, "brand": 0.5, "convenience": 0.6},
+    "channels": ["电商平台", "超市", "品牌专卖店"],
+    "purchase_frequency": "中频",
+    "influence_score": 0.6
+  },
+  {
+    "id": "elderly_health",
+    "name": "老年健康",
+    "type": "conservative",
+    "age_range": "55-70",
+    "income_range": "5000-15000",
+    "characteristics": ["健康意识强", "品牌忠诚", "口碑驱动", "线下偏好"],
+    "preferences": {"price": 0.5, "quality": 0.8, "brand": 0.7, "convenience": 0.4},
+    "channels": ["药店", "医院", "社区店"],
+    "purchase_frequency": "低频",
+    "influence_score": 0.4
+  },
+  {
+    "id": "student_group",
+    "name": "学生群体",
+    "type": "price_sensitive",
+    "age_range": "18-25",
+    "income_range": "2000-5000",
+    "characteristics": ["价格敏感", "社交传播力强", "尝鲜意愿高", "线上消费"],
+    "preferences": {"price": 0.9, "quality": 0.4, "brand": 0.3, "convenience": 0.8},
+    "channels": ["电商平台", "社交媒体", "校园店"],
+    "purchase_frequency": "中频",
+    "influence_score": 0.8
+  },
+  {
+    "id": "business_elite",
+    "name": "商务精英",
+    "type": "brand_loyal",
+    "age_range": "35-55",
+    "income_range": "30000-100000",
+    "characteristics": ["品牌导向", "高端消费", "时间宝贵", "品质至上"],
+    "preferences": {"price": 0.1, "quality": 0.9, "brand": 0.95, "convenience": 0.9},
+    "channels": ["高端商场", "品牌官网", "私人定制"],
+    "purchase_frequency": "低频高客单",
+    "influence_score": 0.9
+  },
+  {
+    "id": "health_enthusiast",
+    "name": "健身达人",
+    "type": "health_conscious",
+    "age_range": "25-40",
+    "income_range": "10000-30000",
+    "characteristics": ["健康生活方式", "产品研究型", "社群活跃", "数据驱动"],
+    "preferences": {"price": 0.4, "quality": 0.9, "brand": 0.6, "convenience": 0.5},
+    "channels": ["健身APP", "健康食品店", "专业论坛"],
+    "purchase_frequency": "高频",
+    "influence_score": 0.75
+  },
+  {
+    "id": "tech_early_adopter",
+    "name": "科技尝鲜者",
+    "type": "early_adopter",
+    "age_range": "20-35",
+    "income_range": "10000-25000",
+    "characteristics": ["技术敏感", "尝鲜意愿强", "社交媒体意见领袖", "产品反馈积极"],
+    "preferences": {"price": 0.3, "quality": 0.7, "brand": 0.4, "convenience": 0.6},
+    "channels": ["科技媒体", "众筹平台", "新品发布会"],
+    "purchase_frequency": "高频",
+    "influence_score": 0.85
+  },
+  {
+    "id": "rural_consumer",
+    "name": "农村消费者",
+    "type": "price_sensitive",
+    "age_range": "25-55",
+    "income_range": "3000-8000",
+    "characteristics": ["价格敏感", "熟人推荐", "实用导向", "品牌认知度低"],
+    "preferences": {"price": 0.9, "quality": 0.5, "brand": 0.2, "convenience": 0.3},
+    "channels": ["村镇商店", "电商下沉", "集市"],
+    "purchase_frequency": "低频",
+    "influence_score": 0.3
+  },
+  {
+    "id": "new_parent",
+    "name": "新手父母",
+    "type": "quality_seeker",
+    "age_range": "25-35",
+    "income_range": "10000-30000",
+    "characteristics": ["安全敏感", "信息搜索密集", "品牌信任重要", "愿意为品质付费"],
+    "preferences": {"price": 0.4, "quality": 0.95, "brand": 0.8, "convenience": 0.7},
+    "channels": ["母婴电商", "母婴店", "育儿社区"],
+    "purchase_frequency": "高频",
+    "influence_score": 0.65
+  },
+  {
+    "id": "retiree",
+    "name": "退休老人",
+    "type": "conservative",
+    "age_range": "60-75",
+    "income_range": "4000-10000",
+    "characteristics": ["节俭习惯", "品牌忠诚", "线下为主", "子女影响大"],
+    "preferences": {"price": 0.7, "quality": 0.6, "brand": 0.5, "convenience": 0.3},
+    "channels": ["超市", "药店", "电视购物"],
+    "purchase_frequency": "低频",
+    "influence_score": 0.2
+  }
+]
