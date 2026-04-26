@@ -1,12 +1,16 @@
-# Changelog
+# 📋 更新日志
 
-## [0.1.0] — 2026-04-16
+本项目遵循 [语义化版本](https://semver.org/) 规范。
 
-### Added
-- Initial public release
-- Core project structure and documentation
-- GitHub Pages with Schema.org structured data
-- Issue and PR templates
-- Contributing guide and Code of Conduct
+## [0.1.0] - 2026-04-26
 
-See [README](https://github.com/MoKangMedical/tianyan#readme) for project details.
+### 新增
+- 项目初始化
+- 核心功能实现
+- README 文档
+- 项目结构搭建
+
+### 说明
+- 首次发布
+- 基础功能可用
+- 欢迎反馈和贡献
