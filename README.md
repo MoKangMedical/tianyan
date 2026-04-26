@@ -1,8 +1,6 @@
 # 👁️ 天眼
 
-### 用AI虚拟人群预测中国市场趋势
-
-> **一句话介绍：** 10,000+ 虚拟消费者，模拟真实市场行为，预测商业趋势。
+**多Agent人群模拟的中国商业预测平台** — 10,000+ 虚拟消费者，模拟真实市场行为，预测商业趋势。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://python.org)
