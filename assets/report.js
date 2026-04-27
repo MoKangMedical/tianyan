@@ -475,12 +475,29 @@ function renderMarket(caseData, analysis) {
     createBarRow(label, text, (value / maxSize) * 100)
   ).join("");
 
-  document.getElementById("real-world-facts").innerHTML = [
-    createFactItem("2020 超重/肥胖人口", `${formatCompactNumber(analysis.real_world.obesity_2020.population)} 人`, `合并患病率 ${formatPercent(analysis.real_world.obesity_2020.combined)}`),
-    createFactItem("2030 预测", `超重与肥胖率预计达到 ${formatPercent(analysis.real_world.projection_2030.combined_rate)}`),
-    createFactItem("中国 GLP-1 市场", `$${(analysis.real_world.glp1_market_2024.usd / 1000000).toFixed(1)}M`, `2030 CAGR ${(analysis.real_world.glp1_market_2024.cagr * 100).toFixed(0)}%`),
-    createFactItem("政策窗口", `${analysis.real_world.policy.name} · ${analysis.real_world.policy.period}`, `${analysis.real_world.policy.departments} 部门联合推进`)
-  ].join("");
+  // Generic real_world data rendering
+  const rw = analysis.real_world || {};
+  const rwItems = [];
+  if (rw.obesity_2020) {
+    rwItems.push(createFactItem("2020 超重/肥胖人口", `${formatCompactNumber(rw.obesity_2020.population)} 人`, `合并患病率 ${formatPercent(rw.obesity_2020.combined)}`));
+  }
+  if (rw.projection_2030) {
+    rwItems.push(createFactItem("2030 预测", `超重与肥胖率预计达到 ${formatPercent(rw.projection_2030.combined_rate)}`));
+  }
+  if (rw.glp1_market_2024) {
+    rwItems.push(createFactItem("中国 GLP-1 市场", `$${(rw.glp1_market_2024.usd / 1000000).toFixed(1)}M`, `2030 CAGR ${(rw.glp1_market_2024.cagr * 100).toFixed(0)}%`));
+  }
+  if (rw.policy) {
+    rwItems.push(createFactItem("政策窗口", `${rw.policy.name} · ${rw.policy.period}`, `${rw.policy.departments} 部门联合推进`));
+  }
+  // Generic real_world items (for non-MediSlim cases)
+  Object.entries(rw).forEach(([key, val]) => {
+    if (key === 'obesity_2020' || key === 'projection_2030' || key === 'glp1_market_2024' || key === 'policy') return;
+    if (val && typeof val === 'object' && val.value !== undefined) {
+      rwItems.push(createFactItem(key.replace(/_/g, ' '), `${formatCompactNumber(val.value)}${val.unit || ''}`, val.source || ''));
+    }
+  });
+  document.getElementById("real-world-facts").innerHTML = rwItems.join("");
 
   document.getElementById("population-segments").innerHTML = Object.entries(analysis.population.segments).map(([segment, detail]) => `
     <article class="segment-item">
@@ -490,12 +507,15 @@ function renderMarket(caseData, analysis) {
     </article>
   `).join("");
 
-  document.getElementById("target-market-facts").innerHTML = [
-    createFactItem("目标城市", caseData.target_market.cities.join("、")),
-    createFactItem("BMI 范围", `${caseData.target_market.bmi_range[0]}-${caseData.target_market.bmi_range[1]}`),
-    createFactItem("核心痛点", caseData.target_market.pain_points.slice(0, 3).join(" · ")),
-    createFactItem("决策因子", caseData.target_market.decision_factors.join("；"))
-  ].join("");
+  // Generic target_market facts
+  const tm = caseData.target_market || {};
+  const tmItems = [];
+  if (tm.cities) tmItems.push(createFactItem("目标城市", tm.cities.join("、")));
+  if (tm.bmi_range) tmItems.push(createFactItem("BMI 范围", `${tm.bmi_range[0]}-${tm.bmi_range[1]}`));
+  if (tm.age_range) tmItems.push(createFactItem("年龄范围", `${tm.age_range[0]}-${tm.age_range[1]}岁`));
+  if (tm.pain_points) tmItems.push(createFactItem("核心痛点", tm.pain_points.slice(0, 3).join(" · ")));
+  if (tm.decision_factors) tmItems.push(createFactItem("决策因子", tm.decision_factors.join("；")));
+  document.getElementById("target-market-facts").innerHTML = tmItems.join("");
 }
 
 function renderPricing(caseData, analysis) {

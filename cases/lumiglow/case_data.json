@@ -1,6 +1,6 @@
 {
   "case_name": "光感焕颜精华液上市预测",
-  "case_version": "1.0.0",
+  "case_version": "2.0.0",
   "created_at": "2026-04-27",
   "platform": "天眼 Tianyan",
   "disclaimer": "本案例所有数据均为天眼平台基于公开统计数据合成生成，不涉及任何真实个人信息或商业机密。",
@@ -35,6 +35,10 @@
     "age_range": [
       18,
       35
+    ],
+    "bmi_range": [
+      18,
+      25
     ],
     "city_tiers": [
       "一线城市",
@@ -142,8 +146,7 @@
       ],
       "weaknesses": [
         "价格极高",
-        "保存要求高",
-        "气味不佳"
+        "保存要求高"
       ],
       "market_share_est": 0.15,
       "brand_awareness": 0.75
@@ -194,8 +197,7 @@
         "target_audience": "有购买意向的消费者",
         "content_types": [
           "品牌旗舰店",
-          "天猫小黑盒",
-          "超级品牌日"
+          "天猫小黑盒"
         ],
         "budget_allocation": 0.2
       }

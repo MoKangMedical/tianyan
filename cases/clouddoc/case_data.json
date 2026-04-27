@@ -1,6 +1,6 @@
 {
   "case_name": "云诊通远程医疗平台商业预测",
-  "case_version": "1.0.0",
+  "case_version": "2.0.0",
   "created_at": "2026-04-27",
   "platform": "天眼 Tianyan",
   "disclaimer": "本案例所有数据均为天眼平台基于公开统计数据合成生成，不涉及任何真实个人信息或商业机密。",
@@ -35,6 +35,10 @@
     "age_range": [
       20,
       60
+    ],
+    "bmi_range": [
+      18,
+      35
     ],
     "city_tiers": [
       "一线城市",
@@ -119,8 +123,7 @@
       ],
       "weaknesses": [
         "商业化过重",
-        "用户体验一般",
-        "医生质量参差"
+        "用户体验一般"
       ],
       "market_share_est": 0.3,
       "brand_awareness": 0.9
