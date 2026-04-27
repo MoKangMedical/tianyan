@@ -1,0 +1,89 @@
+{
+  "items": [
+    {
+      "kicker": "Policy Document",
+      "title": "政策文件 / 监管文本",
+      "description": "将政策语言拆成监管方向、适用范围、受益者、受损者和执行节奏，形成影响判断。",
+      "signals": [
+        "监管强度、时间窗口、适用对象",
+        "地方执行差异与配套资源",
+        "行业门槛、价格机制、支付变化"
+      ],
+      "analysis": [
+        "政策语义切片与条款归因",
+        "行业与区域映射",
+        "情景推演与机会/风险权重排序"
+      ],
+      "outlook": "未来预期\n- 未来 6-12 个月政策将如何改变市场进入门槛\n- 哪些玩家受益、哪些环节承压\n- 项目节奏应提前、延后还是分阶段推进",
+      "deliverable": "McKinsey-style material\n1. Executive summary\n2. Policy impact tree\n3. Region-by-region implications\n4. Risk dashboard\n5. 100-day response plan"
+    },
+    {
+      "kicker": "Research Report",
+      "title": "行业研究 / 券商研报 / 白皮书",
+      "description": "将外部报告转为市场假设、需求弹性、竞争差异和项目的未来区间判断。",
+      "signals": [
+        "市场规模、增长率、利润池迁移",
+        "竞争者策略、价格带、技术代际",
+        "需求驱动与供给约束"
+      ],
+      "analysis": [
+        "假设抽取与交叉验证",
+        "竞争格局与增长逻辑重构",
+        "项目收益区间与关键拐点判断"
+      ],
+      "outlook": "未来预期\n- 赛道未来 12-36 个月增长曲线\n- 竞争格局是否会重排\n- 项目进入后 3 个季度内最可能发生的变化",
+      "deliverable": "McKinsey-style material\n1. Market attractiveness memo\n2. Scenario comparison\n3. Revenue / margin outlook\n4. Entry strategy recommendation\n5. Appendix with source reconciliation"
+    },
+    {
+      "kicker": "Interview and Minutes",
+      "title": "访谈纪要 / 会议纪要 / 调研记录",
+      "description": "把分散的一手信息转成结构化洞察，明确哪些是事实、哪些是假设、哪些需要再验证。",
+      "signals": [
+        "高频痛点与一线判断",
+        "组织分歧、执行阻力、渠道反馈",
+        "客户需求与购买障碍"
+      ],
+      "analysis": [
+        "观点聚类与冲突检测",
+        "证据级别分层",
+        "行动项与验证实验设计"
+      ],
+      "outlook": "未来预期\n- 这个项目最可能卡在哪个环节\n- 一线反馈指向的是短期问题还是结构性问题\n- 下一轮验证应该优先投哪里",
+      "deliverable": "McKinsey-style material\n1. Insight synthesis note\n2. Hypothesis matrix\n3. Decision memo\n4. Validation roadmap\n5. Interview evidence appendix"
+    },
+    {
+      "kicker": "Prospectus and Financials",
+      "title": "招股书 / 财报 / 商业计划书",
+      "description": "从公开财务与叙事中提炼项目的经营杠杆、增长约束与未来估值支撑逻辑。",
+      "signals": [
+        "收入结构、毛利、现金流与 CAPEX",
+        "增长驱动与风险披露",
+        "组织能力、渠道能力和运营质量"
+      ],
+      "analysis": [
+        "经营结构拆解",
+        "增长与盈利桥接",
+        "市场叙事与现实兑现度比较"
+      ],
+      "outlook": "未来预期\n- 收入与利润的最可能区间\n- 哪些变量决定估值与市场预期\n- 未来 4-6 个季度的关键观察点",
+      "deliverable": "McKinsey-style material\n1. Financial quality review\n2. Growth thesis assessment\n3. Forward-looking KPI pack\n4. Board-level risk notes\n5. Strategy options"
+    },
+    {
+      "kicker": "Public Opinion and Media",
+      "title": "舆情 / 内容 / 媒体监测",
+      "description": "将品牌语义、平台情绪和热点结构与商业转化路径对应起来。",
+      "signals": [
+        "情绪变化与主题聚类",
+        "内容扩散结构与平台差异",
+        "品牌信任、争议点和触发因素"
+      ],
+      "analysis": [
+        "舆论演化图谱",
+        "平台与人群映射",
+        "品牌动作优先级排序"
+      ],
+      "outlook": "未来预期\n- 舆情会自然回落还是继续放大\n- 哪类内容最能修复信任或推动转化\n- 品牌接下来 2-4 周应采取什么动作",
+      "deliverable": "McKinsey-style material\n1. Narrative map\n2. Sentiment dashboard\n3. Response playbook\n4. Channel-specific content brief\n5. Weekly monitoring template"
+    }
+  ]
+}

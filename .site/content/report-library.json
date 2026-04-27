@@ -1,0 +1,63 @@
+{
+  "items": [
+    {
+      "title": "天眼算法备案准备材料",
+      "category": "监管与政策",
+      "summary": "沉淀算法类型、数据安全、合规红线、备案清单和提交节奏，适合监管准备与客户合规背书。",
+      "deliverable": "算法备案底稿 / 合规准备包",
+      "path": "docs/algorithm_filing.md"
+    },
+    {
+      "title": "天眼商业计划书",
+      "category": "市场与业务",
+      "summary": "梳理中国适配策略、目标客户、商业模式、竞争格局和合规框架，适合对外介绍和内部统一定位。",
+      "deliverable": "业务定位与市场进入材料",
+      "path": "docs/business_plan.md"
+    },
+    {
+      "title": "天眼顶级战略蓝图",
+      "category": "战略与国家发展",
+      "summary": "从品类定义、政策杠杆、成本颠覆到网络效应，形成天眼长期战略叙事。",
+      "deliverable": "战略蓝图 / 品类叙事",
+      "path": "docs/strategic_blueprint.md"
+    },
+    {
+      "title": "天眼真实世界战略 v2.0",
+      "category": "商业化与落地",
+      "summary": "把理想化战略压回真实执行，强调免费 POC、行业切入、销售周期与数据闭环。",
+      "deliverable": "现实落地策略 / Go-to-market memo",
+      "path": "docs/realistic_strategy.md"
+    },
+    {
+      "title": "天眼融资叙事一页纸",
+      "category": "融资与叙事",
+      "summary": "把问题、解法、市场、竞争、商业模式和融资需求压缩成对投资人可读的一页叙事。",
+      "deliverable": "Investor memo / 融资叙事摘要",
+      "path": "docs/investor_deck.md"
+    },
+    {
+      "title": "麦肯锡报告方法论学习笔记",
+      "category": "方法论",
+      "summary": "提炼 MECE、金字塔原则、Issue Tree、TAM/SAM/SOM 与报告结构，可直接指导标准化交付。",
+      "deliverable": "报告方法论与模板",
+      "path": "docs/mckinsey_methodology.md"
+    },
+    {
+      "title": "MediSlim 纤姿 GLP-1 上市预测案例",
+      "category": "案例研究",
+      "summary": "覆盖市场空间、定价、渠道、KOL、直播、财务与风险，是对外展示专业度的最完整样板。",
+      "deliverable": "产品上市预测案例 / 客户样板",
+      "path": "cases/medislim/results/full_analysis.json",
+      "casePath": "cases/medislim/report.html"
+    },
+    {
+      "title": "VirtualCell 单细胞模型 Benchmark",
+      "category": "生物计算与基准测试",
+      "summary": "对 scGPT、Geneformer、scBERT、RegFormer 等模型在 cell annotation、GRN、integration、perturbation 上做横向比较。",
+      "deliverable": "Benchmark report / 模型比较材料",
+      "path": "虚拟细胞/docs/benchmark_report.md",
+      "secondaryPath": "虚拟细胞/docs/benchmark_report.json",
+      "secondaryLabel": "原始 JSON"
+    }
+  ]
+}

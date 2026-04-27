@@ -1,0 +1,431 @@
+{
+  "meta": {
+    "title": "纤姿GLP-1减重胶囊上市预测报告",
+    "platform": "天眼 Tianyan v0.1.0",
+    "date": "2026-04-07",
+    "methodology": "多Agent合成人群仿真（3000人样本）",
+    "data_sources": [
+      "国家卫健委《中国居民营养与慢性病状况报告(2020)》",
+      "Grand View Research - China GLP-1 Market 2024",
+      "国家卫健委等16部门《体重管理年活动实施方案》",
+      "L.E.K. Consulting - China GLP-1 Race"
+    ],
+    "disclaimer": "本报告所有数据均为天眼平台基于公开统计数据合成生成，不涉及任何真实个人信息或商业机密。"
+  },
+  "population": {
+    "size": 3000,
+    "region": "一线城市",
+    "age_range": [
+      25,
+      45
+    ],
+    "avg_age": 35.0,
+    "avg_income": 29006,
+    "gender_split": {
+      "female": 0.65,
+      "male": 0.35
+    },
+    "digital_literacy": 0.644,
+    "segments": {
+      "城市白领女性(25-35)": {
+        "pct": 0.28,
+        "intent": 0.72,
+        "reason": "高颜值焦虑+高数字素养"
+      },
+      "新中产妈妈(30-40)": {
+        "pct": 0.22,
+        "intent": 0.68,
+        "reason": "产后恢复需求+家庭消费决策者"
+      },
+      "中年男性(35-45)": {
+        "pct": 0.2,
+        "intent": 0.45,
+        "reason": "健康意识觉醒但行动力弱"
+      },
+      "下沉市场(25-45)": {
+        "pct": 0.15,
+        "intent": 0.38,
+        "reason": "价格敏感+品牌认知低"
+      },
+      "高收入精英(30-45)": {
+        "pct": 0.15,
+        "intent": 0.55,
+        "reason": "已有其他方案+品牌忠诚度高"
+      }
+    }
+  },
+  "market_sizing": {
+    "tam": {
+      "value": 18830,
+      "unit": "亿元",
+      "base": "5.38亿超重/肥胖人口 × ¥3,500/年"
+    },
+    "sam": {
+      "value": 1728,
+      "unit": "亿元",
+      "base": "一线+新一线10城 × 1.2亿目标人群 × 40%意愿"
+    },
+    "som_y1": {
+      "value": 1.73,
+      "unit": "亿元",
+      "base": "SAM × 0.01%渗透率"
+    },
+    "som_y3": {
+      "value": 17.3,
+      "unit": "亿元",
+      "base": "SAM × 0.1%渗透率"
+    }
+  },
+  "real_world": {
+    "obesity_2020": {
+      "overweight_rate": 0.343,
+      "obesity_rate": 0.164,
+      "combined": 0.507,
+      "population": 538000000,
+      "source": "国家卫健委"
+    },
+    "projection_2030": {
+      "combined_rate": 0.65,
+      "source": "《中华流行病学杂志》"
+    },
+    "diabetes_2023": {
+      "prevalence": 0.122,
+      "population": 141000000,
+      "source": "IDF"
+    },
+    "glp1_market_2024": {
+      "usd": 161700000,
+      "cagr": 0.19,
+      "projected_2030_usd": 558500000,
+      "source": "Grand View Research"
+    },
+    "policy": {
+      "name": "体重管理年",
+      "period": "2024-2026",
+      "departments": 16,
+      "source": "国家卫健委等16部门"
+    }
+  },
+  "purchase_intent": {
+    "overall": 0.621,
+    "confidence": 0.586,
+    "by_segment": {
+      "城市白领女性": 0.72,
+      "新中产妈妈": 0.68,
+      "高收入精英": 0.55,
+      "中年男性": 0.45,
+      "下沉市场": 0.38
+    },
+    "by_price": {
+      "199": {
+        "intent": 0.68,
+        "margin": 0.55,
+        "perception": "性价比高但疑品质"
+      },
+      "299": {
+        "intent": 0.62,
+        "margin": 0.65,
+        "perception": "中端定位，可接受"
+      },
+      "399": {
+        "intent": 0.51,
+        "margin": 0.72,
+        "perception": "偏贵但品质感强"
+      }
+    }
+  },
+  "kol_analysis": {
+    "comparison": [
+      {
+        "type": "素人种草号",
+        "reach": 2160000,
+        "engagement": 0.12,
+        "conversion": 0.081,
+        "cost": 500,
+        "roi": 5232.6,
+        "trust": 0.85,
+        "recommend": "⭐ 首选"
+      },
+      {
+        "type": "中腰部健康博主",
+        "reach": 2160000,
+        "engagement": 0.05,
+        "conversion": 0.081,
+        "cost": 8000,
+        "roi": 5232.6,
+        "trust": 0.8,
+        "recommend": "⭐ 首选"
+      },
+      {
+        "type": "垂类健康博主",
+        "reach": 2160000,
+        "engagement": 0.08,
+        "conversion": 0.076,
+        "cost": 5000,
+        "roi": 4909.7,
+        "trust": 0.9,
+        "recommend": "✅ 强烈推荐"
+      },
+      {
+        "type": "头部美妆博主",
+        "reach": 2160000,
+        "engagement": 0.03,
+        "conversion": 0.061,
+        "cost": 150000,
+        "roi": 3940.9,
+        "trust": 0.65,
+        "recommend": "⚠️ 性价比低"
+      }
+    ],
+    "recommendation": "素人种草号 + 垂类健康博主 组合投放，总预算¥5-10万可覆盖200篇种草笔记"
+  },
+  "livestream": {
+    "comparison": [
+      {
+        "platform": "小红书",
+        "viewers": 150000,
+        "gmv": 3049800,
+        "conversion": 0.08,
+        "best_time": "20:00-22:00",
+        "recommend": "⭐ 首选（高转化）"
+      },
+      {
+        "platform": "抖音",
+        "viewers": 150000,
+        "gmv": 1219920,
+        "conversion": 0.032,
+        "best_time": "20:00-22:00",
+        "recommend": "✅ 规模化首选"
+      },
+      {
+        "platform": "快手",
+        "viewers": 150000,
+        "gmv": 1219920,
+        "conversion": 0.032,
+        "best_time": "12:00-14:00",
+        "recommend": "⚠️ 下沉市场"
+      }
+    ]
+  },
+  "channel_ranking": [
+    {
+      "platform": "小红书",
+      "score": 1.009,
+      "rec": "强烈推荐，匹配度极高"
+    },
+    {
+      "platform": "淘宝",
+      "score": 0.866,
+      "rec": "强烈推荐，匹配度极高"
+    },
+    {
+      "platform": "抖音电商",
+      "score": 0.808,
+      "rec": "强烈推荐，匹配度极高"
+    },
+    {
+      "platform": "京东",
+      "score": 0.712,
+      "rec": "强烈推荐，匹配度极高"
+    },
+    {
+      "platform": "拼多多",
+      "score": 0.591,
+      "rec": "建议作为辅助渠道"
+    }
+  ],
+  "xiaohongshu": [
+    {
+      "style": "测评视频",
+      "impressions": 194400,
+      "interactions": 11433,
+      "rate": 0.0588,
+      "best": true
+    },
+    {
+      "style": "开箱体验",
+      "impressions": 178200,
+      "interactions": 9606,
+      "rate": 0.0539,
+      "best": false
+    },
+    {
+      "style": "种草笔记",
+      "impressions": 162000,
+      "interactions": 7939,
+      "rate": 0.049,
+      "best": false
+    },
+    {
+      "style": "教程攻略",
+      "impressions": 145800,
+      "interactions": 6431,
+      "rate": 0.0441,
+      "best": false
+    },
+    {
+      "style": "合集推荐",
+      "impressions": 129600,
+      "interactions": 5081,
+      "rate": 0.0392,
+      "best": false
+    }
+  ],
+  "competitors": [
+    {
+      "name": "司美格鲁肽",
+      "price": 1200,
+      "form": "注射剂",
+      "share": 0.45,
+      "awareness": 0.85,
+      "threat": "高"
+    },
+    {
+      "name": "利拉鲁肽",
+      "price": 800,
+      "form": "注射剂",
+      "share": 0.2,
+      "awareness": 0.6,
+      "threat": "中"
+    },
+    {
+      "name": "奥利司他",
+      "price": 80,
+      "form": "口服胶囊",
+      "share": 0.25,
+      "awareness": 0.9,
+      "threat": "中"
+    },
+    {
+      "name": "减肥茶/酵素",
+      "price": 50,
+      "form": "冲剂",
+      "share": 0.1,
+      "awareness": 0.5,
+      "threat": "低"
+    }
+  ],
+  "financial": {
+    "unit_economics": {
+      "avg_price": 299,
+      "cogs": 90,
+      "gross_margin": 0.7,
+      "cac": 120,
+      "ltv": 1196,
+      "ltv_cac_ratio": 9.97,
+      "payback_months": 1.2
+    },
+    "projections": {
+      "y1": {
+        "revenue": 3000000,
+        "customers": 10000,
+        "cost": 2100000
+      },
+      "y2": {
+        "revenue": 15000000,
+        "customers": 50000,
+        "cost": 7500000
+      },
+      "y3": {
+        "revenue": 50000000,
+        "customers": 167000,
+        "cost": 20000000
+      }
+    }
+  },
+  "action_plan": [
+    {
+      "phase": "第1-2周",
+      "action": "小红书素人种草（200篇测评视频）",
+      "budget": 100000,
+      "kpi": "曝光30万+，互动1.5万+"
+    },
+    {
+      "phase": "第3-4周",
+      "action": "垂类健康博主合作（10篇深度测评）",
+      "budget": 50000,
+      "kpi": "精准触达5万+"
+    },
+    {
+      "phase": "第5-8周",
+      "action": "抖音信息流广告测试",
+      "budget": 200000,
+      "kpi": "CPA<¥30，转化率>3%"
+    },
+    {
+      "phase": "第9-12周",
+      "action": "京东健康旗舰店上线 + 直播首秀",
+      "budget": 150000,
+      "kpi": "首月GMV ¥50万+"
+    },
+    {
+      "phase": "第13-16周",
+      "action": "数据复盘 + 策略调整 + 规模化投放",
+      "budget": 300000,
+      "kpi": "月GMV ¥200万+"
+    }
+  ],
+  "maturity_assessment": {
+    "overall_score": 62,
+    "dimensions": {
+      "市场机会": {
+        "score": 85,
+        "note": "5.38亿超重人群，GLP-1赛道CAGR 19%"
+      },
+      "产品竞争力": {
+        "score": 65,
+        "note": "差异化定位清晰，但临床数据待补充"
+      },
+      "渠道可行性": {
+        "score": 70,
+        "note": "线上渠道成熟，线下待拓展"
+      },
+      "团队能力": {
+        "score": 40,
+        "note": "一人公司，需要合作伙伴补充"
+      },
+      "资金充足度": {
+        "score": 35,
+        "note": "需天使轮或自筹资金"
+      },
+      "合规安全": {
+        "score": 75,
+        "note": "保健食品备案制，风险可控"
+      },
+      "数据壁垒": {
+        "score": 30,
+        "note": "新品牌无数据积累，需时间"
+      },
+      "竞争格局": {
+        "score": 55,
+        "note": "处方药/OTC/保健品三足鼎立"
+      }
+    },
+    "risks": [
+      {
+        "risk": "功效宣传被监管处罚",
+        "prob": "中",
+        "impact": "高",
+        "mitigation": "严格合规文案审查"
+      },
+      {
+        "risk": "GLP-1原料供应波动",
+        "prob": "低",
+        "impact": "高",
+        "mitigation": "多供应商备选"
+      },
+      {
+        "risk": "大品牌仿制跟进",
+        "prob": "高",
+        "impact": "中",
+        "mitigation": "品牌+私域护城河"
+      },
+      {
+        "risk": "消费者信任建立慢",
+        "prob": "高",
+        "impact": "中",
+        "mitigation": "KOL背书+临床数据"
+      }
+    ]
+  }
+}

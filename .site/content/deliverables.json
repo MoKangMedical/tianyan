@@ -1,0 +1,34 @@
+{
+  "items": [
+    {
+      "title": "Executive Summary",
+      "description": "把项目的结论、判断和建议压缩进一页可读、可汇报的高层摘要。",
+      "bullets": ["一句话结论", "三条关键判断", "行动优先级", "董事会可读格式"]
+    },
+    {
+      "title": "Future Outlook Pack",
+      "description": "围绕未来 6-36 个月，把增长、风险、政策和竞争变量做成可复盘的预期材料。",
+      "bullets": ["乐观/基准/保守情景", "关键拐点", "预警指标", "季度更新机制"]
+    },
+    {
+      "title": "McKinsey-style Report",
+      "description": "结构化报告不是简单排版，而是完整的论点链、证据链和建议链。",
+      "bullets": ["Executive summary", "Market and policy analysis", "Scenario tree", "Implementation roadmap"]
+    },
+    {
+      "title": "Risk and Decision Memo",
+      "description": "帮助客户在进入、扩张、投资和合作前完成风险排序与决策闭环。",
+      "bullets": ["风险分层", "概率与影响评估", "缓释动作", "决策建议"]
+    },
+    {
+      "title": "Client-facing Deck",
+      "description": "把复杂研究转成客户团队、合作伙伴和投资方都能直接看的 deck。",
+      "bullets": ["品牌化版式", "图表摘要", "关键数据附录", "讨论用章节结构"]
+    },
+    {
+      "title": "100-day Action Plan",
+      "description": "研究最终要落到执行，所以每个项目都应有可追踪的阶段计划。",
+      "bullets": ["阶段目标", "预算与资源", "KPI 追踪", "复盘节点"]
+    }
+  ]
+}
