@@ -1186,6 +1186,110 @@ function runDemo() {
     statusEl.className = 'tag-pill';
     btnEl.disabled = false;
     btnEl.style.opacity = '1';
+
+    // Render charts
+    document.getElementById('demo-charts-row').hidden = false;
+    renderDemoCharts(intent, channels, category, rand);
   }, 800 + Math.random() * 400);
+}
+
+function renderDemoCharts(intent, channels, category, rand) {
+  const chartColors = {
+    purple: 'rgba(129, 140, 248, 0.8)',
+    purpleLight: 'rgba(129, 140, 248, 0.2)',
+    pink: 'rgba(192, 132, 252, 0.8)',
+    pinkLight: 'rgba(192, 132, 252, 0.2)',
+    green: 'rgba(74, 222, 128, 0.8)',
+    greenLight: 'rgba(74, 222, 128, 0.2)',
+    orange: 'rgba(251, 191, 36, 0.8)',
+    orangeLight: 'rgba(251, 191, 36, 0.2)',
+  };
+
+  // Destroy existing charts
+  const existingIntent = Chart.getChart('demo-chart-intent');
+  if (existingIntent) existingIntent.destroy();
+  const existingChannels = Chart.getChart('demo-chart-channels');
+  if (existingChannels) existingChannels.destroy();
+
+  // Intent by segment chart
+  const segments = ['18-24', '25-30', '31-35', '36-45', '46-55'];
+  const segmentIntents = segments.map(function() {
+    return (intent * 100 + (rand() - 0.5) * 20).toFixed(1);
+  });
+
+  new Chart(document.getElementById('demo-chart-intent'), {
+    type: 'bar',
+    data: {
+      labels: segments,
+      datasets: [{
+        label: '购买意愿 (%)',
+        data: segmentIntents,
+        backgroundColor: [
+          chartColors.purple,
+          chartColors.pink,
+          chartColors.green,
+          chartColors.orange,
+          chartColors.purple,
+        ],
+        borderRadius: 6,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 100,
+          grid: { color: 'rgba(255,255,255,0.05)' },
+          ticks: { color: '#94a3b8', callback: function(v) { return v + '%'; } }
+        },
+        x: {
+          grid: { display: false },
+          ticks: { color: '#94a3b8' }
+        }
+      }
+    }
+  });
+
+  // Channel ROI chart
+  const channelNames = channels.map(function(c) { return c.name; });
+  const channelRois = channels.map(function(c) { return parseFloat(c.roi); });
+
+  new Chart(document.getElementById('demo-chart-channels'), {
+    type: 'doughnut',
+    data: {
+      labels: channelNames,
+      datasets: [{
+        data: channelRois,
+        backgroundColor: [
+          chartColors.purple,
+          chartColors.pink,
+          chartColors.green,
+          chartColors.orange,
+        ],
+        borderWidth: 0,
+        spacing: 4,
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: '55%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: '#94a3b8',
+            padding: 16,
+            usePointStyle: true,
+            pointStyleWidth: 10,
+          }
+        },
+      }
+    }
+  });
 }
 
