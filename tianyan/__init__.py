@@ -15,6 +15,7 @@ from .products import ConsumerEye, PolicyEye, MarketEye, PredictionResult
 from .compliance import ComplianceChecker, DataAuditLog, ComplianceError
 from .china_scenarios import ChineseScenarioEngine, KOLPredictionResult, LivestreamPredictionResult
 from .mimo_adapter import MIMOAdapter, MockMIMOAdapter, MIMOConfig
+from .llm_adapter import UnifiedLLMAdapter, LLMConfig, LLMProvider, get_llm, reset_llm
 from .report_generator import McKinseyReportGenerator, McKinseyReport, ReportSection
 from .persistence import PersistenceLayer, SimulationRun
 from .realtime_feeds import RealtimeFeedManager, StockFeedAdapter, NewsFeedAdapter, PolicyFeedAdapter
