@@ -1,212 +1,360 @@
 {
-  "simulation_id": "clouddoc_2026_04",
-  "created_at": "2026-04-27T21:03:14.794170",
-  "platform": "天眼 Tianyan v1.0.0",
-  "product_name": "云诊通",
-  "brand": "CloudDoc",
-  "population_summary": {
-    "total_size": 8000,
+  "meta": {
+    "title": "云诊通远程医疗平台商业预测报告",
+    "platform": "天眼 Tianyan v2.0.0",
+    "date": "2026-04-27",
+    "methodology": "多Agent合成人群仿真（8000人样本）",
+    "data_sources": [
+      "国家卫健委《互联网诊疗管理办法》",
+      "艾瑞咨询 - 中国互联网医疗行业报告2024",
+      "弗若斯特沙利文 - 远程医疗市场规模预测",
+      "上市公司财报（平安好医生/京东健康）"
+    ],
+    "disclaimer": "本报告所有数据均为天眼平台基于公开统计数据合成生成，不涉及任何真实个人信息或商业机密。"
+  },
+  "population": {
+    "size": 8000,
+    "region": "全国",
+    "age_range": [
+      20,
+      60
+    ],
     "avg_age": 38.5,
-    "gender_dist": {
-      "女": 0.55,
-      "男": 0.45
-    },
-    "city_tier_dist": {
-      "一线城市": 0.25,
-      "新一线城市": 0.3,
-      "二线城市": 0.25,
-      "三线及以下": 0.2
-    },
     "avg_income": 12500,
-    "top_archetypes": {
-      "理性决策型": 0.3,
-      "品质追求型": 0.25,
-      "精打细算型": 0.2,
-      "尝鲜探索型": 0.15,
-      "其他": 0.1
+    "gender_split": {
+      "female": 0.55,
+      "male": 0.45
+    },
+    "digital_literacy": 0.62,
+    "segments": {
+      "城市白领(25-40)": {
+        "pct": 0.3,
+        "intent": 0.68,
+        "reason": "时间宝贵+健康意识强"
+      },
+      "慢性病患者(35-60)": {
+        "pct": 0.25,
+        "intent": 0.72,
+        "reason": "复诊需求+用药管理"
+      },
+      "年轻父母(25-35)": {
+        "pct": 0.2,
+        "intent": 0.65,
+        "reason": "儿童健康焦虑+便捷性需求"
+      },
+      "下沉市场(25-55)": {
+        "pct": 0.15,
+        "intent": 0.42,
+        "reason": "医疗资源匮乏但数字素养低"
+      },
+      "老年人(55-60)": {
+        "pct": 0.1,
+        "intent": 0.35,
+        "reason": "数字鸿沟+信任问题"
+      }
     }
   },
+  "market_sizing": {
+    "china_telehealth_2024": 3200,
+    "unit": "亿元",
+    "growth_rate": 0.25,
+    "online_consultation": 1200,
+    "chronic_management": 800,
+    "source": "艾瑞咨询2024"
+  },
+  "real_world": [
+    {
+      "name": "互联网医疗用户规模",
+      "value": "3.6亿",
+      "source": "CNNIC"
+    },
+    {
+      "name": "在线问诊渗透率",
+      "value": "8.5%",
+      "source": "艾瑞咨询"
+    },
+    {
+      "name": "互联网医院数量",
+      "value": "3000+",
+      "source": "国家卫健委"
+    },
+    {
+      "name": "远程医疗市场规模",
+      "value": "3200亿元",
+      "source": "弗若斯特沙利文"
+    }
+  ],
   "purchase_intent": {
     "overall": 0.58,
-    "by_age": {
-      "20-30": 0.65,
-      "31-40": 0.62,
-      "41-50": 0.55,
-      "51-60": 0.45
+    "confidence": 0.78,
+    "by_segment": {
+      "城市白领": 0.68,
+      "慢性病患者": 0.72,
+      "年轻父母": 0.65,
+      "下沉市场": 0.42,
+      "老年人": 0.35
     },
-    "by_city_tier": {
-      "一线城市": 0.68,
-      "新一线城市": 0.6,
-      "二线城市": 0.52,
-      "三线及以下": 0.42
-    },
-    "by_archetype": {
-      "理性决策型": 0.7,
-      "品质追求型": 0.65,
-      "尝鲜探索型": 0.6,
-      "精打细算型": 0.48
-    },
-    "confidence": 0.78
-  },
-  "pricing_analysis": {
-    "optimal_price": 99,
-    "price_sensitivity": {
+    "by_price": {
       "49": {
-        "conversion": 0.75,
+        "intent": 0.72,
         "margin": 0.15,
-        "revenue_index": 0.6
+        "perception": "低价体验"
       },
       "79": {
-        "conversion": 0.65,
+        "intent": 0.65,
         "margin": 0.3,
-        "revenue_index": 0.8
+        "perception": "中端定位"
       },
       "99": {
-        "conversion": 0.58,
+        "intent": 0.58,
         "margin": 0.42,
-        "revenue_index": 0.92
+        "perception": "标准定价"
       },
       "149": {
-        "conversion": 0.42,
+        "intent": 0.45,
         "margin": 0.55,
-        "revenue_index": 0.82
+        "perception": "高端定位"
       },
       "199": {
-        "conversion": 0.28,
+        "intent": 0.32,
         "margin": 0.65,
-        "revenue_index": 0.65
+        "perception": "超高端"
       }
-    },
-    "recommendation": "建议定价99元/月，提供首月49元体验价"
-  },
-  "channel_analysis": {
-    "primary_channel": "微信生态",
-    "channel_ranking": [
-      {
-        "channel": "微信小程序",
-        "roi": 4.5,
-        "cac": 35,
-        "conversion": 0.12
-      },
-      {
-        "channel": "医生IP短视频",
-        "roi": 3.2,
-        "cac": 50,
-        "conversion": 0.08
-      },
-      {
-        "channel": "线下医院转诊",
-        "roi": 5.0,
-        "cac": 25,
-        "conversion": 0.15
-      },
-      {
-        "channel": "百度搜索",
-        "roi": 2.0,
-        "cac": 80,
-        "conversion": 0.04
-      }
-    ],
-    "budget_allocation": {
-      "微信生态": 0.35,
-      "短视频": 0.3,
-      "线下合作": 0.25,
-      "搜索": 0.1
     }
   },
   "kol_analysis": {
     "recommended_mix": [
       {
         "type": "三甲医院医生IP",
-        "count": 10,
-        "budget": 300000,
-        "expected_reach": 5000000
+        "count": 15,
+        "budget": 450000,
+        "expected_reach": 7500000
       },
       {
         "type": "健康科普博主",
-        "count": 30,
-        "budget": 150000,
-        "expected_reach": 3000000
+        "count": 50,
+        "budget": 250000,
+        "expected_reach": 5000000
       },
       {
         "type": "患者真实分享号",
-        "count": 100,
-        "budget": 50000,
-        "expected_reach": 1500000
+        "count": 200,
+        "budget": 100000,
+        "expected_reach": 3000000
       }
     ],
-    "total_budget": 500000,
-    "expected_total_reach": 9500000,
-    "expected_conversion_rate": 0.045
+    "total_budget": 800000,
+    "expected_total_reach": 15500000,
+    "expected_conversion_rate": 0.042
   },
-  "competitor_impact": {
-    "vs_好大夫在线": {
-      "win_rate": 0.4,
-      "lose_rate": 0.35,
-      "draw_rate": 0.25
-    },
-    "vs_平安好医生": {
-      "win_rate": 0.3,
-      "lose_rate": 0.45,
-      "draw_rate": 0.25
-    },
-    "vs_京东健康": {
-      "win_rate": 0.35,
-      "lose_rate": 0.4,
-      "draw_rate": 0.25
-    }
+  "livestream": {
+    "comparison": [
+      {
+        "platform": "微信视频号",
+        "viewers": 300000,
+        "gmv": 5400000,
+        "conversion": 0.09,
+        "best_time": "19:00-21:00",
+        "recommend": "首选（私域转化高）"
+      },
+      {
+        "platform": "抖音",
+        "viewers": 800000,
+        "gmv": 4800000,
+        "conversion": 0.045,
+        "best_time": "20:00-22:00",
+        "recommend": "流量大但信任度低"
+      },
+      {
+        "platform": "快手",
+        "viewers": 400000,
+        "gmv": 3200000,
+        "conversion": 0.055,
+        "best_time": "19:00-21:00",
+        "recommend": "下沉市场"
+      }
+    ]
   },
-  "revenue_projection": {
-    "month_1": {
-      "users": 5000,
-      "revenue": 495000
-    },
-    "month_3": {
-      "users": 18000,
-      "revenue": 1782000
-    },
-    "month_6": {
-      "users": 45000,
-      "revenue": 4455000
-    },
-    "month_12": {
-      "users": 100000,
-      "revenue": 9900000
-    },
-    "year_1_total_revenue": 58800000,
-    "year_1_users": 100000
-  },
-  "risk_assessment": [
+  "channel_ranking": [
     {
-      "risk": "医生资源获取成本高",
-      "probability": "高",
-      "impact": "高",
-      "mitigation": "与医学院合作+远程执业政策利用"
+      "platform": "微信小程序",
+      "score": 1.0,
+      "rec": "强烈推荐，私域+裂变"
     },
     {
-      "risk": "政策监管趋严",
-      "probability": "中",
-      "impact": "高",
-      "mitigation": "提前申请互联网医院牌照"
+      "platform": "医生IP短视频",
+      "score": 0.88,
+      "rec": "推荐，信任背书"
     },
     {
-      "risk": "用户留存率低",
-      "probability": "中",
-      "impact": "中",
-      "mitigation": "建立慢病管理体系+定期随访"
+      "platform": "线下医院转诊",
+      "score": 0.82,
+      "rec": "推荐，精准获客"
     },
     {
-      "risk": "竞品价格战",
-      "probability": "高",
-      "impact": "中",
-      "mitigation": "差异化AI能力+医生服务质量"
+      "platform": "百度搜索",
+      "score": 0.6,
+      "rec": "可选，搜索流量"
     }
   ],
-  "recommendations": [
-    "首月聚焦微信小程序，利用社交裂变获客",
-    "与10家三甲医院建立转诊合作",
-    "打造5-10个医生IP账号，建立信任",
-    "首月49元体验价，降低试用门槛",
-    "建立慢病管理体系，提高用户留存"
-  ]
+  "xiaohongshu": [
+    {
+      "style": "医生科普",
+      "impressions": 350000,
+      "interactions": 21000,
+      "rate": 0.06,
+      "best": true
+    },
+    {
+      "style": "问诊实录",
+      "impressions": 200000,
+      "interactions": 12000,
+      "rate": 0.06,
+      "best": false
+    },
+    {
+      "style": "健康知识",
+      "impressions": 280000,
+      "interactions": 14000,
+      "rate": 0.05,
+      "best": false
+    },
+    {
+      "style": "患者故事",
+      "impressions": 150000,
+      "interactions": 9000,
+      "rate": 0.06,
+      "best": false
+    }
+  ],
+  "competitors": [
+    {
+      "name": "好大夫在线",
+      "price": 60,
+      "share": 0.25,
+      "strengths": [
+        "医生资源丰富",
+        "品牌知名度高"
+      ],
+      "weaknesses": [
+        "界面老旧",
+        "AI能力弱"
+      ]
+    },
+    {
+      "name": "平安好医生",
+      "price": 128,
+      "share": 0.3,
+      "strengths": [
+        "保险+医疗闭环",
+        "AI能力强"
+      ],
+      "weaknesses": [
+        "商业化过重"
+      ]
+    },
+    {
+      "name": "京东健康",
+      "price": 89,
+      "share": 0.25,
+      "strengths": [
+        "药品配送快",
+        "用户基数大"
+      ],
+      "weaknesses": [
+        "医疗属性弱"
+      ]
+    },
+    {
+      "name": "微医",
+      "price": 99,
+      "share": 0.15,
+      "strengths": [
+        "互联网医院牌照",
+        "医保对接"
+      ],
+      "weaknesses": [
+        "C端品牌弱"
+      ]
+    }
+  ],
+  "financial": {
+    "unit_economics": {
+      "avg_price": 99,
+      "cogs": 35,
+      "gross_margin": 0.65,
+      "cac": 120,
+      "ltv": 1188,
+      "ltv_cac_ratio": 9.9,
+      "payback_months": 1.2
+    },
+    "projections": {
+      "y1": {
+        "revenue": 58800000,
+        "customers": 100000,
+        "cost": 35000000
+      },
+      "y2": {
+        "revenue": 150000000,
+        "customers": 250000,
+        "cost": 75000000
+      },
+      "y3": {
+        "revenue": 300000000,
+        "customers": 500000,
+        "cost": 120000000
+      }
+    },
+    "breakeven_months": 10
+  },
+  "action_plan": [
+    {
+      "week": "1-2",
+      "action": "产品MVP+医生签约",
+      "budget": 100000
+    },
+    {
+      "week": "3-4",
+      "action": "微信小程序上线",
+      "budget": 50000
+    },
+    {
+      "week": "5-6",
+      "action": "医生IP账号启动",
+      "budget": 150000
+    },
+    {
+      "week": "7-8",
+      "action": "首批医院转诊合作",
+      "budget": 200000
+    },
+    {
+      "week": "9-10",
+      "action": "短视频内容投放",
+      "budget": 250000
+    },
+    {
+      "week": "11-12",
+      "action": "慢病管理体系上线",
+      "budget": 100000
+    },
+    {
+      "week": "13-14",
+      "action": "数据复盘+策略调整",
+      "budget": 0
+    },
+    {
+      "week": "15-16",
+      "action": "放量获客+商业化",
+      "budget": 500000
+    }
+  ],
+  "maturity_assessment": {
+    "product": 78,
+    "market": 85,
+    "channel": 72,
+    "brand": 55,
+    "supply_chain": 68,
+    "overall": 72
+  }
 }

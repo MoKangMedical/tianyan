@@ -1,212 +1,359 @@
 {
-  "simulation_id": "lumiglow_2026_04",
-  "created_at": "2026-04-27T21:03:14.793862",
-  "platform": "天眼 Tianyan v1.0.0",
-  "product_name": "光感焕颜精华液",
-  "brand": "LumiGlow",
-  "population_summary": {
-    "total_size": 5000,
+  "meta": {
+    "title": "光感焕颜精华液上市预测报告",
+    "platform": "天眼 Tianyan v2.0.0",
+    "date": "2026-04-27",
+    "methodology": "多Agent合成人群仿真（5000人样本）",
+    "data_sources": [
+      "国家统计局《中国人口和就业统计年鉴》",
+      "Euromonitor - China Skincare Market 2024",
+      "小红书美妆行业数据报告",
+      "天猫美妆行业趋势报告"
+    ],
+    "disclaimer": "本报告所有数据均为天眼平台基于公开统计数据合成生成，不涉及任何真实个人信息或商业机密。"
+  },
+  "population": {
+    "size": 5000,
+    "region": "全国",
+    "age_range": [
+      18,
+      35
+    ],
     "avg_age": 26.8,
-    "gender_dist": {
-      "女": 0.88,
-      "男": 0.12
-    },
-    "city_tier_dist": {
-      "一线城市": 0.35,
-      "新一线城市": 0.35,
-      "二线城市": 0.3
-    },
     "avg_income": 15800,
-    "top_archetypes": {
-      "品质追求型": 0.28,
-      "跟风种草型": 0.22,
-      "尝鲜探索型": 0.18,
-      "精打细算型": 0.15,
-      "品牌忠诚型": 0.1,
-      "其他": 0.07
+    "gender_split": {
+      "female": 0.88,
+      "male": 0.12
+    },
+    "digital_literacy": 0.78,
+    "segments": {
+      "城市白领女性(22-30)": {
+        "pct": 0.32,
+        "intent": 0.78,
+        "reason": "高颜值焦虑+高数字素养+强购买力"
+      },
+      "大学生群体(18-24)": {
+        "pct": 0.25,
+        "intent": 0.72,
+        "reason": "尝鲜意愿强+社交传播力高"
+      },
+      "新中产女性(28-35)": {
+        "pct": 0.2,
+        "intent": 0.68,
+        "reason": "品质追求+成分党"
+      },
+      "下沉市场(18-35)": {
+        "pct": 0.15,
+        "intent": 0.52,
+        "reason": "价格敏感+品牌认知低"
+      },
+      "男性护肤(18-30)": {
+        "pct": 0.08,
+        "intent": 0.35,
+        "reason": "男性护肤意识提升但购买力弱"
+      }
     }
   },
+  "market_sizing": {
+    "china_skincare_2024": 5200,
+    "unit": "亿元",
+    "growth_rate": 0.08,
+    "whitening_segment": 850,
+    "premium_whitening": 320,
+    "source": "Euromonitor 2024"
+  },
+  "real_world": [
+    {
+      "name": "烟酰胺美白市场规模",
+      "value": "120亿元",
+      "source": "行业研报"
+    },
+    {
+      "name": "精华液品类增长率",
+      "value": "12%",
+      "source": "天猫数据"
+    },
+    {
+      "name": "敏感肌人群占比",
+      "value": "36%",
+      "source": "中国皮肤科协会"
+    },
+    {
+      "name": "小红书美妆笔记量",
+      "value": "2.8亿篇",
+      "source": "小红书官方"
+    }
+  ],
   "purchase_intent": {
     "overall": 0.72,
-    "by_age": {
-      "18-24": 0.78,
-      "25-30": 0.75,
-      "31-35": 0.68,
-      "36-45": 0.55
+    "confidence": 0.82,
+    "by_segment": {
+      "城市白领女性": 0.78,
+      "大学生群体": 0.72,
+      "新中产女性": 0.68,
+      "下沉市场": 0.52,
+      "男性护肤": 0.35
     },
-    "by_city_tier": {
-      "一线城市": 0.76,
-      "新一线城市": 0.73,
-      "二线城市": 0.68
-    },
-    "by_archetype": {
-      "品质追求型": 0.85,
-      "跟风种草型": 0.82,
-      "尝鲜探索型": 0.8,
-      "精打细算型": 0.55,
-      "品牌忠诚型": 0.45
-    },
-    "confidence": 0.82
-  },
-  "pricing_analysis": {
-    "optimal_price": 258,
-    "price_sensitivity": {
+    "by_price": {
       "168": {
-        "conversion": 0.85,
-        "margin": 0.25,
-        "revenue_index": 0.72
+        "intent": 0.82,
+        "margin": 0.35,
+        "perception": "性价比高但疑品质"
       },
       "198": {
-        "conversion": 0.8,
-        "margin": 0.35,
-        "revenue_index": 0.85
+        "intent": 0.78,
+        "margin": 0.42,
+        "perception": "中端定位"
       },
       "258": {
-        "conversion": 0.72,
-        "margin": 0.48,
-        "revenue_index": 0.95
+        "intent": 0.72,
+        "margin": 0.52,
+        "perception": "品质溢价"
       },
       "298": {
-        "conversion": 0.62,
-        "margin": 0.55,
-        "revenue_index": 0.88
+        "intent": 0.65,
+        "margin": 0.58,
+        "perception": "高端定位"
       },
       "398": {
-        "conversion": 0.42,
+        "intent": 0.48,
         "margin": 0.65,
-        "revenue_index": 0.7
+        "perception": "超高端"
       }
-    },
-    "recommendation": "建议定价258元，平衡转化率与利润率"
-  },
-  "channel_analysis": {
-    "primary_channel": "小红书",
-    "channel_ranking": [
-      {
-        "channel": "小红书",
-        "roi": 3.2,
-        "cac": 45,
-        "conversion": 0.08
-      },
-      {
-        "channel": "抖音",
-        "roi": 2.8,
-        "cac": 55,
-        "conversion": 0.06
-      },
-      {
-        "channel": "天猫旗舰店",
-        "roi": 2.5,
-        "cac": 65,
-        "conversion": 0.05
-      },
-      {
-        "channel": "京东",
-        "roi": 2.0,
-        "cac": 80,
-        "conversion": 0.03
-      }
-    ],
-    "budget_allocation": {
-      "小红书": 0.4,
-      "抖音": 0.35,
-      "天猫": 0.2,
-      "其他": 0.05
     }
   },
   "kol_analysis": {
     "recommended_mix": [
       {
         "type": "皮肤科医生KOL",
-        "count": 3,
-        "budget": 15000,
-        "expected_reach": 500000
+        "count": 5,
+        "budget": 25000,
+        "expected_reach": 800000
       },
       {
         "type": "中腰部成分党博主",
-        "count": 20,
-        "budget": 160000,
-        "expected_reach": 2000000
+        "count": 30,
+        "budget": 240000,
+        "expected_reach": 3000000
       },
       {
         "type": "素人真实测评号",
-        "count": 200,
-        "budget": 100000,
-        "expected_reach": 3000000
+        "count": 300,
+        "budget": 150000,
+        "expected_reach": 4500000
       }
     ],
-    "total_budget": 275000,
-    "expected_total_reach": 5500000,
+    "total_budget": 415000,
+    "expected_total_reach": 8300000,
     "expected_conversion_rate": 0.065
   },
-  "competitor_impact": {
-    "vs_OLAY小白瓶": {
-      "win_rate": 0.35,
-      "lose_rate": 0.45,
-      "draw_rate": 0.2
-    },
-    "vs_珀莱雅双抗": {
-      "win_rate": 0.55,
-      "lose_rate": 0.25,
-      "draw_rate": 0.2
-    },
-    "vs_SK-II小灯泡": {
-      "win_rate": 0.15,
-      "lose_rate": 0.7,
-      "draw_rate": 0.15
-    }
+  "livestream": {
+    "comparison": [
+      {
+        "platform": "小红书",
+        "viewers": 200000,
+        "gmv": 4200000,
+        "conversion": 0.085,
+        "best_time": "20:00-22:00",
+        "recommend": "首选（高转化）"
+      },
+      {
+        "platform": "抖音",
+        "viewers": 500000,
+        "gmv": 3500000,
+        "conversion": 0.055,
+        "best_time": "19:00-21:00",
+        "recommend": "流量大但转化低"
+      },
+      {
+        "platform": "淘宝直播",
+        "viewers": 300000,
+        "gmv": 2800000,
+        "conversion": 0.065,
+        "best_time": "20:00-22:00",
+        "recommend": "电商闭环"
+      }
+    ]
   },
-  "revenue_projection": {
-    "month_1": {
-      "units": 8500,
-      "revenue": 2193000
-    },
-    "month_3": {
-      "units": 15000,
-      "revenue": 3870000
-    },
-    "month_6": {
-      "units": 22000,
-      "revenue": 5676000
-    },
-    "month_12": {
-      "units": 35000,
-      "revenue": 9030000
-    },
-    "year_1_total_revenue": 62400000,
-    "year_1_customers": 240000
-  },
-  "risk_assessment": [
+  "channel_ranking": [
     {
-      "risk": "美白品类竞争激烈",
-      "probability": "高",
-      "impact": "中",
-      "mitigation": "差异化成分故事+医生背书"
+      "platform": "小红书",
+      "score": 1.0,
+      "rec": "强烈推荐，匹配度极高"
     },
     {
-      "risk": "烟酰胺不耐受投诉",
-      "probability": "中",
-      "impact": "高",
-      "mitigation": "建立耐受指南+客服培训"
+      "platform": "抖音",
+      "score": 0.85,
+      "rec": "推荐，流量大但需优化内容"
     },
     {
-      "risk": "KOL效果不及预期",
-      "probability": "中",
-      "impact": "中",
-      "mitigation": "小批量测试+数据监控"
+      "platform": "天猫旗舰店",
+      "score": 0.78,
+      "rec": "推荐，电商闭环"
     },
     {
-      "risk": "供应链断货",
-      "probability": "低",
-      "impact": "高",
-      "mitigation": "双供应商+安全库存"
+      "platform": "京东",
+      "score": 0.65,
+      "rec": "可选，补充渠道"
     }
   ],
-  "recommendations": [
-    "首月聚焦小红书种草，建立成分口碑",
-    "与3-5位皮肤科医生合作，建立专业背书",
-    "首月限量1000份试用装，收集真实反馈",
-    "建立烟酰胺耐受指南，降低退货率",
-    "第3个月开始抖音直播带货"
-  ]
+  "xiaohongshu": [
+    {
+      "style": "成分测评",
+      "impressions": 250000,
+      "interactions": 15000,
+      "rate": 0.06,
+      "best": true
+    },
+    {
+      "style": "before/after",
+      "impressions": 180000,
+      "interactions": 12000,
+      "rate": 0.067,
+      "best": false
+    },
+    {
+      "style": "护肤教程",
+      "impressions": 200000,
+      "interactions": 10000,
+      "rate": 0.05,
+      "best": false
+    },
+    {
+      "style": "合集推荐",
+      "impressions": 150000,
+      "interactions": 8000,
+      "rate": 0.053,
+      "best": false
+    }
+  ],
+  "competitors": [
+    {
+      "name": "SK-II小灯泡",
+      "price": 1280,
+      "share": 0.25,
+      "strengths": [
+        "品牌力强",
+        "口碑积累深"
+      ],
+      "weaknesses": [
+        "价格极高"
+      ]
+    },
+    {
+      "name": "OLAY小白瓶",
+      "price": 299,
+      "share": 0.3,
+      "strengths": [
+        "性价比高",
+        "渠道广"
+      ],
+      "weaknesses": [
+        "同质化严重"
+      ]
+    },
+    {
+      "name": "修丽可CE精华",
+      "price": 1580,
+      "share": 0.15,
+      "strengths": [
+        "医学背景",
+        "抗氧化标杆"
+      ],
+      "weaknesses": [
+        "价格极高"
+      ]
+    },
+    {
+      "name": "珀莱雅双抗",
+      "price": 189,
+      "share": 0.2,
+      "strengths": [
+        "国货之光",
+        "营销强"
+      ],
+      "weaknesses": [
+        "品牌溢价低"
+      ]
+    }
+  ],
+  "financial": {
+    "unit_economics": {
+      "avg_price": 258,
+      "cogs": 52,
+      "gross_margin": 0.8,
+      "cac": 85,
+      "ltv": 774,
+      "ltv_cac_ratio": 9.1,
+      "payback_months": 1.1
+    },
+    "projections": {
+      "y1": {
+        "revenue": 62400000,
+        "customers": 240000,
+        "cost": 25000000
+      },
+      "y2": {
+        "revenue": 120000000,
+        "customers": 465000,
+        "cost": 42000000
+      },
+      "y3": {
+        "revenue": 180000000,
+        "customers": 698000,
+        "cost": 58000000
+      }
+    },
+    "breakeven_months": 8
+  },
+  "action_plan": [
+    {
+      "week": "1-2",
+      "action": "产品定型+包装设计",
+      "budget": 50000
+    },
+    {
+      "week": "3-4",
+      "action": "皮肤科医生KOL合作启动",
+      "budget": 25000
+    },
+    {
+      "week": "5-6",
+      "action": "小红书种草内容投放",
+      "budget": 80000
+    },
+    {
+      "week": "7-8",
+      "action": "素人测评号铺量",
+      "budget": 50000
+    },
+    {
+      "week": "9-10",
+      "action": "抖音短视频引流",
+      "budget": 100000
+    },
+    {
+      "week": "11-12",
+      "action": "天猫旗舰店上线+首销",
+      "budget": 150000
+    },
+    {
+      "week": "13-14",
+      "action": "数据复盘+策略调整",
+      "budget": 0
+    },
+    {
+      "week": "15-16",
+      "action": "放量投放+直播带货",
+      "budget": 200000
+    }
+  ],
+  "maturity_assessment": {
+    "product": 85,
+    "market": 78,
+    "channel": 82,
+    "brand": 45,
+    "supply_chain": 70,
+    "overall": 72
+  }
 }
