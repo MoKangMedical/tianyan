@@ -1,56 +1,57 @@
-# Contributing to Tianyan
+# 🤝 贡献指南
 
-感谢你对天眼平台的兴趣！
+感谢你对本项目的关注！我们欢迎所有形式的贡献。
 
-## 开发环境
+## 如何贡献
 
-```bash
-git clone https://github.com/MoKangMedical/tianyan.git
-cd tianyan
-pip install -e ".[dev]"
-python -m pytest tests/ -v
+### 报告 Bug
+使用 [Bug Report](https://github.com/MoKangMedical/tianyan/issues/new?template=bug_report.md) 模板提交问题。
+
+### 功能建议
+使用 [Feature Request](https://github.com/MoKangMedical/tianyan/issues/new?template=feature_request.md) 模板提出建议。
+
+### 代码贡献
+
+1. Fork 项目
+2. 创建功能分支 (`git checkout -b feature/amazing-feature`)
+3. 提交更改 (`git commit -m 'feat: add amazing feature'`)
+4. 推送到分支 (`git push origin feature/amazing-feature`)
+5. 创建 Pull Request
+
+## 开发规范
+
+### 提交信息格式
+```
+<type>(<scope>): <subject>
+
+类型：
+- feat: 新功能
+- fix: 修复 Bug
+- docs: 文档更新
+- style: 代码格式（不影响功能）
+- refactor: 重构
+- test: 测试相关
+- chore: 构建/工具相关
 ```
 
-## 代码规范
+### 代码风格
+- Python: PEP 8 / Black 格式化
+- TypeScript: ESLint + Prettier
+- 提交前运行 `lint` 检查
 
-- Python 3.11+，使用类型注解
-- 所有新功能必须有测试
-- 测试覆盖率达到80%以上
-- 遵循PEP 8代码风格
+### 分支策略
+- `main`: 稳定版本
+- `develop`: 开发分支
+- `feature/*`: 功能分支
+- `fix/*`: 修复分支
 
-## 提交规范
+## 社区准则
 
-```
-feat: 新功能
-fix: 修复bug
-docs: 文档更新
-test: 测试相关
-refactor: 重构
-```
+- 尊重所有参与者
+- 建设性讨论
+- 不接受任何形式的骚扰
 
-## 测试
+## 联系方式
 
-```bash
-# 运行全部测试
-python -m pytest tests/ -v
-
-# 运行特定测试文件
-python -m pytest tests/test_demo_server.py -v
-
-# 带覆盖率
-python -m pytest tests/ --cov=tianyan --cov-report=html
-```
-
-## 部署
-
-```bash
-# Docker
-docker-compose up -d
-
-# 手动
-python demo_server.py
-```
-
-## 许可证
-
-MIT License
+- GitHub Issues: 提交问题
+- Email: MoKangMedical@users.noreply.github.com

@@ -1,0 +1,329 @@
+{
+  "version": "1.0",
+  "description": "天眼虚拟人群数据模板 — 10种核心人群画像",
+  "generated_at": "2026-04-26",
+  "population_profiles": [
+    {
+      "id": "P01",
+      "name": "都市白领丽人",
+      "gender_ratio": {"female": 0.75, "male": 0.25},
+      "age_range": [25, 35],
+      "avg_age": 29,
+      "monthly_income": {"min": 8000, "max": 25000, "avg": 15000, "unit": "CNY"},
+      "tier_1_ratio": 0.6,
+      "tier_2_ratio": 0.3,
+      "tier_3_ratio": 0.1,
+      "cities": ["上海", "北京", "深圳", "杭州", "成都", "广州"],
+      "education": ["本科", "硕士"],
+      "consumption_habits": {
+        "monthly_spending": 6000,
+        "categories": ["美妆护肤", "服饰鞋包", "餐饮外卖", "健身运动", "知识付费"],
+        "preferred_channels": ["小红书", "天猫", "抖音", "京东"],
+        "brand_loyalty": 0.6,
+        "price_sensitivity": 0.4,
+        "impulse_buying": 0.65,
+        "research_before_buy": 0.7
+      },
+      "values": ["品质生活", "自我提升", "颜值经济", "社交认同"],
+      "lifestyle": {
+        "social_media_hours": 3.5,
+        "online_shopping_weekly": 2.8,
+        "offline_shopping_monthly": 4,
+        "content_consumption": ["短视频", "种草笔记", "播客"]
+      },
+      "population_share": 0.12,
+      "description": "一二线城市年轻职业女性，注重品质与颜值，活跃于社交媒体，易被种草"
+    },
+    {
+      "id": "P02",
+      "name": "小镇青年",
+      "gender_ratio": {"female": 0.48, "male": 0.52},
+      "age_range": [18, 28],
+      "avg_age": 23,
+      "monthly_income": {"min": 3000, "max": 8000, "avg": 5500, "unit": "CNY"},
+      "tier_1_ratio": 0.05,
+      "tier_2_ratio": 0.25,
+      "tier_3_ratio": 0.7,
+      "cities": ["洛阳", "潍坊", "遵义", "赣州", "湛江", "绵阳"],
+      "education": ["大专", "本科"],
+      "consumption_habits": {
+        "monthly_spending": 2800,
+        "categories": ["游戏充值", "短视频打赏", "快消饮品", "运动鞋服", "数码配件"],
+        "preferred_channels": ["拼多多", "快手", "抖音", "淘宝"],
+        "brand_loyalty": 0.35,
+        "price_sensitivity": 0.8,
+        "impulse_buying": 0.7,
+        "research_before_buy": 0.3
+      },
+      "values": ["性价比", "娱乐至上", "从众心理", "面子消费"],
+      "lifestyle": {
+        "social_media_hours": 4.5,
+        "online_shopping_weekly": 3.2,
+        "offline_shopping_monthly": 6,
+        "content_consumption": ["短视频", "直播", "游戏直播"]
+      },
+      "population_share": 0.18,
+      "description": "三四线城市年轻群体，时间充裕，价格敏感但冲动消费高，短视频深度用户"
+    },
+    {
+      "id": "P03",
+      "name": "新中产家庭",
+      "gender_ratio": {"female": 0.55, "male": 0.45},
+      "age_range": [30, 45],
+      "avg_age": 37,
+      "monthly_income": {"min": 20000, "max": 60000, "avg": 35000, "unit": "CNY"},
+      "tier_1_ratio": 0.5,
+      "tier_2_ratio": 0.4,
+      "tier_3_ratio": 0.1,
+      "cities": ["上海", "北京", "杭州", "南京", "苏州", "厦门"],
+      "education": ["本科", "硕士", "博士"],
+      "consumption_habits": {
+        "monthly_spending": 15000,
+        "categories": ["教育培训", "母婴用品", "家居家装", "健康食品", "旅游度假"],
+        "preferred_channels": ["京东", "天猫", "山姆会员店", "盒马"],
+        "brand_loyalty": 0.8,
+        "price_sensitivity": 0.3,
+        "impulse_buying": 0.3,
+        "research_before_buy": 0.9
+      },
+      "values": ["子女教育", "家庭幸福", "资产保值", "健康生活"],
+      "lifestyle": {
+        "social_media_hours": 2.0,
+        "online_shopping_weekly": 2.0,
+        "offline_shopping_monthly": 8,
+        "content_consumption": ["公众号深度文章", "得到/喜马拉雅", "知乎"]
+      },
+      "population_share": 0.15,
+      "description": "一二线城市有房有车中产家庭，消费理性但舍得为教育和健康花钱"
+    },
+    {
+      "id": "P04",
+      "name": "银发一族",
+      "gender_ratio": {"female": 0.52, "male": 0.48},
+      "age_range": [55, 75],
+      "avg_age": 63,
+      "monthly_income": {"min": 2000, "max": 8000, "avg": 4500, "unit": "CNY"},
+      "tier_1_ratio": 0.3,
+      "tier_2_ratio": 0.4,
+      "tier_3_ratio": 0.3,
+      "cities": ["全国分布"],
+      "education": ["高中", "大专", "本科"],
+      "consumption_habits": {
+        "monthly_spending": 2500,
+        "categories": ["保健品", "药品", "生鲜食品", "旅游", "广场舞/太极装备"],
+        "preferred_channels": ["线下商超", "电视购物", "拼多多", "微信小程序"],
+        "brand_loyalty": 0.85,
+        "price_sensitivity": 0.7,
+        "impulse_buying": 0.2,
+        "research_before_buy": 0.4
+      },
+      "values": ["健康长寿", "节俭持家", "子女牵挂", "社交归属"],
+      "lifestyle": {
+        "social_media_hours": 2.5,
+        "online_shopping_weekly": 0.8,
+        "offline_shopping_monthly": 12,
+        "content_consumption": ["短视频(微信/抖音)", "养生文章", "戏曲"]
+      },
+      "population_share": 0.20,
+      "description": "退休或接近退休群体，品牌忠诚度高但价格敏感，健康是第一关注点"
+    },
+    {
+      "id": "P05",
+      "name": "Z世代学生",
+      "gender_ratio": {"female": 0.5, "male": 0.5},
+      "age_range": [16, 24],
+      "avg_age": 20,
+      "monthly_income": {"min": 1000, "max": 4000, "avg": 2000, "unit": "CNY"},
+      "tier_1_ratio": 0.3,
+      "tier_2_ratio": 0.4,
+      "tier_3_ratio": 0.3,
+      "cities": ["大学城所在城市"],
+      "education": ["高中", "本科在读", "硕士在读"],
+      "consumption_habits": {
+        "monthly_spending": 1800,
+        "categories": ["潮牌服饰", "盲盒手办", "游戏", "奶茶咖啡", "美妆"],
+        "preferred_channels": ["得物", "淘宝", "抖音", "B站会员购"],
+        "brand_loyalty": 0.3,
+        "price_sensitivity": 0.65,
+        "impulse_buying": 0.8,
+        "research_before_buy": 0.5
+      },
+      "values": ["个性表达", "圈层认同", "颜值正义", "国潮自信"],
+      "lifestyle": {
+        "social_media_hours": 5.0,
+        "online_shopping_weekly": 3.5,
+        "offline_shopping_monthly": 5,
+        "content_consumption": ["B站", "小红书", "微博", "QQ空间"]
+      },
+      "population_share": 0.10,
+      "description": "在校学生群体，消费能力有限但消费意愿强，追求个性和圈层认同"
+    },
+    {
+      "id": "P06",
+      "name": "蓝领工人",
+      "gender_ratio": {"female": 0.3, "male": 0.7},
+      "age_range": [22, 50],
+      "avg_age": 35,
+      "monthly_income": {"min": 4000, "max": 10000, "avg": 6500, "unit": "CNY"},
+      "tier_1_ratio": 0.2,
+      "tier_2_ratio": 0.3,
+      "tier_3_ratio": 0.5,
+      "cities": ["东莞", "佛山", "苏州", "宁波", "温州", "泉州"],
+      "education": ["初中", "高中", "中专"],
+      "consumption_habits": {
+        "monthly_spending": 3000,
+        "categories": ["烟酒", "方便食品", "手机", "劳保用品", "彩票"],
+        "preferred_channels": ["拼多多", "快手", "线下小店"],
+        "brand_loyalty": 0.4,
+        "price_sensitivity": 0.85,
+        "impulse_buying": 0.5,
+        "research_before_buy": 0.2
+      },
+      "values": ["实惠耐用", "养家糊口", "同乡社交", "返乡体面"],
+      "lifestyle": {
+        "social_media_hours": 3.0,
+        "online_shopping_weekly": 1.5,
+        "offline_shopping_monthly": 8,
+        "content_consumption": ["快手", "今日头条", "小说APP"]
+      },
+      "population_share": 0.13,
+      "description": "制造业/服务业从业者，消费务实，价格极度敏感，社交圈以同乡同事为主"
+    },
+    {
+      "id": "P07",
+      "name": "创业老板",
+      "gender_ratio": {"female": 0.35, "male": 0.65},
+      "age_range": [28, 55],
+      "avg_age": 40,
+      "monthly_income": {"min": 30000, "max": 200000, "avg": 80000, "unit": "CNY"},
+      "tier_1_ratio": 0.4,
+      "tier_2_ratio": 0.45,
+      "tier_3_ratio": 0.15,
+      "cities": ["深圳", "杭州", "广州", "成都", "长沙", "武汉"],
+      "education": ["本科", "硕士", "MBA"],
+      "consumption_habents": {
+        "monthly_spending": 30000,
+        "categories": ["商务社交", "高端餐饮", "商务出行", "办公设备", "管理课程"],
+        "preferred_channels": ["京东企业购", "天猫", "线下专卖店", "朋友推荐"],
+        "brand_loyalty": 0.7,
+        "price_sensitivity": 0.15,
+        "impulse_buying": 0.4,
+        "research_before_buy": 0.6
+      },
+      "values": ["效率优先", "人脉资源", "品牌象征", "时间成本"],
+      "lifestyle": {
+        "social_media_hours": 1.5,
+        "online_shopping_weekly": 1.0,
+        "offline_shopping_monthly": 6,
+        "content_consumption": ["得到", "36氪", "虎嗅", "行业报告"]
+      },
+      "population_share": 0.05,
+      "description": "中小企业主/创业者，注重效率和品牌，消费决策快但客单价高"
+    },
+    {
+      "id": "P08",
+      "name": "宝妈群体",
+      "gender_ratio": {"female": 0.95, "male": 0.05},
+      "age_range": [25, 40],
+      "avg_age": 32,
+      "monthly_income": {"min": 5000, "max": 15000, "avg": 9000, "unit": "CNY"},
+      "tier_1_ratio": 0.3,
+      "tier_2_ratio": 0.45,
+      "tier_3_ratio": 0.25,
+      "cities": ["全国分布，偏向二三线"],
+      "education": ["大专", "本科"],
+      "consumption_habits": {
+        "monthly_spending": 5000,
+        "categories": ["母婴用品", "儿童教育", "家庭清洁", "生鲜食材", "亲子旅游"],
+        "preferred_channels": ["小红书", "淘宝", "拼多多", "微信社群团购"],
+        "brand_loyalty": 0.7,
+        "price_sensitivity": 0.6,
+        "impulse_buying": 0.45,
+        "research_before_buy": 0.85
+      },
+      "values": ["孩子至上", "安全第一", "精打细算", "宝妈社交"],
+      "lifestyle": {
+        "social_media_hours": 3.0,
+        "online_shopping_weekly": 4.0,
+        "offline_shopping_monthly": 8,
+        "content_consumption": ["小红书育儿", "宝妈群", "抖音亲子", "年糕妈妈"]
+      },
+      "population_share": 0.08,
+      "description": "有0-12岁孩子的母亲，消费以孩子为中心，决策前大量搜索比较"
+    },
+    {
+      "id": "P09",
+      "name": "科技极客",
+      "gender_ratio": {"female": 0.2, "male": 0.8},
+      "age_range": [20, 38],
+      "avg_age": 28,
+      "monthly_income": {"min": 12000, "max": 50000, "avg": 25000, "unit": "CNY"},
+      "tier_1_ratio": 0.7,
+      "tier_2_ratio": 0.25,
+      "tier_3_ratio": 0.05,
+      "cities": ["深圳", "北京", "杭州", "上海", "成都"],
+      "education": ["本科", "硕士", "博士"],
+      "consumption_habits": {
+        "monthly_spending": 8000,
+        "categories": ["数码3C", "编程工具", "AI产品", "游戏硬件", "极客装备"],
+        "preferred_channels": ["京东", "官网直购", "GitHub Sponsors", "闲鱼"],
+        "brand_loyalty": 0.5,
+        "price_sensitivity": 0.35,
+        "impulse_buying": 0.55,
+        "research_before_buy": 0.95
+      },
+      "values": ["技术信仰", "参数至上", "开源精神", "尝鲜意愿"],
+      "lifestyle": {
+        "social_media_hours": 4.0,
+        "online_shopping_weekly": 1.5,
+        "offline_shopping_monthly": 2,
+        "content_consumption": ["GitHub", "HackerNews", "B站科技区", "即刻"]
+      },
+      "population_share": 0.04,
+      "description": "互联网/科技从业者，技术驱动消费，参数敏感，愿意为新技术买单"
+    },
+    {
+      "id": "P10",
+      "name": "小城退休族",
+      "gender_ratio": {"female": 0.55, "male": 0.45},
+      "age_range": [50, 70],
+      "avg_age": 58,
+      "monthly_income": {"min": 2500, "max": 6000, "avg": 3800, "unit": "CNY"},
+      "tier_1_ratio": 0.05,
+      "tier_2_ratio": 0.2,
+      "tier_3_ratio": 0.75,
+      "cities": ["三四线城市及县城"],
+      "education": ["初中", "高中"],
+      "consumption_habits": {
+        "monthly_spending": 2000,
+        "categories": ["米面粮油", "中老年服装", "保健品", "棋牌娱乐", "广场舞装备"],
+        "preferred_channels": ["线下超市", "拼多多", "社区团购", "赶集/庙会"],
+        "brand_loyalty": 0.9,
+        "price_sensitivity": 0.9,
+        "impulse_buying": 0.15,
+        "research_before_buy": 0.2
+      },
+      "values": ["勤俭节约", "熟人推荐", "传统习惯", "健康养生"],
+      "lifestyle": {
+        "social_media_hours": 2.0,
+        "online_shopping_weekly": 0.5,
+        "offline_shopping_monthly": 15,
+        "content_consumption": ["电视", "微信聊天", "今日头条"]
+      },
+      "population_share": 0.05,
+      "description": "小城市退休群体，极度价格敏感，消费习惯固化，熟人推荐是核心决策因素"
+    }
+  ],
+  "metadata": {
+    "total_profiles": 10,
+    "coverage": "中国主要消费人群",
+    "data_sources": [
+      "国家统计局第七次人口普查数据",
+      "中国互联网络信息中心(CNNIC)报告",
+      "麦肯锡中国消费者调查报告",
+      "艾瑞咨询行业数据"
+    ],
+    "update_frequency": "季度更新",
+    "population_share_sum": 1.0
+  }
+}

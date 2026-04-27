@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>天眼 Tianyan — 报告生成</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,sans-serif;background:#f5f7fa;color:#333;max-width:800px;margin:0 auto}
+.hdr{background:linear-gradient(135deg,#1565c0,#0d47a1);color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+.hdr h1{font-size:18px}.hdr nav{display:flex;gap:8px}
+.hdr nav a{color:rgba(255,255,255,.8);text-decoration:none;font-size:12px;padding:4px 10px;border-radius:6px;background:rgba(255,255,255,.15)}
+.wrap{padding:16px}
+.card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card h3{font-size:14px;color:#1565c0;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+select,input,textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;margin:4px 0 8px;font-size:13px}
+.btn{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;font-size:14px}
+.btn.blue{background:#1565c0;color:#fff}
+.btn.outline{background:#fff;color:#1565c0;border:1px solid #1565c0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:10px 0}
+.report-card{border:2px solid #e0e0e0;border-radius:10px;padding:12px;text-align:center;cursor:pointer;transition:.2s}
+.report-card.selected{border-color:#1565c0;background:#e3f2fd}
+.report-card .icon{font-size:28px}.report-card .name{font-weight:700;font-size:14px;color:#1565c0;margin:4px 0}
+.report-card .price{font-size:16px;font-weight:800;color:#e65100}.report-card .desc{font-size:11px;color:#888}
+.step{display:flex;gap:10px;margin:8px 0;padding:10px;border-radius:8px;font-size:12px}
+.step.done{background:#e0f2f1;color:#00695c}.step.active{background:#e3f2fd;color:#1565c0}.step.pending{background:#f5f5f5;color:#888}
+.step .num{font-weight:800;font-size:14px;min-width:24px;text-align:center}
+.report-section{border-left:3px solid #1565c0;padding-left:14px;margin:12px 0}
+.report-section h4{font-size:14px;color:#1565c0;margin-bottom:6px}
+.report-section p{font-size:13px;line-height:1.8;color:#555}
+.chart-bar{display:flex;align-items:center;gap:8px;margin:4px 0;font-size:12px}
+.chart-label{width:80px;text-align:right;font-weight:600;font-size:12px}
+.chart-bar .bar{height:20px;border-radius:4px;display:flex;align-items:center;padding:0 8px;color:#fff;font-size:11px;font-weight:700}
+.tag{display:inline-block;padding:2px 8px;border-radius:8px;font-size:11px}
+.tag.blue{background:#e3f2fd;color:#1565c0}.tag.green{background:#e0f2f1;color:#00695c}.tag.orange{background:#fff3e0;color:#e65100}
+.table-mini{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+.table-mini th{background:#f5f5f5;padding:6px;text-align:center;border-bottom:2px solid #e0e0e0}
+.table-mini td{padding:6px;text-align:center;border-bottom:1px solid #f0f0f0}
+.finding{padding:10px;background:#f5f5f5;border-radius:8px;margin:6px 0;font-size:13px}
+.finding .tag{margin-right:6px}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <h1>👁️ 天眼 Tianyan</h1>
+  <nav><a href="/">📋 定价</a><a href="/report">📊 报告生成</a></nav>
+</div>
+
+<div class="wrap">
+  <!-- Step 1: 选择报告类型 -->
+  <div class="card">
+    <div class="step active"><div class="num">1</div><div>选择报告类型</div></div>
+    <div class="grid">
+      <div class="report-card selected" onclick="selectReport(this,'competitor','⚔️ 竞品深度分析',2000)"><div class="icon">⚔️</div><div class="name">竞品分析</div><div class="price">¥2,000</div><div class="desc">商业模式+产品策略+定价</div></div>
+      <div class="report-card" onclick="selectReport(this,'market-entry','🚀 市场进入分析',3000)"><div class="icon">🚀</div><div class="name">市场进入</div><div class="price">¥3,000</div><div class="desc">规模+竞争+进入策略</div></div>
+      <div class="report-card" onclick="selectReport(this,'consumer','👥 消费者洞察',2500)"><div class="icon">👥</div><div class="name">消费者洞察</div><div class="price">¥2,500</div><div class="desc">人群画像+需求+决策</div></div>
+      <div class="report-card" onclick="selectReport(this,'product-launch','📦 新品上市预测',3500)"><div class="icon">📦</div><div class="name">新品预测</div><div class="price">¥3,500</div><div class="desc">接受度+销量+定价</div></div>
+      <div class="report-card" onclick="selectReport(this,'trend','📈 行业趋势',2000)"><div class="icon">📈</div><div class="name">行业趋势</div><div class="price">¥2,000</div><div class="desc">方向+趋势+机会</div></div>
+      <div class="report-card" onclick="selectReport(this,'pricing','💰 定价优化',2500)"><div class="icon">💰</div><div class="name">定价优化</div><div class="price">¥2,500</div><div class="desc">弹性+竞品+最优价</div></div>
+    </div>
+  </div>
+
+  <!-- Step 2: 填写需求 -->
+  <div class="card">
+    <div class="step active"><div class="num">2</div><div>填写分析需求</div></div>
+    <label>公司名称</label><input id="company" placeholder="您的公司名称">
+    <label>分析对象</label><input id="target" placeholder="如：GLP-1减重市场 / 德适生物 / 某竞品">
+    <label>补充说明（可选）</label><textarea id="notes" rows="3" placeholder="特别关注的角度、已有数据等"></textarea>
+    <button class="btn blue" onclick="startAnalysis()" style="width:100%;margin-top:8px">🚀 开始AI分析</button>
+  </div>
+
+  <!-- 分析进度 -->
+  <div class="card" id="progressCard" style="display:none">
+    <div class="step active"><div class="num">3</div><div>AI分析中...</div></div>
+    <div id="progressSteps">
+      <div class="step pending" id="step1">🔍 数据采集：多源数据抓取</div>
+      <div class="step pending" id="step2">📊 数据清洗：结构化处理</div>
+      <div class="step pending" id="step3">🧠 深度分析：AI模型推理</div>
+      <div class="step pending" id="step4">📝 报告生成：结构化输出</div>
+      <div class="step pending" id="step5">✅ 质量校验：完整性检查</div>
+    </div>
+  </div>
+
+  <!-- 报告结果 -->
+  <div class="card" id="reportCard" style="display:none">
+    <div class="step done"><div class="num">✅</div><div>报告已生成</div></div>
+    <div style="text-align:center;padding:10px;background:#e3f2fd;border-radius:8px;margin-bottom:12px">
+      <div style="font-size:16px;font-weight:700;color:#1565c0" id="reportTitle">竞品深度分析：德适生物</div>
+      <div style="font-size:12px;color:#888;margin-top:4px">生成时间：<span id="reportTime">2026-04-26 16:00</span> · 付费：¥2,000</div>
+    </div>
+
+    <div class="report-section">
+      <h4>📊 一、执行摘要</h4>
+      <p>德适生物成立于2016年，总部杭州，是国内AI医疗影像领域的头部企业。累计融资超10亿元，估值约170亿人民币。核心产品覆盖眼科AI诊断、病理AI、基因组分析三大方向。2025年申报港股18A上市。</p>
+    </div>
+
+    <div class="report-section">
+      <h4>⚔️ 二、竞品全景对比</h4>
+      <table class="table-mini">
+        <tr><th>维度</th><th>德适生物</th><th>您公司</th><th>差距</th></tr>
+        <tr><td>核心赛道</td><td>AI影像诊断</td><td>AI罕见病诊断</td><td>差异化定位</td></tr>
+        <tr><td>商业模式</td><td>医院SaaS</td><td>药企付费</td><td>付费方不同</td></tr>
+        <tr><td>融资阶段</td><td>Pre-IPO</td><td>种子轮</td><td>资金差距大</td></tr>
+        <tr><td>技术壁垒</td><td>影像AI</td><td>NLP+知识图谱</td><td>技术互补</td></tr>
+        <tr><td>团队规模</td><td>500+</td><td>1-5人</td><td>需AI杠杆</td></tr>
+      </table>
+    </div>
+
+    <div class="report-section">
+      <h4>📈 三、市场格局</h4>
+      <div class="chart-bar"><div class="chart-label">德适生物</div><div class="bar" style="width:35%;background:#1565c0">35%</div></div>
+      <div class="chart-bar"><div class="chart-label">推想医疗</div><div class="bar" style="width:22%;background:#42a5f5">22%</div></div>
+      <div class="chart-bar"><div class="chart-label">数坤科技</div><div class="bar" style="width:18%;background:#64b5f6">18%</div></div>
+      <div class="chart-bar"><div class="chart-label">鹰瞳科技</div><div class="bar" style="width:12%;background:#90caf9">12%</div></div>
+      <div class="chart-bar"><div class="chart-label">其他</div><div class="bar" style="width:13%;background:#bbdefb">13%</div></div>
+    </div>
+
+    <div class="report-section">
+      <h4>💡 四、关键发现</h4>
+      <div class="finding"><span class="tag green">机会</span>德适聚焦影像，罕见病NLP诊断是空白赛道，可差异化切入</div>
+      <div class="finding"><span class="tag orange">风险</span>医院付费模式决策周期长（6-12月），药企付费更快（1-3月）</div>
+      <div class="finding"><span class="tag blue">建议</span>对标德适商业模式但避开其赛道，以OPC模式+AI杠杆实现低成本高效率</div>
+      <div class="finding"><span class="tag green">机会</span>港股18A路径已验证（德适2025年申报），可作为上市参考</div>
+    </div>
+
+    <div class="report-section">
+      <h4>🎯 五、战略建议</h4>
+      <p>1. <strong>定位差异化</strong>：德适做影像→您做NLP+知识图谱，互补而非竞争<br>
+      2. <strong>付费方差异化</strong>：医院SaaS→药企付费，决策更快回款更稳<br>
+      3. <strong>规模差异化</strong>：500人团队→OPC一人公司，AI驱动90%运营<br>
+      4. <strong>路径参考</strong>：学习德适10年路径但压缩到3-5年（AI加速）</p>
+    </div>
+
+    <div style="text-align:center;margin-top:12px">
+      <button class="btn blue" onclick="downloadReport()">📥 下载PDF</button>
+      <button class="btn outline" style="margin-left:8px" onclick="emailReport()">📧 发送邮箱</button>
+      <button class="btn outline" style="margin-left:8px" onclick="shareReport()">🔗 生成分享链接</button>
+    </div>
+  </div>
+
+  <!-- 历史报告 -->
+  <div class="card">
+    <h3>📚 历史报告</h3>
+    <div style="font-size:12px;line-height:2.2">
+      📄 <a href="#">竞品分析：德适生物</a> <span class="tag blue">已完成</span> · ¥2,000<br>
+      📄 <a href="#">市场进入：GLP-1减重赛道</a> <span class="tag orange">分析中</span> · ¥3,000<br>
+      📄 <a href="#">行业趋势：基因治疗2026</a> <span class="tag green">已完成</span> · ¥2,000
+    </div>
+  </div>
+</div>
+
+<script>
+let selectedReport={type:'competitor',name:'⚔️ 竞品深度分析',price:2000};
+function selectReport(el,type,name,price){
+  document.querySelectorAll('.report-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedReport={type,name,price};
+}
+function downloadReport(){
+  const el=document.getElementById("reportCard");
+  const title=document.getElementById("reportTitle").textContent;
+  // 生成简单文本版报告
+  let text=title+"\n"+"=".repeat(40)+"\n\n";
+  el.querySelectorAll(".report-section").forEach(s=>{
+    text+=s.querySelector("h4").textContent+"\n";
+    text+=s.querySelector("p")?.textContent||""+"\n\n";
+  });
+  const blob=new Blob([text],{type:"text/plain;charset=utf-8"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=title+".txt";
+  a.click();
+  alert("✅ 报告已下载："+title+".txt");
+}
+function emailReport(){
+  const email=prompt("请输入接收邮箱：");
+  if(email){alert("✅ 报告已发送至："+email+"\n请查收邮件（5分钟内送达）");}
+}
+function shareReport(){
+  const link="https://tianyan.ai/report/share/"+Date.now();
+  prompt("分享链接已生成，复制发送给他人：",link);
+}
+
+function startAnalysis(){
+  const company=document.getElementById('company').value;
+  const target=document.getElementById('target').value;
+  if(!company||!target){alert('请填写公司名称和分析对象');return;}
+  document.getElementById('progressCard').style.display='block';
+  document.getElementById('reportCard').style.display='none';
+  const steps=['step1','step2','step3','step4','step5'];
+  steps.forEach((s,i)=>{
+    setTimeout(()=>{
+      const el=document.getElementById(s);
+      el.className='step'+(i<4?' active':' done');
+      if(i===steps.length-1){
+        setTimeout(()=>{
+          document.getElementById('reportCard').style.display='block';
+          document.getElementById('reportTitle').textContent=selectedReport.name+'：'+target;
+          document.getElementById('reportTime').textContent=new Date().toLocaleString('zh-CN');
+        },500);
+      }
+    },(i+1)*800);
+  });
+}
+</script>
+</body>
+</html>

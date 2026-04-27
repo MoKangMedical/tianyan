@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tianyan Library Viewer</title>
+    <meta name="description" content="天眼能力库内容浏览器，用于查看报告、skills 与源材料。">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/github-pages.css">
+</head>
+<body class="page-home">
+    <div class="page-aura page-aura-one"></div>
+    <div class="page-aura page-aura-two"></div>
+
+    <header class="site-nav site-nav-compact">
+        <a class="nav-brand" href="../index.html#top">
+            <span class="nav-brand-mark">◉</span>
+            <span>
+                <strong>天眼 Tianyan</strong>
+                <em>Library Viewer</em>
+            </span>
+        </a>
+        <nav class="nav-links">
+            <a href="../index.html#domains">研究域</a>
+            <a href="../index.html#pipeline">报告流</a>
+            <a href="../index.html#report-skills">能力库</a>
+        </nav>
+        <a class="nav-cta" href="../index.html#report-skills">返回主页</a>
+    </header>
+
+    <main class="report-main viewer-main">
+        <section class="report-hero viewer-hero">
+            <article class="report-panel">
+                <p class="section-kicker" id="viewer-mode-label">Library Viewer</p>
+                <h1 id="viewer-title">加载中</h1>
+                <p class="section-body" id="viewer-summary">正在读取仓库内容。</p>
+                <div class="hero-meta viewer-meta">
+                    <span id="viewer-category">内容</span>
+                    <span id="viewer-type">Document</span>
+                    <span id="viewer-path">-</span>
+                </div>
+                <div class="hero-actions">
+                    <a class="button button-primary" id="viewer-source-link" href="#">打开源文件</a>
+                    <a class="button button-secondary" href="../index.html#report-skills">返回能力库</a>
+                </div>
+            </article>
+
+            <aside class="report-panel viewer-sidebar">
+                <div class="panel-row">
+                    <span class="panel-label">Content Snapshot</span>
+                    <a class="text-link" id="viewer-raw-link" href="#">原始路径</a>
+                </div>
+                <div class="viewer-facts" id="viewer-facts"></div>
+                <p class="endpoint-description" id="viewer-note">文件摘要会显示在这里。</p>
+            </aside>
+        </section>
+
+        <section class="section">
+            <article class="report-panel viewer-content">
+                <div class="panel-row">
+                    <span class="panel-label">Rendered Content</span>
+                    <span class="tag-pill">GitHub Pages</span>
+                </div>
+                <div class="markdown-body" id="viewer-rendered">加载中...</div>
+            </article>
+        </section>
+    </main>
+
+    <script src="../assets/library-viewer.js"></script>
+</body>
+</html>
