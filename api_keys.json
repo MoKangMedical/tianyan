@@ -1,0 +1,18 @@
+{
+  "ty_a64b1250afdb7784f10298a50a46f58cbf14fe84747e655f": {
+    "name": "test",
+    "email": "test@test.com",
+    "role": "free",
+    "created_at": "2026-04-27T22:00:04.377137",
+    "daily_count": 0,
+    "last_date": "2026-04-27"
+  },
+  "ty_f30c84d21c09ba232b927661f7cda3d48ad3081d034d1e02": {
+    "name": "test",
+    "email": "test@test.com",
+    "role": "free",
+    "created_at": "2026-04-27T22:01:58.037805",
+    "daily_count": 0,
+    "last_date": "2026-04-27"
+  }
+}
