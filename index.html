@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/github-pages.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
 <body class="page-home">
     <div class="page-aura page-aura-one"></div>
@@ -428,6 +429,25 @@
                     </div>
                     <div id="demo-results" style="padding:16px 0;">
                         <p style="color:#64748b;text-align:center;padding:40px 0;">点击"运行预测"查看结果</p>
+                    </div>
+                </article>
+            </div>
+
+            <div class="report-two-column" style="margin-top:24px;" id="demo-charts-row" hidden>
+                <article class="report-panel">
+                    <div class="panel-row">
+                        <span class="panel-label">Purchase Intent by Segment</span>
+                    </div>
+                    <div style="padding:16px;">
+                        <canvas id="demo-chart-intent" height="200"></canvas>
+                    </div>
+                </article>
+                <article class="report-panel">
+                    <div class="panel-row">
+                        <span class="panel-label">Channel ROI Comparison</span>
+                    </div>
+                    <div style="padding:16px;">
+                        <canvas id="demo-chart-channels" height="200"></canvas>
                     </div>
                 </article>
             </div>
