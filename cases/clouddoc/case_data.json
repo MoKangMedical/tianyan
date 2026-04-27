@@ -1,0 +1,251 @@
+{
+  "case_name": "云诊通远程医疗平台商业预测",
+  "case_version": "1.0.0",
+  "created_at": "2026-04-27",
+  "platform": "天眼 Tianyan",
+  "disclaimer": "本案例所有数据均为天眼平台基于公开统计数据合成生成，不涉及任何真实个人信息或商业机密。",
+  "product": {
+    "name": "云诊通",
+    "brand": "CloudDoc",
+    "price_monthly": 99,
+    "category": "互联网医疗平台",
+    "form": "App + 小程序 + Web",
+    "registration": "互联网医院牌照",
+    "selling_points": [
+      "三甲医生在线问诊",
+      "AI智能分诊+辅助诊断",
+      "电子处方+药品配送到家",
+      "7x24小时随时问诊"
+    ],
+    "advantages": [
+      "突破地域限制获取优质医疗资源",
+      "AI辅助提高问诊效率",
+      "药品闭环配送便捷",
+      "价格仅为线下的1/3"
+    ],
+    "disadvantages": [
+      "用户对线上问诊信任度低",
+      "医生资源获取成本高",
+      "政策监管趋严",
+      "医保对接尚未打通"
+    ]
+  },
+  "target_market": {
+    "population_size_estimated": 200000000,
+    "age_range": [
+      20,
+      60
+    ],
+    "city_tiers": [
+      "一线城市",
+      "新一线城市",
+      "二线城市",
+      "三线及以下"
+    ],
+    "cities": [
+      "全国覆盖"
+    ],
+    "gender_split": {
+      "female": 0.55,
+      "male": 0.45
+    },
+    "income_brackets": {
+      "中等收入": {
+        "range": [
+          5000,
+          15000
+        ],
+        "pct": 0.45
+      },
+      "中高收入": {
+        "range": [
+          15000,
+          30000
+        ],
+        "pct": 0.3
+      },
+      "高收入": {
+        "range": [
+          30000,
+          100000
+        ],
+        "pct": 0.15
+      },
+      "低收入": {
+        "range": [
+          2000,
+          5000
+        ],
+        "pct": 0.1
+      }
+    },
+    "pain_points": [
+      "看病排队时间长",
+      "小病不想去医院",
+      "复诊开药不方便",
+      "基层医疗资源差",
+      "慢性病管理困难"
+    ],
+    "decision_factors": [
+      "医生资质 > 问诊体验 > 价格 > 配送速度 > 品牌"
+    ]
+  },
+  "competitors": [
+    {
+      "name": "好大夫在线",
+      "price_monthly": 60,
+      "form": "App + Web",
+      "strengths": [
+        "医生资源丰富",
+        "品牌知名度高",
+        "口碑积累深"
+      ],
+      "weaknesses": [
+        "界面老旧",
+        "AI能力弱",
+        "药品配送慢"
+      ],
+      "market_share_est": 0.25,
+      "brand_awareness": 0.85
+    },
+    {
+      "name": "平安好医生",
+      "price_monthly": 128,
+      "form": "App",
+      "strengths": [
+        "保险+医疗闭环",
+        "AI能力强",
+        "资金充裕"
+      ],
+      "weaknesses": [
+        "商业化过重",
+        "用户体验一般",
+        "医生质量参差"
+      ],
+      "market_share_est": 0.3,
+      "brand_awareness": 0.9
+    },
+    {
+      "name": "京东健康",
+      "price_monthly": 89,
+      "form": "App + 小程序",
+      "strengths": [
+        "药品配送快",
+        "电商基因",
+        "用户基数大"
+      ],
+      "weaknesses": [
+        "医疗属性弱",
+        "医生互动少"
+      ],
+      "market_share_est": 0.25,
+      "brand_awareness": 0.88
+    },
+    {
+      "name": "微医",
+      "price_monthly": 99,
+      "form": "App + Web",
+      "strengths": [
+        "互联网医院牌照",
+        "医保对接",
+        "政府关系"
+      ],
+      "weaknesses": [
+        "C端品牌弱",
+        "获客成本高"
+      ],
+      "market_share_est": 0.15,
+      "brand_awareness": 0.6
+    }
+  ],
+  "channels": {
+    "primary": {
+      "微信生态": {
+        "role": "小程序+公众号+社群",
+        "target_audience": "全年龄段",
+        "content_types": [
+          "健康科普",
+          "医生IP",
+          "社群运营",
+          "裂变活动"
+        ],
+        "budget_allocation": 0.35
+      },
+      "抖音/快手": {
+        "role": "医生IP短视频引流",
+        "target_audience": "25-55岁",
+        "content_types": [
+          "医生科普",
+          "问诊实录",
+          "健康知识"
+        ],
+        "budget_allocation": 0.3
+      },
+      "线下医院合作": {
+        "role": "导流+信任背书",
+        "target_audience": "复诊患者",
+        "content_types": [
+          "转诊合作",
+          "联合义诊"
+        ],
+        "budget_allocation": 0.25
+      }
+    },
+    "secondary": {
+      "百度/搜索": {
+        "role": "搜索流量",
+        "budget_allocation": 0.05
+      },
+      "企业客户": {
+        "role": "B端合作",
+        "budget_allocation": 0.05
+      }
+    }
+  },
+  "pricing": {
+    "current": 99,
+    "options": [
+      {
+        "price": 49,
+        "strategy": "低价获客",
+        "risk": "医生积极性低/服务质量下降"
+      },
+      {
+        "price": 99,
+        "strategy": "中端定位",
+        "risk": "与京东健康正面竞争"
+      },
+      {
+        "price": 199,
+        "strategy": "高端定位",
+        "risk": "获客困难"
+      }
+    ]
+  },
+  "kol_types": [
+    {
+      "type": "三甲医院医生IP",
+      "followers": "50-500万",
+      "cost_per_post": 30000,
+      "trust_score": 0.95
+    },
+    {
+      "type": "健康科普博主",
+      "followers": "10-100万",
+      "cost_per_post": 5000,
+      "trust_score": 0.75
+    },
+    {
+      "type": "护士/药师KOL",
+      "followers": "5-50万",
+      "cost_per_post": 3000,
+      "trust_score": 0.8
+    },
+    {
+      "type": "患者真实分享号",
+      "followers": "1-10万",
+      "cost_per_post": 500,
+      "trust_score": 0.88
+    }
+  ]
+}

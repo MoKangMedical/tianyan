@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LumiGlow 光感精华 案例报告 · 天眼 Tianyan</title>
+    <meta name="description" content="LumiGlow 光感焕颜精华液上市预测报告，包含市场空间、渠道策略、KOL建议、财务测算与风险矩阵。">
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/github-pages.css">
+</head>
+<body class="page-report">
+    <div class="page-aura page-aura-one"></div>
+    <div class="page-aura page-aura-two"></div>
+
+    <header class="site-nav site-nav-compact">
+        <a class="nav-brand" href="../../index.html">
+            <span class="nav-brand-mark">◉</span>
+            <span>
+                <strong>天眼 Tianyan</strong>
+                <em>LumiGlow Case</em>
+            </span>
+        </a>
+        <nav class="nav-links">
+            <a href="#overview">总览</a>
+            <a href="#narration">旁白</a>
+            <a href="#market">市场</a>
+            <a href="#channels">渠道</a>
+            <a href="#execution">执行</a>
+            <a href="#risks">风险</a>
+        </nav>
+        <a class="nav-cta" href="../../index.html">返回主页</a>
+    </header>
+
+    <main class="report-main">
+        <section class="report-hero reveal" id="overview">
+            <div class="report-hero-copy">
+                <p class="kicker">Case Report</p>
+                <h1 id="report-title">加载中</h1>
+                <p class="hero-text" id="report-subtitle">正在读取案例数据...</p>
+                <div class="hero-meta">
+                    <span id="report-date">--</span>
+                    <span id="report-methodology">--</span>
+                    <span id="report-disclaimer-short">Synthetic only</span>
+                </div>
+            </div>
+            <div class="report-highlight-grid">
+                <article class="metric-panel">
+                    <span class="metric-label">购买意愿</span>
+                    <strong class="metric-value" id="summary-intent">--</strong>
+                    <p class="metric-note" id="summary-confidence">--</p>
+                </article>
+                <article class="metric-panel">
+                    <span class="metric-label">建议定价</span>
+                    <strong class="metric-value" id="summary-price">--</strong>
+                    <p class="metric-note">基于转化与利润平衡</p>
+                </article>
+                <article class="metric-panel">
+                    <span class="metric-label">首推渠道</span>
+                    <strong class="metric-value" id="summary-channel">--</strong>
+                    <p class="metric-note" id="summary-channel-note">--</p>
+                </article>
+                <article class="metric-panel">
+                    <span class="metric-label">首年收入</span>
+                    <strong class="metric-value" id="summary-revenue">--</strong>
+                    <p class="metric-note" id="summary-customers">--</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section reveal">
+            <div class="section-head section-head-left">
+                <p class="section-kicker">Executive Readout</p>
+                <h2>先看结论，再决定看哪一层细节。</h2>
+            </div>
+            <div class="report-callouts" id="executive-callouts"></div>
+        </section>
+
+        <section class="section reveal" id="narration">
+            <div class="section-head section-head-left">
+                <p class="section-kicker">Narration Studio</p>
+                <h2>把报告摘要直接转成可播报素材。</h2>
+                <p class="section-body">
+                    这里的素材流会把案例报告拆成董事会摘要、渠道投放稿和风险提示三段脚本。页面可直接调用本地天眼音频接口，生成旁白、试听并下载。
+                </p>
+            </div>
+
+            <div class="studio-layout">
+                <article class="report-panel studio-config-panel" id="audio-config-panel" data-availability="checking">
+                    <div class="panel-row">
+                        <span class="panel-label">Audio Config</span>
+                        <span class="tag-pill tag-pill-status-checking" id="audio-connection-tag">检测中</span>
+                    </div>
+                    <div class="studio-form">
+                        <label class="studio-field">
+                            <span>音频接口地址</span>
+                            <input id="audio-api-base" class="studio-input" type="text" placeholder="https://tianyan-api.mokangmedical-dev.workers.dev">
+                        </label>
+                        <label class="studio-field">
+                            <span>音色</span>
+                            <select id="audio-voice" class="studio-input">
+                                <option value="default_zh">default_zh</option>
+                                <option value="mimo_default">mimo_default</option>
+                                <option value="default_en">default_en</option>
+                            </select>
+                        </label>
+                        <label class="studio-field">
+                            <span>旁白风格指令</span>
+                            <textarea id="audio-instructions" class="studio-input studio-textarea" placeholder="例如：语速稳一点，适合董事会汇报。"></textarea>
+                        </label>
+                    </div>
+                    <div class="hero-actions studio-actions">
+                        <button class="button button-small button-secondary" id="save-audio-config" type="button">保存设置</button>
+                        <button class="button button-small button-ghost" id="copy-audio-endpoint" type="button">复制接口地址</button>
+                    </div>
+                    <p class="endpoint-description" id="audio-config-note">
+                        正在探测音频服务健康状态。GitHub Pages 默认会连接公网 Tianyan API；如果你在本地调试，可改回 `http://127.0.0.1:8000`。
+                    </p>
+                    <div class="viewer-facts studio-facts">
+                        <article class="viewer-fact">
+                            <span>当前工作流</span>
+                            <strong>脚本 -> Xiaomi Mimo TTS -> MP3</strong>
+                        </article>
+                        <article class="viewer-fact">
+                            <span>建议用途</span>
+                            <strong>汇报旁白 / 视频解说 / 案例演示</strong>
+                        </article>
+                    </div>
+                </article>
+
+                <div class="studio-materials" id="narration-materials"></div>
+            </div>
+        </section>
+
+        <section class="section reveal" id="market">
+            <div class="section-head section-head-left">
+                <p class="section-kicker">Market</p>
+                <h2>市场空间、客群结构与真实世界依据。</h2>
+            </div>
+
+            <div class="report-two-column">
+                <article class="report-panel">
+                    <div class="panel-row">
+                        <span class="panel-label">Market Sizing</span>
+                    </div>
+                    <div class="bar-stack" id="market-size-bars"></div>
+                </article>
+
+                <article class="report-panel">
+                    <div class="panel-row">
+                        <span class="panel-label">真实世界数据</span>
+                    </div>
+                    <div class="fact-list" id="real-world-facts"></div>
+                </article>
+            </div>
+
+            <div class="report-two-column">
+                <article class="report-panel">
+                    <div class="panel-row">
+                        <span class="panel-label">核心细分人群</span>
+                    </div>
+                    <div class="segment-list" id="population-segments"></div>
+                </article>
+
+                <article class="report-panel">
+                    <div class="panel-row">
+                        <span class="panel-label">目标市场画像</span>
+                    </div>
+                    <div class="fact-list" id="target-market-facts"></div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section reveal">
+            <div class="section-head section-head-left">
+                <p class="section-kicker">Pricing</p>
+                <h2>价格不是一个数字，而是一条选择曲线。</h2>
+            </div>
+            <div class="pricing-grid" id="pricing-grid"></div>
+        </section>
+
+        <section class="section reveal" id="channels">
+            <div class="section-head section-head-left">
+                <p class="section-kicker">Channels</p>
+                <h2>渠道、直播、内容风格放在同一页判断。</h2>
+            </div>
+
+            <div class="report-two-column">
+                <article class="report-panel">
+                    <div class="panel-row">
+                        <span class="panel-label">渠道排序</span>
+                    </div>
+                    <div class="bar-stack" id="channel-ranking-bars"></div>
+                </article>
+
+                <article class="report-panel">
+                    <div class="panel-row">
+                        <span class="panel-label">直播平台建议</span>
+                    </div>
+                    <div class="card-column" id="livestream-grid"></div>
+                </article>
+            </div>
+
+            <div class="report-two-column">
+                <article class="report-panel">
+                    <div class="panel-row">
+                        <span class="panel-label">KOL 投放组合</span>
+                    </div>
+                    <div class="table-wrap">
+                        <table class="data-table" id="kol-table"></table>
+                    </div>
+                </article>
+
+                <article class="report-panel">
+                    <div class="panel-row">
+                        <span class="panel-label">小红书内容表现</span>
+                    </div>
+                    <div class="bar-stack" id="xiaohongshu-bars"></div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section reveal">
+            <div class="section-head section-head-left">
+                <p class="section-kicker">Competition</p>
+                <h2>对手对比与产品位势。</h2>
+            </div>
+            <div class="report-panel">
+                <div class="table-wrap">
+                    <table class="data-table" id="competitor-table"></table>
+                </div>
+            </div>
+        </section>
+
+        <section class="section reveal" id="execution">
+            <div class="section-head section-head-left">
+                <p class="section-kicker">Execution</p>
+                <h2>从投放动作到单位经济性，给到实际执行面。</h2>
+            </div>
+
+            <div class="report-two-column">
+                <article class="report-panel">
+                    <div class="panel-row">
+                        <span class="panel-label">16 周执行计划</span>
+                    </div>
+                    <div class="timeline-list" id="execution-timeline"></div>
+                </article>
+
+                <article class="report-panel">
+                    <div class="panel-row">
+                        <span class="panel-label">财务结构</span>
+                    </div>
+                    <div class="finance-grid" id="finance-grid"></div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section reveal" id="risks">
+            <div class="section-head section-head-left">
+                <p class="section-kicker">Risk and Readiness</p>
+                <h2>成熟度评估与关键风险。</h2>
+            </div>
+
+            <div class="report-two-column">
+                <article class="report-panel">
+                    <div class="panel-row">
+                        <span class="panel-label">成熟度维度</span>
+                        <strong class="panel-score" id="overall-score">--</strong>
+                    </div>
+                    <div class="bar-stack" id="maturity-bars"></div>
+                </article>
+
+                <article class="report-panel">
+                    <div class="panel-row">
+                        <span class="panel-label">主要风险</span>
+                    </div>
+                    <div class="risk-list" id="risk-list"></div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section reveal">
+            <div class="section-head section-head-left">
+                <p class="section-kicker">Methodology</p>
+                <h2>数据来源与报告边界。</h2>
+            </div>
+            <div class="report-two-column">
+                <article class="report-panel">
+                    <div class="panel-row">
+                        <span class="panel-label">Data Sources</span>
+                    </div>
+                    <ul class="source-list" id="source-list"></ul>
+                </article>
+                <article class="report-panel">
+                    <div class="panel-row">
+                        <span class="panel-label">Disclaimer</span>
+                    </div>
+                    <p class="disclaimer-copy" id="report-disclaimer-full"></p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div>
+            <strong>LumiGlow × Tianyan</strong>
+            <p>护肤品上市预测报告 · 天眼平台生成</p>
+        </div>
+        <div class="footer-links">
+            <a href="../../index.html">主页</a>
+            <a href="../../docs/strategic_blueprint.md">战略蓝图</a>
+            <a href="https://github.com/MoKangMedical/tianyan">GitHub</a>
+        </div>
+    </footer>
+
+    <script src="../../assets/report.js" defer></script>
+</body>
+</html>
