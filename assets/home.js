@@ -1054,3 +1054,138 @@ async function init() {
 }
 
 init();
+
+// ============================================================
+// Interactive Demo Engine (Browser-side simulation)
+// ============================================================
+
+function seededRandom(seed) {
+  let s = seed;
+  return function() {
+    s = (s * 16807 + 0) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+function runDemo() {
+  const productName = document.getElementById('demo-product-name').value || '测试产品';
+  const category = document.getElementById('demo-category').value;
+  const price = parseFloat(document.getElementById('demo-price').value) || 99;
+  const popSize = parseInt(document.getElementById('demo-pop-size').value) || 1000;
+
+  const statusEl = document.getElementById('demo-status');
+  const btnEl = document.getElementById('demo-run-btn');
+  const resultsEl = document.getElementById('demo-results');
+  const confidenceEl = document.getElementById('demo-confidence');
+
+  statusEl.textContent = '运行中...';
+  statusEl.className = 'tag-pill tag-pill-status-checking';
+  btnEl.disabled = true;
+  btnEl.style.opacity = '0.6';
+  resultsEl.innerHTML = '<p style="color:#818cf8;text-align:center;padding:40px 0;">正在模拟 ' + popSize + ' 位消费者决策...</p>';
+
+  setTimeout(function() {
+    const rand = seededRandom(productName.length * 137 + Math.floor(price * 100));
+
+    // Purchase intent based on price and category
+    const priceFactor = Math.max(0.3, 1 - price / 500);
+    const categoryBoost = {
+      '饮料': 0.15, '美妆护肤': 0.10, '保健品': 0.05,
+      '食品零食': 0.12, '数码3C': -0.05, '服装鞋帽': 0.08
+    };
+    const baseIntent = 0.45 + priceFactor * 0.35 + (categoryBoost[category] || 0);
+    const intent = Math.min(0.95, Math.max(0.15, baseIntent + (rand() - 0.5) * 0.15));
+    const confidence = 0.65 + rand() * 0.25;
+
+    // Channel analysis
+    const channels = [
+      { name: '小红书', roi: (2.5 + rand() * 2).toFixed(1), conversion: (4 + rand() * 6).toFixed(1) },
+      { name: '抖音', roi: (2.0 + rand() * 2).toFixed(1), conversion: (3 + rand() * 5).toFixed(1) },
+      { name: '天猫旗舰店', roi: (1.8 + rand() * 1.5).toFixed(1), conversion: (2 + rand() * 4).toFixed(1) },
+      { name: '京东', roi: (1.5 + rand() * 1).toFixed(1), conversion: (1.5 + rand() * 3).toFixed(1) }
+    ].sort(function(a, b) { return parseFloat(b.roi) - parseFloat(a.roi); });
+
+    // KOL recommendation
+    const kolTypes = [
+      '中腰部垂直博主',
+      '头部KOL (品牌背书)',
+      '素人种草号 (真实口碑)',
+      '专业人士/医生KOL'
+    ];
+    const selectedKol = kolTypes[Math.floor(rand() * kolTypes.length)];
+
+    // Revenue projection
+    const monthlyUnits = Math.floor(popSize * intent * 0.3 * (1 + rand() * 0.5));
+    const monthlyRevenue = monthlyUnits * price;
+
+    // Build results HTML
+    let html = '';
+
+    // Purchase Intent
+    html += '<div style="margin-bottom:20px;">';
+    html += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">';
+    html += '<span style="font-size:0.85rem;color:#94a3b8;min-width:80px;">购买意愿</span>';
+    html += '<div style="flex:1;background:rgba(255,255,255,0.06);border-radius:4px;height:8px;overflow:hidden;">';
+    html += '<div style="width:' + (intent * 100).toFixed(0) + '%;height:100%;background:linear-gradient(90deg,#818cf8,#a78bfa);border-radius:4px;transition:width 0.5s;"></div>';
+    html += '</div>';
+    html += '<strong style="color:#c4b5fd;min-width:40px;text-align:right;">' + (intent * 100).toFixed(1) + '%</strong>';
+    html += '</div></div>';
+
+    // Channel Ranking
+    html += '<div style="margin-bottom:20px;">';
+    html += '<span style="font-size:0.85rem;color:#94a3b8;display:block;margin-bottom:8px;">渠道排名 (按ROI)</span>';
+    channels.forEach(function(ch, i) {
+      const barWidth = Math.min(100, parseFloat(ch.roi) / 5 * 100);
+      html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">';
+      html += '<span style="font-size:0.8rem;color:#94a3b8;min-width:90px;">' + (i+1) + '. ' + ch.name + '</span>';
+      html += '<div style="flex:1;background:rgba(255,255,255,0.04);border-radius:3px;height:6px;overflow:hidden;">';
+      html += '<div style="width:' + barWidth + '%;height:100%;background:rgba(129,140,248,0.5);border-radius:3px;"></div>';
+      html += '</div>';
+      html += '<span style="font-size:0.75rem;color:#64748b;min-width:80px;">ROI ' + ch.roi + 'x | ' + ch.conversion + '%</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+
+    // Key Metrics
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">';
+    html += '<div style="background:rgba(255,255,255,0.04);border-radius:8px;padding:12px;text-align:center;">';
+    html += '<div style="font-size:1.5rem;font-weight:700;background:linear-gradient(135deg,#818cf8,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">¥' + (monthlyRevenue / 10000).toFixed(1) + '万</div>';
+    html += '<div style="font-size:0.8rem;color:#94a3b8;margin-top:4px;">月收入预测</div></div>';
+    html += '<div style="background:rgba(255,255,255,0.04);border-radius:8px;padding:12px;text-align:center;">';
+    html += '<div style="font-size:1.5rem;font-weight:700;background:linear-gradient(135deg,#818cf8,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">' + monthlyUnits.toLocaleString() + '</div>';
+    html += '<div style="font-size:0.8rem;color:#94a3b8;margin-top:4px;">月销量预测</div></div>';
+    html += '</div>';
+
+    // KOL Recommendation
+    html += '<div style="background:rgba(129,140,248,0.08);border:1px solid rgba(129,140,248,0.2);border-radius:8px;padding:14px;margin-bottom:16px;">';
+    html += '<div style="font-size:0.85rem;color:#818cf8;margin-bottom:4px;">推荐KOL策略</div>';
+    html += '<div style="color:#e0e0e0;font-size:0.95rem;">' + selectedKol + '</div>';
+    html += '<div style="color:#94a3b8;font-size:0.8rem;margin-top:4px;">建议首月投入50-100篇种草内容，小规模测试后放量</div>';
+    html += '</div>';
+
+    // Recommendations
+    html += '<div>';
+    html += '<span style="font-size:0.85rem;color:#94a3b8;display:block;margin-bottom:8px;">策略建议</span>';
+    const recs = [
+      '首月聚焦' + channels[0].name + '，建立初始口碑',
+      '建议定价 ¥' + price + '，' + (price < 50 ? '走量策略' : price < 200 ? '平衡策略' : '品质策略'),
+      '先做 ' + Math.floor(popSize * 0.1) + ' 人小规模测试，验证后放量',
+      '建立用户评价体系，收集真实反馈'
+    ];
+    recs.forEach(function(r) {
+      html += '<div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;">';
+      html += '<span style="color:#818cf8;margin-top:2px;">&#8226;</span>';
+      html += '<span style="color:#c4b5fd;font-size:0.9rem;">' + r + '</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+
+    resultsEl.innerHTML = html;
+    confidenceEl.textContent = '置信度 ' + (confidence * 100).toFixed(0) + '%';
+    statusEl.textContent = '完成';
+    statusEl.className = 'tag-pill';
+    btnEl.disabled = false;
+    btnEl.style.opacity = '1';
+  }, 800 + Math.random() * 400);
+}
+
