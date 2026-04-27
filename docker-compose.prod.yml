@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  tianyan-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - TIANYAN_LLM_PROVIDER=${TIANYAN_LLM_PROVIDER:-mock}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-}
+      - MIMO_API_KEY=${MIMO_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - TIANYAN_HOST=0.0.0.0
+      - TIANYAN_PORT=8000
+      - DEBUG=false
+    volumes:
+      - ./data:/app/data
+      - ./api_keys.json:/app/api_keys.json
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v2/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  tianyan-docs:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./index.html:/usr/share/nginx/html/index.html:ro
+      - ./assets:/usr/share/nginx/html/assets:ro
+      - ./cases:/usr/share/nginx/html/cases:ro
+      - ./docs:/usr/share/nginx/html/docs:ro
+    restart: unless-stopped
