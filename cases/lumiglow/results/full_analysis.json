@@ -55,35 +55,51 @@
     }
   },
   "market_sizing": {
-    "china_skincare_2024": 5200,
-    "unit": "亿元",
-    "growth_rate": 0.08,
-    "whitening_segment": 850,
-    "premium_whitening": 320,
-    "source": "Euromonitor 2024"
+    "tam": {
+      "value": 5200,
+      "unit": "亿元",
+      "base": "中国护肤品市场总规模"
+    },
+    "sam": {
+      "value": 850,
+      "unit": "亿元",
+      "base": "美白精华细分市场"
+    },
+    "som_y1": {
+      "value": 6240,
+      "unit": "万元",
+      "base": "首年目标收入"
+    },
+    "som_y3": {
+      "value": 18000,
+      "unit": "万元",
+      "base": "第三年目标收入"
+    }
   },
-  "real_world": [
-    {
-      "name": "烟酰胺美白市场规模",
-      "value": "120亿元",
+  "real_world": {
+    "skincare_market_2024": {
+      "value": 5200,
+      "unit": "亿元",
+      "growth": "8%",
+      "source": "Euromonitor"
+    },
+    "whitening_segment": {
+      "value": 850,
+      "unit": "亿元",
+      "growth": "12%",
       "source": "行业研报"
     },
-    {
-      "name": "精华液品类增长率",
-      "value": "12%",
-      "source": "天猫数据"
-    },
-    {
-      "name": "敏感肌人群占比",
-      "value": "36%",
+    "sensitive_skin_rate": {
+      "value": 0.36,
+      "unit": "比例",
       "source": "中国皮肤科协会"
     },
-    {
-      "name": "小红书美妆笔记量",
-      "value": "2.8亿篇",
+    "xiaohongshu_notes": {
+      "value": 280000000,
+      "unit": "篇",
       "source": "小红书官方"
     }
-  ],
+  },
   "purchase_intent": {
     "overall": 0.72,
     "confidence": 0.82,
@@ -100,20 +116,10 @@
         "margin": 0.35,
         "perception": "性价比高但疑品质"
       },
-      "198": {
-        "intent": 0.78,
-        "margin": 0.42,
-        "perception": "中端定位"
-      },
       "258": {
         "intent": 0.72,
         "margin": 0.52,
         "perception": "品质溢价"
-      },
-      "298": {
-        "intent": 0.65,
-        "margin": 0.58,
-        "perception": "高端定位"
       },
       "398": {
         "intent": 0.48,
@@ -123,29 +129,49 @@
     }
   },
   "kol_analysis": {
-    "recommended_mix": [
+    "comparison": [
       {
         "type": "皮肤科医生KOL",
-        "count": 5,
-        "budget": 25000,
-        "expected_reach": 800000
+        "reach": 800000,
+        "engagement": 0.08,
+        "conversion": 0.05,
+        "cost": 5000,
+        "roi": 1200,
+        "trust": 0.92,
+        "recommend": "首选（专业背书）"
       },
       {
         "type": "中腰部成分党博主",
-        "count": 30,
-        "budget": 240000,
-        "expected_reach": 3000000
+        "reach": 3000000,
+        "engagement": 0.1,
+        "conversion": 0.065,
+        "cost": 8000,
+        "roi": 800,
+        "trust": 0.85,
+        "recommend": "核心投放"
       },
       {
         "type": "素人真实测评号",
-        "count": 300,
-        "budget": 150000,
-        "expected_reach": 4500000
+        "reach": 4500000,
+        "engagement": 0.12,
+        "conversion": 0.08,
+        "cost": 500,
+        "roi": 5200,
+        "trust": 0.88,
+        "recommend": "铺量首选"
+      },
+      {
+        "type": "头部美妆博主",
+        "reach": 5000000,
+        "engagement": 0.06,
+        "conversion": 0.03,
+        "cost": 120000,
+        "roi": 200,
+        "trust": 0.6,
+        "recommend": "品牌曝光"
       }
     ],
-    "total_budget": 415000,
-    "expected_total_reach": 8300000,
-    "expected_conversion_rate": 0.065
+    "recommendation": "皮肤科医生KOL + 素人真实测评号 组合投放，总预算¥15-20万可覆盖300篇种草笔记"
   },
   "livestream": {
     "comparison": [
@@ -231,50 +257,34 @@
     {
       "name": "SK-II小灯泡",
       "price": 1280,
+      "form": "精华液",
       "share": 0.25,
-      "strengths": [
-        "品牌力强",
-        "口碑积累深"
-      ],
-      "weaknesses": [
-        "价格极高"
-      ]
+      "awareness": 0.95,
+      "threat": "高"
     },
     {
       "name": "OLAY小白瓶",
       "price": 299,
+      "form": "精华液",
       "share": 0.3,
-      "strengths": [
-        "性价比高",
-        "渠道广"
-      ],
-      "weaknesses": [
-        "同质化严重"
-      ]
+      "awareness": 0.9,
+      "threat": "高"
     },
     {
       "name": "修丽可CE精华",
       "price": 1580,
+      "form": "精华液",
       "share": 0.15,
-      "strengths": [
-        "医学背景",
-        "抗氧化标杆"
-      ],
-      "weaknesses": [
-        "价格极高"
-      ]
+      "awareness": 0.75,
+      "threat": "中"
     },
     {
       "name": "珀莱雅双抗",
       "price": 189,
+      "form": "精华液",
       "share": 0.2,
-      "strengths": [
-        "国货之光",
-        "营销强"
-      ],
-      "weaknesses": [
-        "品牌溢价低"
-      ]
+      "awareness": 0.85,
+      "threat": "中"
     }
   ],
   "financial": {
@@ -303,57 +313,77 @@
         "customers": 698000,
         "cost": 58000000
       }
-    },
-    "breakeven_months": 8
+    }
   },
   "action_plan": [
     {
-      "week": "1-2",
-      "action": "产品定型+包装设计",
-      "budget": 50000
+      "phase": "第1-2周",
+      "action": "产品定型+包装设计+备案",
+      "budget": 50000,
+      "kpi": "完成产品备案"
     },
     {
-      "week": "3-4",
-      "action": "皮肤科医生KOL合作启动",
-      "budget": 25000
+      "phase": "第3-4周",
+      "action": "皮肤科医生KOL合作启动(5位)",
+      "budget": 25000,
+      "kpi": "发布5篇专业测评"
     },
     {
-      "week": "5-6",
-      "action": "小红书种草内容投放",
-      "budget": 80000
+      "phase": "第5-8周",
+      "action": "小红书种草内容投放(200篇)",
+      "budget": 130000,
+      "kpi": "曝光50万+，互动3万+"
     },
     {
-      "week": "7-8",
-      "action": "素人测评号铺量",
-      "budget": 50000
+      "phase": "第9-12周",
+      "action": "抖音短视频+直播带货",
+      "budget": 250000,
+      "kpi": "GMV 100万+"
     },
     {
-      "week": "9-10",
-      "action": "抖音短视频引流",
-      "budget": 100000
-    },
-    {
-      "week": "11-12",
-      "action": "天猫旗舰店上线+首销",
-      "budget": 150000
-    },
-    {
-      "week": "13-14",
-      "action": "数据复盘+策略调整",
-      "budget": 0
-    },
-    {
-      "week": "15-16",
-      "action": "放量投放+直播带货",
-      "budget": 200000
+      "phase": "第13-16周",
+      "action": "天猫旗舰店上线+全渠道放量",
+      "budget": 400000,
+      "kpi": "月销5000+"
     }
   ],
   "maturity_assessment": {
-    "product": 85,
-    "market": 78,
-    "channel": 82,
-    "brand": 45,
-    "supply_chain": 70,
-    "overall": 72
+    "overall_score": 72,
+    "dimensions": {
+      "产品力": 85,
+      "市场空间": 78,
+      "渠道匹配": 82,
+      "品牌认知": 45,
+      "供应链": 70,
+      "团队能力": 75,
+      "资金储备": 65,
+      "合规风险": 80
+    },
+    "risks": [
+      {
+        "risk": "美白品类竞争激烈",
+        "probability": "高",
+        "impact": "中",
+        "mitigation": "差异化成分故事+医生背书"
+      },
+      {
+        "risk": "烟酰胺不耐受投诉",
+        "probability": "中",
+        "impact": "高",
+        "mitigation": "建立耐受指南+客服培训"
+      },
+      {
+        "risk": "KOL效果不及预期",
+        "probability": "中",
+        "impact": "中",
+        "mitigation": "小批量测试+数据监控"
+      },
+      {
+        "risk": "供应链断货",
+        "probability": "低",
+        "impact": "高",
+        "mitigation": "双供应商+安全库存"
+      }
+    ]
   }
 }

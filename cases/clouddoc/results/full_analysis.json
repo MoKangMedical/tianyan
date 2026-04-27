@@ -55,35 +55,50 @@
     }
   },
   "market_sizing": {
-    "china_telehealth_2024": 3200,
-    "unit": "亿元",
-    "growth_rate": 0.25,
-    "online_consultation": 1200,
-    "chronic_management": 800,
-    "source": "艾瑞咨询2024"
+    "tam": {
+      "value": 3200,
+      "unit": "亿元",
+      "base": "中国远程医疗市场总规模"
+    },
+    "sam": {
+      "value": 1200,
+      "unit": "亿元",
+      "base": "在线问诊细分市场"
+    },
+    "som_y1": {
+      "value": 5880,
+      "unit": "万元",
+      "base": "首年目标收入"
+    },
+    "som_y3": {
+      "value": 30000,
+      "unit": "万元",
+      "base": "第三年目标收入"
+    }
   },
-  "real_world": [
-    {
-      "name": "互联网医疗用户规模",
-      "value": "3.6亿",
+  "real_world": {
+    "internet_medical_users": {
+      "value": 360000000,
+      "unit": "人",
       "source": "CNNIC"
     },
-    {
-      "name": "在线问诊渗透率",
-      "value": "8.5%",
+    "online_consultation_penetration": {
+      "value": 0.085,
+      "unit": "比例",
       "source": "艾瑞咨询"
     },
-    {
-      "name": "互联网医院数量",
-      "value": "3000+",
+    "internet_hospitals": {
+      "value": 3000,
+      "unit": "家",
       "source": "国家卫健委"
     },
-    {
-      "name": "远程医疗市场规模",
-      "value": "3200亿元",
+    "telehealth_market_2024": {
+      "value": 3200,
+      "unit": "亿元",
+      "growth": "25%",
       "source": "弗若斯特沙利文"
     }
-  ],
+  },
   "purchase_intent": {
     "overall": 0.58,
     "confidence": 0.78,
@@ -100,52 +115,62 @@
         "margin": 0.15,
         "perception": "低价体验"
       },
-      "79": {
-        "intent": 0.65,
-        "margin": 0.3,
-        "perception": "中端定位"
-      },
       "99": {
         "intent": 0.58,
         "margin": 0.42,
         "perception": "标准定价"
       },
-      "149": {
-        "intent": 0.45,
-        "margin": 0.55,
-        "perception": "高端定位"
-      },
       "199": {
         "intent": 0.32,
         "margin": 0.65,
-        "perception": "超高端"
+        "perception": "高端定位"
       }
     }
   },
   "kol_analysis": {
-    "recommended_mix": [
+    "comparison": [
       {
         "type": "三甲医院医生IP",
-        "count": 15,
-        "budget": 450000,
-        "expected_reach": 7500000
+        "reach": 7500000,
+        "engagement": 0.06,
+        "conversion": 0.04,
+        "cost": 30000,
+        "roi": 800,
+        "trust": 0.95,
+        "recommend": "首选（信任背书）"
       },
       {
         "type": "健康科普博主",
-        "count": 50,
-        "budget": 250000,
-        "expected_reach": 5000000
+        "reach": 5000000,
+        "engagement": 0.08,
+        "conversion": 0.05,
+        "cost": 5000,
+        "roi": 600,
+        "trust": 0.75,
+        "recommend": "核心投放"
       },
       {
         "type": "患者真实分享号",
-        "count": 200,
-        "budget": 100000,
-        "expected_reach": 3000000
+        "reach": 3000000,
+        "engagement": 0.1,
+        "conversion": 0.06,
+        "cost": 500,
+        "roi": 4800,
+        "trust": 0.88,
+        "recommend": "口碑传播"
+      },
+      {
+        "type": "护士/药师KOL",
+        "reach": 2000000,
+        "engagement": 0.07,
+        "conversion": 0.045,
+        "cost": 3000,
+        "roi": 900,
+        "trust": 0.8,
+        "recommend": "专业补充"
       }
     ],
-    "total_budget": 800000,
-    "expected_total_reach": 15500000,
-    "expected_conversion_rate": 0.042
+    "recommendation": "三甲医院医生IP + 患者真实分享号 组合投放，总预算¥30-50万可覆盖500篇内容"
   },
   "livestream": {
     "comparison": [
@@ -231,51 +256,34 @@
     {
       "name": "好大夫在线",
       "price": 60,
+      "form": "App",
       "share": 0.25,
-      "strengths": [
-        "医生资源丰富",
-        "品牌知名度高"
-      ],
-      "weaknesses": [
-        "界面老旧",
-        "AI能力弱"
-      ]
+      "awareness": 0.85,
+      "threat": "高"
     },
     {
       "name": "平安好医生",
       "price": 128,
+      "form": "App",
       "share": 0.3,
-      "strengths": [
-        "保险+医疗闭环",
-        "AI能力强"
-      ],
-      "weaknesses": [
-        "商业化过重"
-      ]
+      "awareness": 0.9,
+      "threat": "高"
     },
     {
       "name": "京东健康",
       "price": 89,
+      "form": "App+小程序",
       "share": 0.25,
-      "strengths": [
-        "药品配送快",
-        "用户基数大"
-      ],
-      "weaknesses": [
-        "医疗属性弱"
-      ]
+      "awareness": 0.88,
+      "threat": "高"
     },
     {
       "name": "微医",
       "price": 99,
+      "form": "App",
       "share": 0.15,
-      "strengths": [
-        "互联网医院牌照",
-        "医保对接"
-      ],
-      "weaknesses": [
-        "C端品牌弱"
-      ]
+      "awareness": 0.6,
+      "threat": "中"
     }
   ],
   "financial": {
@@ -304,57 +312,77 @@
         "customers": 500000,
         "cost": 120000000
       }
-    },
-    "breakeven_months": 10
+    }
   },
   "action_plan": [
     {
-      "week": "1-2",
-      "action": "产品MVP+医生签约",
-      "budget": 100000
+      "phase": "第1-2周",
+      "action": "产品MVP+医生签约(10位)",
+      "budget": 100000,
+      "kpi": "完成MVP+签约10位医生"
     },
     {
-      "week": "3-4",
-      "action": "微信小程序上线",
-      "budget": 50000
+      "phase": "第3-4周",
+      "action": "微信小程序上线+种子用户",
+      "budget": 50000,
+      "kpi": "1000注册用户"
     },
     {
-      "week": "5-6",
-      "action": "医生IP账号启动",
-      "budget": 150000
+      "phase": "第5-8周",
+      "action": "医生IP账号启动+内容投放",
+      "budget": 400000,
+      "kpi": "曝光100万+，问诊5000+"
     },
     {
-      "week": "7-8",
-      "action": "首批医院转诊合作",
-      "budget": 200000
+      "phase": "第9-12周",
+      "action": "线下医院转诊合作(5家)",
+      "budget": 500000,
+      "kpi": "月活2万+"
     },
     {
-      "week": "9-10",
-      "action": "短视频内容投放",
-      "budget": 250000
-    },
-    {
-      "week": "11-12",
-      "action": "慢病管理体系上线",
-      "budget": 100000
-    },
-    {
-      "week": "13-14",
-      "action": "数据复盘+策略调整",
-      "budget": 0
-    },
-    {
-      "week": "15-16",
-      "action": "放量获客+商业化",
-      "budget": 500000
+      "phase": "第13-16周",
+      "action": "慢病管理体系上线+商业化",
+      "budget": 600000,
+      "kpi": "月收入100万+"
     }
   ],
   "maturity_assessment": {
-    "product": 78,
-    "market": 85,
-    "channel": 72,
-    "brand": 55,
-    "supply_chain": 68,
-    "overall": 72
+    "overall_score": 72,
+    "dimensions": {
+      "产品力": 78,
+      "市场空间": 85,
+      "渠道匹配": 72,
+      "品牌认知": 55,
+      "供应链": 68,
+      "团队能力": 75,
+      "资金储备": 60,
+      "合规风险": 70
+    },
+    "risks": [
+      {
+        "risk": "医生资源获取成本高",
+        "probability": "高",
+        "impact": "高",
+        "mitigation": "与医学院合作+远程执业政策利用"
+      },
+      {
+        "risk": "政策监管趋严",
+        "probability": "中",
+        "impact": "高",
+        "mitigation": "提前申请互联网医院牌照"
+      },
+      {
+        "risk": "用户留存率低",
+        "probability": "中",
+        "impact": "中",
+        "mitigation": "建立慢病管理体系+定期随访"
+      },
+      {
+        "risk": "竞品价格战",
+        "probability": "高",
+        "impact": "中",
+        "mitigation": "差异化AI能力+医生服务质量"
+      }
+    ]
   }
 }
