@@ -1,0 +1,260 @@
+{
+  "case_name": "光感焕颜精华液上市预测",
+  "case_version": "1.0.0",
+  "created_at": "2026-04-27",
+  "platform": "天眼 Tianyan",
+  "disclaimer": "本案例所有数据均为天眼平台基于公开统计数据合成生成，不涉及任何真实个人信息或商业机密。",
+  "product": {
+    "name": "光感焕颜精华液",
+    "brand": "LumiGlow",
+    "price_monthly": 258,
+    "category": "功能性护肤品（精华类）",
+    "form": "30ml瓶装，滴管设计",
+    "registration": "国产特殊化妆品备案",
+    "selling_points": [
+      "烟酰胺+传明酸双重美白",
+      "7天可见光感透亮",
+      "敏感肌友好配方",
+      "日本进口原料"
+    ],
+    "advantages": [
+      "双重美白成分协同作用",
+      "敏感肌可用扩大受众",
+      "日系原料品质背书",
+      "定价适中覆盖大众市场"
+    ],
+    "disadvantages": [
+      "新品牌认知度低",
+      "美白品类竞争激烈",
+      "需持续投入KOL种草",
+      "功效宣称需合规审查"
+    ]
+  },
+  "target_market": {
+    "population_size_estimated": 85000000,
+    "age_range": [
+      18,
+      35
+    ],
+    "city_tiers": [
+      "一线城市",
+      "新一线城市",
+      "二线城市"
+    ],
+    "cities": [
+      "上海",
+      "北京",
+      "广州",
+      "深圳",
+      "成都",
+      "杭州",
+      "武汉",
+      "南京",
+      "重庆",
+      "苏州"
+    ],
+    "gender_split": {
+      "female": 0.88,
+      "male": 0.12
+    },
+    "income_brackets": {
+      "中等收入": {
+        "range": [
+          5000,
+          15000
+        ],
+        "pct": 0.45
+      },
+      "中高收入": {
+        "range": [
+          15000,
+          30000
+        ],
+        "pct": 0.35
+      },
+      "高收入": {
+        "range": [
+          30000,
+          100000
+        ],
+        "pct": 0.15
+      },
+      "超高收入": {
+        "range": [
+          100000,
+          500000
+        ],
+        "pct": 0.05
+      }
+    },
+    "pain_points": [
+      "肤色暗沉不均匀",
+      "痘印色斑难消退",
+      "美白产品刺激性大",
+      "效果慢难以坚持",
+      "担心成分不安全"
+    ],
+    "decision_factors": [
+      "成分安全性 > 功效 > 价格 > 品牌 > 包装"
+    ]
+  },
+  "competitors": [
+    {
+      "name": "SK-II小灯泡精华",
+      "price_monthly": 1280,
+      "form": "30ml瓶装",
+      "strengths": [
+        "品牌力强",
+        "口碑积累深",
+        "成分专利"
+      ],
+      "weaknesses": [
+        "价格极高",
+        "部分人过敏"
+      ],
+      "market_share_est": 0.25,
+      "brand_awareness": 0.95
+    },
+    {
+      "name": "OLAY小白瓶",
+      "price_monthly": 299,
+      "form": "30ml瓶装",
+      "strengths": [
+        "性价比高",
+        "烟酰胺标杆",
+        "渠道广"
+      ],
+      "weaknesses": [
+        "烟酰胺不耐受",
+        "同质化严重"
+      ],
+      "market_share_est": 0.3,
+      "brand_awareness": 0.9
+    },
+    {
+      "name": "修丽可CE精华",
+      "price_monthly": 1580,
+      "form": "30ml瓶装",
+      "strengths": [
+        "医学背景",
+        "抗氧化标杆",
+        "医生推荐"
+      ],
+      "weaknesses": [
+        "价格极高",
+        "保存要求高",
+        "气味不佳"
+      ],
+      "market_share_est": 0.15,
+      "brand_awareness": 0.75
+    },
+    {
+      "name": "珀莱雅双抗精华",
+      "price_monthly": 189,
+      "form": "30ml瓶装",
+      "strengths": [
+        "国货之光",
+        "性价比高",
+        "营销强"
+      ],
+      "weaknesses": [
+        "品牌溢价低",
+        "成分同质化"
+      ],
+      "market_share_est": 0.2,
+      "brand_awareness": 0.85
+    }
+  ],
+  "channels": {
+    "primary": {
+      "小红书": {
+        "role": "种草/口碑建立",
+        "target_audience": "18-30岁女性",
+        "content_types": [
+          "成分测评",
+          "before/after",
+          "护肤教程",
+          "合集推荐"
+        ],
+        "budget_allocation": 0.4
+      },
+      "抖音": {
+        "role": "短视频引流/直播带货",
+        "target_audience": "18-35岁泛人群",
+        "content_types": [
+          "成分科普",
+          "上脸测试",
+          "直播",
+          "信息流广告"
+        ],
+        "budget_allocation": 0.35
+      },
+      "天猫旗舰店": {
+        "role": "官方渠道/信任背书",
+        "target_audience": "有购买意向的消费者",
+        "content_types": [
+          "品牌旗舰店",
+          "天猫小黑盒",
+          "超级品牌日"
+        ],
+        "budget_allocation": 0.2
+      }
+    },
+    "secondary": {
+      "京东": {
+        "role": "补充渠道",
+        "budget_allocation": 0.03
+      },
+      "线下CS渠道": {
+        "role": "体验/试用",
+        "budget_allocation": 0.02
+      }
+    }
+  },
+  "pricing": {
+    "current": 258,
+    "options": [
+      {
+        "price": 168,
+        "strategy": "低价渗透",
+        "risk": "利润不足/低品质感知"
+      },
+      {
+        "price": 258,
+        "strategy": "中端定位",
+        "risk": "与OLAY正面竞争"
+      },
+      {
+        "price": 398,
+        "strategy": "品质溢价",
+        "risk": "转化率降低"
+      }
+    ]
+  },
+  "kol_types": [
+    {
+      "type": "头部美妆博主",
+      "followers": "500万+",
+      "cost_per_post": 120000,
+      "trust_score": 0.6
+    },
+    {
+      "type": "中腰部成分党博主",
+      "followers": "10-50万",
+      "cost_per_post": 8000,
+      "trust_score": 0.85
+    },
+    {
+      "type": "素人真实测评号",
+      "followers": "1-10万",
+      "cost_per_post": 500,
+      "trust_score": 0.9
+    },
+    {
+      "type": "皮肤科医生KOL",
+      "followers": "5-30万",
+      "cost_per_post": 5000,
+      "trust_score": 0.92
+    }
+  ]
+}

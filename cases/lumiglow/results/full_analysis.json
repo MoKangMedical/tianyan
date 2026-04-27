@@ -1,0 +1,212 @@
+{
+  "simulation_id": "lumiglow_2026_04",
+  "created_at": "2026-04-27T21:03:14.793862",
+  "platform": "天眼 Tianyan v1.0.0",
+  "product_name": "光感焕颜精华液",
+  "brand": "LumiGlow",
+  "population_summary": {
+    "total_size": 5000,
+    "avg_age": 26.8,
+    "gender_dist": {
+      "女": 0.88,
+      "男": 0.12
+    },
+    "city_tier_dist": {
+      "一线城市": 0.35,
+      "新一线城市": 0.35,
+      "二线城市": 0.3
+    },
+    "avg_income": 15800,
+    "top_archetypes": {
+      "品质追求型": 0.28,
+      "跟风种草型": 0.22,
+      "尝鲜探索型": 0.18,
+      "精打细算型": 0.15,
+      "品牌忠诚型": 0.1,
+      "其他": 0.07
+    }
+  },
+  "purchase_intent": {
+    "overall": 0.72,
+    "by_age": {
+      "18-24": 0.78,
+      "25-30": 0.75,
+      "31-35": 0.68,
+      "36-45": 0.55
+    },
+    "by_city_tier": {
+      "一线城市": 0.76,
+      "新一线城市": 0.73,
+      "二线城市": 0.68
+    },
+    "by_archetype": {
+      "品质追求型": 0.85,
+      "跟风种草型": 0.82,
+      "尝鲜探索型": 0.8,
+      "精打细算型": 0.55,
+      "品牌忠诚型": 0.45
+    },
+    "confidence": 0.82
+  },
+  "pricing_analysis": {
+    "optimal_price": 258,
+    "price_sensitivity": {
+      "168": {
+        "conversion": 0.85,
+        "margin": 0.25,
+        "revenue_index": 0.72
+      },
+      "198": {
+        "conversion": 0.8,
+        "margin": 0.35,
+        "revenue_index": 0.85
+      },
+      "258": {
+        "conversion": 0.72,
+        "margin": 0.48,
+        "revenue_index": 0.95
+      },
+      "298": {
+        "conversion": 0.62,
+        "margin": 0.55,
+        "revenue_index": 0.88
+      },
+      "398": {
+        "conversion": 0.42,
+        "margin": 0.65,
+        "revenue_index": 0.7
+      }
+    },
+    "recommendation": "建议定价258元，平衡转化率与利润率"
+  },
+  "channel_analysis": {
+    "primary_channel": "小红书",
+    "channel_ranking": [
+      {
+        "channel": "小红书",
+        "roi": 3.2,
+        "cac": 45,
+        "conversion": 0.08
+      },
+      {
+        "channel": "抖音",
+        "roi": 2.8,
+        "cac": 55,
+        "conversion": 0.06
+      },
+      {
+        "channel": "天猫旗舰店",
+        "roi": 2.5,
+        "cac": 65,
+        "conversion": 0.05
+      },
+      {
+        "channel": "京东",
+        "roi": 2.0,
+        "cac": 80,
+        "conversion": 0.03
+      }
+    ],
+    "budget_allocation": {
+      "小红书": 0.4,
+      "抖音": 0.35,
+      "天猫": 0.2,
+      "其他": 0.05
+    }
+  },
+  "kol_analysis": {
+    "recommended_mix": [
+      {
+        "type": "皮肤科医生KOL",
+        "count": 3,
+        "budget": 15000,
+        "expected_reach": 500000
+      },
+      {
+        "type": "中腰部成分党博主",
+        "count": 20,
+        "budget": 160000,
+        "expected_reach": 2000000
+      },
+      {
+        "type": "素人真实测评号",
+        "count": 200,
+        "budget": 100000,
+        "expected_reach": 3000000
+      }
+    ],
+    "total_budget": 275000,
+    "expected_total_reach": 5500000,
+    "expected_conversion_rate": 0.065
+  },
+  "competitor_impact": {
+    "vs_OLAY小白瓶": {
+      "win_rate": 0.35,
+      "lose_rate": 0.45,
+      "draw_rate": 0.2
+    },
+    "vs_珀莱雅双抗": {
+      "win_rate": 0.55,
+      "lose_rate": 0.25,
+      "draw_rate": 0.2
+    },
+    "vs_SK-II小灯泡": {
+      "win_rate": 0.15,
+      "lose_rate": 0.7,
+      "draw_rate": 0.15
+    }
+  },
+  "revenue_projection": {
+    "month_1": {
+      "units": 8500,
+      "revenue": 2193000
+    },
+    "month_3": {
+      "units": 15000,
+      "revenue": 3870000
+    },
+    "month_6": {
+      "units": 22000,
+      "revenue": 5676000
+    },
+    "month_12": {
+      "units": 35000,
+      "revenue": 9030000
+    },
+    "year_1_total_revenue": 62400000,
+    "year_1_customers": 240000
+  },
+  "risk_assessment": [
+    {
+      "risk": "美白品类竞争激烈",
+      "probability": "高",
+      "impact": "中",
+      "mitigation": "差异化成分故事+医生背书"
+    },
+    {
+      "risk": "烟酰胺不耐受投诉",
+      "probability": "中",
+      "impact": "高",
+      "mitigation": "建立耐受指南+客服培训"
+    },
+    {
+      "risk": "KOL效果不及预期",
+      "probability": "中",
+      "impact": "中",
+      "mitigation": "小批量测试+数据监控"
+    },
+    {
+      "risk": "供应链断货",
+      "probability": "低",
+      "impact": "高",
+      "mitigation": "双供应商+安全库存"
+    }
+  ],
+  "recommendations": [
+    "首月聚焦小红书种草，建立成分口碑",
+    "与3-5位皮肤科医生合作，建立专业背书",
+    "首月限量1000份试用装，收集真实反馈",
+    "建立烟酰胺耐受指南，降低退货率",
+    "第3个月开始抖音直播带货"
+  ]
+}
