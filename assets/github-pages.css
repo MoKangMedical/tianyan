@@ -1355,3 +1355,40 @@ pre {
         align-items: center;
     }
 }
+
+/* Methodology Section */
+.methodology-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.methodology-grid .feature {
+    text-align: center;
+}
+
+.methodology-grid .feature .icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    background: linear-gradient(135deg, var(--accent-3), var(--accent-2));
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--bg);
+}
+
+@media (max-width: 768px) {
+    .methodology-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .methodology-grid {
+        grid-template-columns: 1fr;
+    }
+}

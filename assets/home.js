@@ -1293,3 +1293,49 @@ function renderDemoCharts(intent, channels, category, rand) {
   });
 }
 
+
+// ============================================================
+// Counter Animation for Trust Bar Stats
+// ============================================================
+function animateCounters() {
+    const counters = document.querySelectorAll('.trust-stat strong');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                const text = el.textContent;
+                const hasPlus = text.includes('+');
+                const hasPercent = text.includes('%');
+                const numStr = text.replace(/[^0-9.]/g, '');
+                const target = parseFloat(numStr);
+                
+                if (isNaN(target)) return;
+                
+                let current = 0;
+                const duration = 1500;
+                const start = performance.now();
+                
+                function update(now) {
+                    const elapsed = now - start;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const eased = 1 - Math.pow(1 - progress, 3);
+                    current = Math.round(target * eased);
+                    
+                    let display = current.toLocaleString();
+                    if (hasPlus) display += '+';
+                    if (hasPercent) display += '%';
+                    el.textContent = display;
+                    
+                    if (progress < 1) requestAnimationFrame(update);
+                }
+                requestAnimationFrame(update);
+                observer.unobserve(el);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    counters.forEach(c => observer.observe(c));
+}
+
+// Init counters on load
+document.addEventListener('DOMContentLoaded', animateCounters);
