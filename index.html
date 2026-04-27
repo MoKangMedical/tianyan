@@ -29,6 +29,7 @@
             <a href="#pipeline">报告流</a>
             <a href="#report-skills">能力库</a>
             <a href="#api-explorer">API Explorer</a>
+            <a href="#try-it">Try It</a>
             <a href="#templates">行业模板</a>
             <a href="#case-study">案例详情</a>
         </nav>
@@ -365,6 +366,69 @@
                         <a class="text-link" href="cases/medislim/report.html">打开完整案例</a>
                     </div>
                     <div class="timeline-list" id="action-plan-list"></div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section reveal" id="try-it">
+            <div class="section-head">
+                <p class="section-kicker">Try It Live</p>
+                <h2>输入你的产品，即刻看到预测结果。</h2>
+                <p class="section-body">
+                    以下是天眼预测引擎的浏览器端演示。输入产品信息，即刻获得市场预测、渠道建议和KOL策略。数据基于合成人群模拟。
+                </p>
+            </div>
+
+            <div class="report-two-column">
+                <article class="report-panel">
+                    <div class="panel-row">
+                        <span class="panel-label">Product Input</span>
+                        <span class="tag-pill" id="demo-status">就绪</span>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:16px;padding:16px 0;">
+                        <label style="display:flex;flex-direction:column;gap:4px;">
+                            <span style="font-size:0.85rem;color:#94a3b8;">产品名称</span>
+                            <input id="demo-product-name" type="text" value="元气森林·夏限定" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:10px 14px;color:#e0e0e0;font-size:0.95rem;">
+                        </label>
+                        <label style="display:flex;flex-direction:column;gap:4px;">
+                            <span style="font-size:0.85rem;color:#94a3b8;">品类</span>
+                            <select id="demo-category" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:10px 14px;color:#e0e0e0;font-size:0.95rem;">
+                                <option value="饮料">饮料</option>
+                                <option value="美妆护肤">美妆护肤</option>
+                                <option value="保健品">保健品</option>
+                                <option value="食品零食">食品零食</option>
+                                <option value="数码3C">数码3C</option>
+                                <option value="服装鞋帽">服装鞋帽</option>
+                            </select>
+                        </label>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                            <label style="display:flex;flex-direction:column;gap:4px;">
+                                <span style="font-size:0.85rem;color:#94a3b8;">价格 (元)</span>
+                                <input id="demo-price" type="number" value="5.5" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:10px 14px;color:#e0e0e0;font-size:0.95rem;">
+                            </label>
+                            <label style="display:flex;flex-direction:column;gap:4px;">
+                                <span style="font-size:0.85rem;color:#94a3b8;">人群规模</span>
+                                <select id="demo-pop-size" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:10px 14px;color:#e0e0e0;font-size:0.95rem;">
+                                    <option value="500">500人 (快速)</option>
+                                    <option value="1000" selected>1,000人 (标准)</option>
+                                    <option value="5000">5,000人 (精确)</option>
+                                </select>
+                            </label>
+                        </div>
+                        <button id="demo-run-btn" onclick="runDemo()" style="background:linear-gradient(135deg,#818cf8,#a78bfa);color:#fff;border:none;border-radius:10px;padding:12px 24px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:8px;">
+                            运行预测
+                        </button>
+                    </div>
+                </article>
+
+                <article class="report-panel">
+                    <div class="panel-row">
+                        <span class="panel-label">Prediction Results</span>
+                        <span class="tag-pill" id="demo-confidence">--</span>
+                    </div>
+                    <div id="demo-results" style="padding:16px 0;">
+                        <p style="color:#64748b;text-align:center;padding:40px 0;">点击"运行预测"查看结果</p>
+                    </div>
                 </article>
             </div>
         </section>
