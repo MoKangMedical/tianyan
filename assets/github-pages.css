@@ -1252,3 +1252,106 @@ pre {
         flex-direction: column;
     }
 }
+
+/* Trust Bar - Social Proof */
+.trust-bar {
+    padding: 40px 24px;
+    text-align: center;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-soft);
+}
+
+.trust-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 24px;
+}
+
+.trust-stats {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    flex-wrap: wrap;
+}
+
+.trust-stat {
+    text-align: center;
+}
+
+.trust-stat strong {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 4px;
+}
+
+.trust-stat span {
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+@media (max-width: 768px) {
+    .trust-stats {
+        gap: 24px;
+    }
+    .trust-stat strong {
+        font-size: 1.5rem;
+    }
+}
+
+/* CTA Section */
+.cta-section {
+    text-align: center;
+    padding: 100px 24px;
+    background: linear-gradient(180deg, var(--bg) 0%, rgba(129, 140, 248, 0.05) 50%, var(--bg) 100%);
+}
+
+.cta-content h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--text), var(--accent-3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.cta-content p {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 600px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.cta-trust {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+    .cta-content h2 {
+        font-size: 1.8rem;
+    }
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+}
