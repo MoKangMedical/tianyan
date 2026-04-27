@@ -18,6 +18,7 @@ from .mimo_adapter import MIMOAdapter, MockMIMOAdapter, MIMOConfig
 from .llm_adapter import UnifiedLLMAdapter, LLMConfig, LLMProvider, get_llm, reset_llm
 from .data_integration import DataIntegration, IntegratedResult
 from .conversation import ConversationEngine, ConversationResponse
+from .opc_integration import OPCIntegration
 from .report_generator import McKinseyReportGenerator, McKinseyReport, ReportSection
 from .persistence import PersistenceLayer, SimulationRun
 from .realtime_feeds import RealtimeFeedManager, StockFeedAdapter, NewsFeedAdapter, PolicyFeedAdapter
