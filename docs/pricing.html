@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>定价 Pricing — 天眼 Tianyan</title>
+    <meta name="description" content="天眼 Tianyan 定价方案：Explorer 免费体验、Professional 专业版、Enterprise 企业定制。">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/github-pages.css">
+    <style>
+        /* ── Pricing-specific styles ── */
+        .pricing-hero { padding: 72px 0 24px; text-align: center; }
+        .pricing-hero h1 { font-size: clamp(2.6rem, 4.5vw, 4.8rem); margin: 12px auto 0; max-width: 14ch; }
+        .pricing-hero .section-body { max-width: 640px; margin: 18px auto 0; }
+
+        /* pricing cards */
+        .pricing-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: stretch; }
+        .pricing-card {
+            background: linear-gradient(180deg, rgba(16,29,42,.88), rgba(7,16,24,.92));
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            border-radius: var(--radius);
+            padding: 32px 26px;
+            display: flex; flex-direction: column;
+            position: relative;
+            transition: transform .22s ease, border-color .22s ease;
+        }
+        .pricing-card:hover { transform: translateY(-4px); border-color: rgba(127,208,200,.38); }
+        .pricing-card.featured { border-color: var(--accent); }
+        .pricing-card.featured::before {
+            content: "最受欢迎";
+            position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--accent), #ffd88d);
+            color: #061019; font-weight: 700; font-size: .82rem;
+            padding: 5px 16px; border-radius: 999px;
+        }
+        .pricing-card .plan-tier { text-transform: uppercase; letter-spacing: .12em; font-size: .82rem; color: var(--accent-2); }
+        .pricing-card .plan-name { font-family: "Noto Serif SC", serif; font-size: 1.6rem; font-weight: 700; margin: 10px 0 4px; }
+        .pricing-card .plan-price { font-size: 2.6rem; font-weight: 700; margin: 12px 0 4px; }
+        .pricing-card .plan-price small { font-size: 1rem; font-weight: 400; color: var(--muted); }
+        .pricing-card .plan-desc { color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+        .pricing-card .plan-features { list-style: none; margin: 0; padding: 0; flex: 1; display: grid; gap: 10px; }
+        .pricing-card .plan-features li { color: var(--muted); font-size: .94rem; line-height: 1.6; padding-left: 22px; position: relative; }
+        .pricing-card .plan-features li::before { content: "✓"; position: absolute; left: 0; color: var(--success); font-weight: 700; }
+        .pricing-card .button { margin-top: 24px; width: 100%; }
+
+        /* comparison table */
+        .comparison-wrap { overflow-x: auto; margin-top: 24px; }
+        .comparison-table { width: 100%; border-collapse: collapse; }
+        .comparison-table th, .comparison-table td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--line); font-size: .94rem; }
+        .comparison-table thead th { color: var(--accent-2); font-size: .82rem; text-transform: uppercase; letter-spacing: .08em; }
+        .comparison-table td { color: var(--muted); }
+        .comparison-table td:first-child { color: var(--text); font-weight: 500; }
+        .comparison-table .check { color: var(--success); font-weight: 700; text-align: center; }
+        .comparison-table .dash  { color: rgba(152,179,206,.3); text-align: center; }
+
+        /* ROI calculator */
+        .roi-shell {
+            background: linear-gradient(180deg, rgba(16,29,42,.88), rgba(7,16,24,.92));
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            border-radius: var(--radius);
+            padding: 32px 28px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 36px;
+        }
+        .roi-inputs label { display: block; margin-bottom: 18px; }
+        .roi-inputs label span { display: block; color: var(--muted); font-size: .9rem; margin-bottom: 6px; }
+        .roi-inputs input, .roi-inputs select {
+            width: 100%; padding: 12px 14px; border-radius: 16px;
+            border: 1px solid var(--line-strong);
+            background: rgba(255,255,255,.03); color: var(--text);
+            font-size: 1rem; outline: none; transition: border-color .18s;
+        }
+        .roi-inputs input:focus, .roi-inputs select:focus { border-color: var(--accent-2); }
+        .roi-results { display: grid; gap: 18px; align-content: start; }
+        .roi-result-card {
+            padding: 20px; border-radius: 20px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,.02);
+        }
+        .roi-result-card .roi-label { font-size: .82rem; text-transform: uppercase; letter-spacing: .1em; color: var(--accent-2); }
+        .roi-result-card .roi-value { font-size: 2rem; font-weight: 700; margin-top: 8px; }
+        .roi-result-card .roi-note { color: var(--muted); font-size: .9rem; margin-top: 6px; line-height: 1.6; }
+
+        /* FAQ */
+        .faq-list { display: grid; gap: 14px; max-width: 800px; }
+        .faq-item {
+            border: 1px solid var(--line); border-radius: 20px;
+            background: rgba(255,255,255,.02); overflow: hidden;
+        }
+        .faq-question {
+            width: 100%; text-align: left; padding: 18px 22px;
+            background: transparent; border: none; color: var(--text);
+            font-size: 1.02rem; font-weight: 600; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .faq-question::after { content: "+"; font-size: 1.4rem; color: var(--accent-2); transition: transform .2s; }
+        .faq-item.open .faq-question::after { content: "−"; }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height .3s ease, padding .3s ease; }
+        .faq-item.open .faq-answer { max-height: 400px; }
+        .faq-answer p { padding: 0 22px 18px; color: var(--muted); line-height: 1.8; margin: 0; }
+
+        @media (max-width: 1120px) {
+            .pricing-cards, .roi-shell { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 720px) {
+            .pricing-hero { padding-top: 44px; }
+            .roi-shell { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-aura page-aura-one"></div>
+    <div class="page-aura page-aura-two"></div>
+
+    <header class="site-nav">
+        <a class="nav-brand" href="index.html">
+            <span class="nav-brand-mark">◉</span>
+            <span>
+                <strong>天眼 Tianyan</strong>
+                <em>Commercial Intelligence for China</em>
+            </span>
+        </a>
+        <nav class="nav-links">
+            <a href="index.html">首页</a>
+            <a href="pricing.html">定价</a>
+            <a href="cases/medislim/report.html">案例</a>
+            <a href="api.html">API</a>
+        </nav>
+        <a class="nav-cta" href="cases/medislim/report.html">打开完整案例</a>
+    </header>
+
+    <main>
+        <!-- Hero -->
+        <section class="section pricing-hero reveal">
+            <p class="kicker">Pricing Plans</p>
+            <h1>选择适合你决策规模的方案。</h1>
+            <p class="section-body">从免费探索到企业级无限模拟，天眼为每个阶段的商业决策提供合成人群推演能力。</p>
+        </section>
+
+        <!-- Pricing Cards -->
+        <section class="section reveal">
+            <div class="pricing-cards">
+                <!-- Explorer -->
+                <article class="pricing-card">
+                    <span class="plan-tier">Explorer</span>
+                    <h3 class="plan-name">探索版</h3>
+                    <div class="plan-price">免费 <small></small></div>
+                    <p class="plan-desc">适合初次体验天眼合成人群推演的个人用户和小型团队。</p>
+                    <ul class="plan-features">
+                        <li>每月 5 次模拟</li>
+                        <li>1 个行业模板</li>
+                        <li>基础报告输出</li>
+                        <li>API 只读访问</li>
+                        <li>社区支持</li>
+                    </ul>
+                    <a class="button button-secondary" href="cases/medislim/report.html">免费开始</a>
+                </article>
+
+                <!-- Professional -->
+                <article class="pricing-card featured">
+                    <span class="plan-tier">Professional</span>
+                    <h3 class="plan-name">专业版</h3>
+                    <div class="plan-price">¥699 <small>/月</small></div>
+                    <p class="plan-desc">适合需要持续模拟和深度分析的中型团队与品牌方。</p>
+                    <ul class="plan-features">
+                        <li>每月 100 次模拟</li>
+                        <li>全部 5 个行业模板</li>
+                        <li>麦肯锡式完整报告</li>
+                        <li>14 个 API 端点完全访问</li>
+                        <li>KOL + 渠道 + 直播推演</li>
+                        <li>定价优化曲线</li>
+                        <li>邮件支持（48h 响应）</li>
+                    </ul>
+                    <a class="button button-primary" href="contact.html">开始试用</a>
+                </article>
+
+                <!-- Enterprise -->
+                <article class="pricing-card">
+                    <span class="plan-tier">Enterprise</span>
+                    <h3 class="plan-name">企业版</h3>
+                    <div class="plan-price">定制 <small></small></div>
+                    <p class="plan-desc">适合需要无限模拟、私有部署和定制研究的大型机构。</p>
+                    <ul class="plan-features">
+                        <li>无限模拟次数</li>
+                        <li>自定义行业模板开发</li>
+                        <li>私有部署 / 混合云</li>
+                        <li>专属数据源接入</li>
+                        <li>战略咨询级交付</li>
+                        <li>专属客户成功经理</li>
+                        <li>SLA 99.9% 可用性保障</li>
+                        <li>合规审计支持</li>
+                    </ul>
+                    <a class="button button-secondary" href="contact.html">联系销售</a>
+                </article>
+            </div>
+        </section>
+
+        <!-- Feature Comparison -->
+        <section class="section reveal">
+            <div class="section-head">
+                <p class="section-kicker">Feature Comparison</p>
+                <h2>功能对比一览</h2>
+            </div>
+            <div class="comparison-wrap">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>功能</th>
+                            <th>Explorer</th>
+                            <th>Professional</th>
+                            <th>Enterprise</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>月模拟次数</td>
+                            <td>5</td>
+                            <td>100</td>
+                            <td>无限</td>
+                        </tr>
+                        <tr>
+                            <td>行业模板</td>
+                            <td>1 个</td>
+                            <td>全部 5 个</td>
+                            <td>全部 + 定制</td>
+                        </tr>
+                        <tr>
+                            <td>合成人群建模</td>
+                            <td class="check">✓</td>
+                            <td class="check">✓</td>
+                            <td class="check">✓</td>
+                        </tr>
+                        <tr>
+                            <td>购买意愿分析</td>
+                            <td class="check">✓</td>
+                            <td class="check">✓</td>
+                            <td class="check">✓</td>
+                        </tr>
+                        <tr>
+                            <td>定价优化曲线</td>
+                            <td class="dash">—</td>
+                            <td class="check">✓</td>
+                            <td class="check">✓</td>
+                        </tr>
+                        <tr>
+                            <td>KOL 影响力推演</td>
+                            <td class="dash">—</td>
+                            <td class="check">✓</td>
+                            <td class="check">✓</td>
+                        </tr>
+                        <tr>
+                            <td>直播平台预测</td>
+                            <td class="dash">—</td>
+                            <td class="check">✓</td>
+                            <td class="check">✓</td>
+                        </tr>
+                        <tr>
+                            <td>渠道组合优化</td>
+                            <td class="dash">—</td>
+                            <td class="check">✓</td>
+                            <td class="check">✓</td>
+                        </tr>
+                        <tr>
+                            <td>麦肯锡式报告</td>
+                            <td>基础版</td>
+                            <td>完整版</td>
+                            <td>完整版 + 附录</td>
+                        </tr>
+                        <tr>
+                            <td>API 访问</td>
+                            <td>只读</td>
+                            <td>完全访问</td>
+                            <td>完全 + Webhook</td>
+                        </tr>
+                        <tr>
+                            <td>政策 / 经济研究域</td>
+                            <td class="dash">—</td>
+                            <td class="check">✓</td>
+                            <td class="check">✓</td>
+                        </tr>
+                        <tr>
+                            <td>私有部署</td>
+                            <td class="dash">—</td>
+                            <td class="dash">—</td>
+                            <td class="check">✓</td>
+                        </tr>
+                        <tr>
+                            <td>SLA 保障</td>
+                            <td class="dash">—</td>
+                            <td class="dash">—</td>
+                            <td>99.9%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ROI Calculator -->
+        <section class="section reveal">
+            <div class="section-head">
+                <p class="section-kicker">ROI Calculator</p>
+                <h2>计算天眼为你的业务带来的预期收益</h2>
+                <p class="section-body">输入你的月营收和计划使用频率，估算模拟决策带来的收入提升。</p>
+            </div>
+            <div class="roi-shell">
+                <div class="roi-inputs">
+                    <label>
+                        <span>月营收（人民币）</span>
+                        <input type="number" id="roi-revenue" value="500000" min="0" step="10000" placeholder="例如 500000">
+                    </label>
+                    <label>
+                        <span>选择方案</span>
+                        <select id="roi-plan">
+                            <option value="professional" selected>Professional ¥699/月</option>
+                            <option value="enterprise">Enterprise 定制</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>月模拟使用次数</span>
+                        <input type="number" id="roi-simulations" value="30" min="1" max="1000" placeholder="例如 30">
+                    </label>
+                    <label>
+                        <span>假设收入提升率（%）</span>
+                        <input type="number" id="roi-improvement" value="3" min="0.1" max="50" step="0.1" placeholder="例如 3">
+                    </label>
+                    <button class="button button-primary" id="roi-calc-btn" type="button" style="margin-top:6px;">计算收益</button>
+                </div>
+                <div class="roi-results">
+                    <div class="roi-result-card">
+                        <div class="roi-label">预计月收入增量</div>
+                        <div class="roi-value" id="roi-additional">--</div>
+                        <div class="roi-note">基于收入提升率 × 月营收</div>
+                    </div>
+                    <div class="roi-result-card">
+                        <div class="roi-label">投入产出比 (ROI)</div>
+                        <div class="roi-value" id="roi-ratio">--</div>
+                        <div class="roi-note">月收入增量 ÷ 方案月费</div>
+                    </div>
+                    <div class="roi-result-card">
+                        <div class="roi-label">每模拟成本</div>
+                        <div class="roi-value" id="roi-per-sim">--</div>
+                        <div class="roi-note">方案月费 ÷ 模拟使用次数</div>
+                    </div>
+                    <div class="roi-result-card">
+                        <div class="roi-label">年化预期收益</div>
+                        <div class="roi-value" id="roi-annual">--</div>
+                        <div class="roi-note">月增量 × 12 − 年方案费用</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="section reveal">
+            <div class="section-head">
+                <p class="section-kicker">FAQ</p>
+                <h2>常见问题</h2>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question">Explorer 免费版有使用期限吗？</button>
+                    <div class="faq-answer"><p>没有。Explorer 免费版永久有效，每月重置 5 次模拟额度。如果当月额度用完，下月 1 日自动恢复。</p></div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">可以随时升级或降级方案吗？</button>
+                    <div class="faq-answer"><p>可以。升级即时生效，按剩余天数折算差价。降级在当前计费周期结束后生效，已用额度不受影响。</p></div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">模拟结果的准确性如何保证？</button>
+                    <div class="faq-answer"><p>天眼基于合成人群建模（Synthetic Population Modeling），结合真实市场数据、政策文件和行业研究进行推演。每份报告附带置信度评分和数据来源标注，帮助你判断结果可靠性。</p></div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Enterprise 企业版的定制范围包括什么？</button>
+                    <div class="faq-answer"><p>包括私有部署（公有云/私有云/本地）、自定义行业模板开发、专属数据源接入（如内部 CRM、ERP 数据）、战略咨询级报告定制、以及与现有 BI 系统的集成对接。</p></div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">数据安全如何保障？</button>
+                    <div class="faq-answer"><p>所有数据传输使用 TLS 1.3 加密。Professional 版数据存储在加密的多租户环境中，Enterprise 版支持数据驻留指定区域、独立存储和合规审计。我们遵循 GDPR 和中国《数据安全法》要求。</p></div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">支持哪些付款方式？</button>
+                    <div class="faq-answer"><p>支持支付宝、微信支付、银行转账和信用卡（Visa/Mastercard）。Enterprise 版支持对公合同和年度发票。</p></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div>
+            <strong>天眼 Tianyan v1.0.0</strong>
+            <p>114 tests · 14 endpoints · Docker + pyproject + docs</p>
+        </div>
+        <div class="footer-links">
+            <a href="index.html">首页</a>
+            <a href="pricing.html">定价</a>
+            <a href="cases/medislim/report.html">案例详情</a>
+            <a href="https://github.com/MoKangMedical/tianyan">GitHub</a>
+        </div>
+    </footer>
+
+    <script>
+        // ROI Calculator
+        document.getElementById('roi-calc-btn').addEventListener('click', function () {
+            var revenue = parseFloat(document.getElementById('roi-revenue').value) || 0;
+            var plan = document.getElementById('roi-plan').value;
+            var sims = parseInt(document.getElementById('roi-simulations').value) || 1;
+            var improvement = parseFloat(document.getElementById('roi-improvement').value) || 0;
+
+            var monthlyCost = plan === 'professional' ? 699 : 3000; // enterprise estimated
+            var additional = revenue * (improvement / 100);
+            var ratio = monthlyCost > 0 ? (additional / monthlyCost).toFixed(1) : '∞';
+            var perSim = (monthlyCost / sims).toFixed(2);
+            var annual = (additional * 12) - (monthlyCost * 12);
+
+            function fmt(n) {
+                if (Math.abs(n) >= 10000) return '¥' + (n / 10000).toFixed(1) + '万';
+                return '¥' + n.toLocaleString('zh-CN', { maximumFractionDigits: 0 });
+            }
+
+            document.getElementById('roi-additional').textContent = fmt(additional);
+            document.getElementById('roi-ratio').textContent = ratio + 'x';
+            document.getElementById('roi-per-sim').textContent = '¥' + perSim;
+            document.getElementById('roi-annual').textContent = fmt(annual);
+        });
+
+        // FAQ toggle
+        document.querySelectorAll('.faq-question').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var item = this.closest('.faq-item');
+                item.classList.toggle('open');
+            });
+        });
+
+        // Reveal animation
+        var obs = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-visible'); obs.unobserve(e.target); } });
+        }, { threshold: 0.08 });
+        document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
+    </script>
+</body>
+</html>
