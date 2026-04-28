@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Sitemap: https://mokangmedical.github.io/tianyan/sitemap.xml
+
+# Public pages
+Allow: /index.html
+Allow: /docs/
+Allow: /cases/
+Allow: /assets/
+
+# Disallow internal files
+Disallow: /api_keys.json
+Disallow: /tianyan_production.db
