@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Use Cases · 天眼 Tianyan</title>
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/github-pages.css">
+    <style>
+        .usecases { max-width: 900px; margin: 0 auto; padding: 40px 24px 100px; }
+        .usecases h1 { font-size: 2.5rem; margin-bottom: 8px; }
+        .usecases .subtitle { color: var(--muted); margin-bottom: 48px; }
+        .case-card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-sm);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .case-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .case-icon { font-size: 1.5rem; }
+        .case-title { font-size: 1.1rem; font-weight: 600; }
+        .case-desc { color: var(--muted); font-size: 0.9rem; margin-bottom: 16px; }
+        .case-example {
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-2);
+        }
+        .case-result { margin-top: 12px; }
+        .case-result strong { color: var(--accent-3); }
+    </style>
+</head>
+<body>
+    <header class="site-nav site-nav-compact">
+        <a class="nav-brand" href="../index.html">
+            <span class="nav-brand-mark">◉</span>
+            <span><strong>天眼 Tianyan</strong><em>Use Cases</em></span>
+        </a>
+        <nav class="nav-links">
+            <a href="../index.html">主页</a>
+            <a href="api.html">API文档</a>
+        </nav>
+        <a class="nav-cta" href="../index.html">返回主页</a>
+    </header>
+
+    <main class="usecases">
+        <h1>Use Cases</h1>
+        <p class="subtitle">天眼的典型使用场景</p>
+
+        <div class="case-card">
+            <div class="case-header">
+                <span class="case-icon">🥤</span>
+                <span class="case-title">新产品上市预测</span>
+            </div>
+            <p class="case-desc">在产品上市前，模拟目标人群对新产品的接受度，预测首月/首季销量，识别核心用户群。</p>
+            <div class="case-example">
+eye = ConsumerEye()
+result = eye.predict_product_launch(
+    product_name="元气森林·夏限定",
+    price=5.5,
+    category="饮料",
+    selling_point="0糖0卡",
+    channels=["天猫", "抖音"],
+    target_population=pop
+)</div>
+            <div class="case-result">
+                <strong>输出：</strong>预测首月销量120万瓶，核心人群18-30岁女性，好评率87.3%
+            </div>
+        </div>
+
+        <div class="case-card">
+            <div class="case-header">
+                <span class="case-icon">💰</span>
+                <span class="case-title">定价策略优化</span>
+            </div>
+            <p class="case-desc">测试不同价格点对销量和利润的影响，找到最优定价区间。</p>
+            <div class="case-result">
+                <strong>输出：</strong>价格弹性曲线、最优价格点、各价位段转化率和利润率
+            </div>
+        </div>
+
+        <div class="case-card">
+            <div class="case-header">
+                <span class="case-icon">📱</span>
+                <span class="case-title">营销渠道选择</span>
+            </div>
+            <p class="case-desc">模拟KOL推荐、社交媒体广告、线下活动等不同营销策略的效果。</p>
+            <div class="case-result">
+                <strong>输出：</strong>渠道ROI排名、KOL类型推荐、内容风格建议、预算分配方案
+            </div>
+        </div>
+
+        <div class="case-card">
+            <div class="case-header">
+                <span class="case-icon">⚔️</span>
+                <span class="case-title">竞品对抗分析</span>
+            </div>
+            <p class="case-desc">模拟消费者在你的产品和竞品之间的选择，发现差异化机会。</p>
+            <div class="case-result">
+                <strong>输出：</strong>竞品对比矩阵、用户迁移路径、差异化建议
+            </div>
+        </div>
+
+        <div class="case-card">
+            <div class="case-header">
+                <span class="case-icon">🏥</span>
+                <span class="case-title">医疗健康产品</span>
+            </div>
+            <p class="case-desc">预测GLP-1减重药、保健品、远程医疗平台等医疗健康产品的市场反应。</p>
+            <div class="case-result">
+                <strong>输出：</strong>目标人群画像、渠道策略、定价建议、风险评估
+            </div>
+        </div>
+
+        <div class="case-card">
+            <div class="case-header">
+                <span class="case-icon">📊</span>
+                <span class="case-title">投资决策支持</span>
+            </div>
+            <p class="case-desc">为投资人提供行业趋势预测、市场规模估算和竞争格局分析。</p>
+            <div class="case-result">
+                <strong>输出：</strong>TAM/SAM/SOM分析、增长预测、竞争格局、投资建议
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div><strong>天眼 Tianyan</strong><p>Use Cases</p></div>
+        <div class="footer-links">
+            <a href="../index.html">主页</a>
+            <a href="https://github.com/MoKangMedical/tianyan">GitHub</a>
+        </div>
+    </footer>
+</body>
+</html>
