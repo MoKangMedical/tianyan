@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrations · 天眼 Tianyan</title>
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/github-pages.css">
+    <style>
+        .integrations { max-width: 900px; margin: 0 auto; padding: 40px 24px 100px; }
+        .integrations h1 { font-size: 2.5rem; margin-bottom: 8px; }
+        .integrations .subtitle { color: var(--muted); margin-bottom: 48px; }
+        .integration-card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-sm);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .integration-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .integration-icon { font-size: 1.5rem; }
+        .integration-name { font-size: 1.1rem; font-weight: 600; }
+        .integration-desc { color: var(--muted); font-size: 0.9rem; margin-bottom: 16px; }
+        pre {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 16px;
+            overflow-x: auto;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--accent-2);
+        }
+    </style>
+</head>
+<body>
+    <header class="site-nav site-nav-compact">
+        <a class="nav-brand" href="../index.html">
+            <span class="nav-brand-mark">◉</span>
+            <span><strong>天眼 Tianyan</strong><em>Integrations</em></span>
+        </a>
+        <nav class="nav-links">
+            <a href="../index.html">主页</a>
+            <a href="api.html">API文档</a>
+        </nav>
+        <a class="nav-cta" href="../index.html">返回主页</a>
+    </header>
+
+    <main class="integrations">
+        <h1>Integrations</h1>
+        <p class="subtitle">将天眼集成到你的工作流中</p>
+
+        <div class="integration-card">
+            <div class="integration-header">
+                <span class="integration-icon">🐍</span>
+                <span class="integration-name">Python SDK</span>
+            </div>
+            <p class="integration-desc">直接在Python代码中使用天眼。</p>
+            <pre>from tianyan import ConsumerEye, SyntheticPopulation
+
+pop = SyntheticPopulation(size=1000, region="全国")
+eye = ConsumerEye()
+result = eye.predict_product_launch(
+    product_name="产品名称",
+    price=99.0,
+    category="品类",
+    selling_point="卖点",
+    channels=["天猫", "抖音"],
+    target_population=pop
+)
+print(f"购买意愿: {result.confidence:.1%}")</pre>
+        </div>
+
+        <div class="integration-card">
+            <div class="integration-header">
+                <span class="integration-icon">⚡</span>
+                <span class="integration-name">CLI 命令行</span>
+            </div>
+            <p class="integration-desc">在终端中直接使用天眼。</p>
+            <pre># 产品预测
+python cli_v2.py predict --product "元气森林" --price 5.5 --category 饮料
+
+# 对话式预测
+python cli_v2.py conversation --interactive
+
+# 启动API服务器
+python cli_v2.py server --port 8000</pre>
+        </div>
+
+        <div class="integration-card">
+            <div class="integration-header">
+                <span class="integration-icon">🌐</span>
+                <span class="integration-name">REST API</span>
+            </div>
+            <p class="integration-desc">通过HTTP API集成到任何语言。</p>
+            <pre># Python
+import requests
+r = requests.post("http://localhost:8000/api/v2/predict",
+    headers={"X-API-Key": "ty_your_key"},
+    json={"product_name": "产品", "price": 99, "category": "品类"})
+
+# JavaScript
+fetch("http://localhost:8000/api/v2/predict", {
+    method: "POST",
+    headers: {"X-API-Key": "ty_your_key", "Content-Type": "application/json"},
+    body: JSON.stringify({product_name: "产品", price: 99, category: "品类"})
+})
+
+# cURL
+curl -X POST http://localhost:8000/api/v2/predict \
+  -H "X-API-Key: ty_your_key" \
+  -H "Content-Type: application/json" \
+  -d '{"product_name": "产品", "price": 99, "category": "品类"}'</pre>
+        </div>
+
+        <div class="integration-card">
+            <div class="integration-header">
+                <span class="integration-icon">🐳</span>
+                <span class="integration-name">Docker</span>
+            </div>
+            <p class="integration-desc">一键部署天眼服务。</p>
+            <pre># 构建并启动
+docker-compose -f docker-compose.prod.yml up -d
+
+# 或单独运行
+docker run -d -p 8000:8000 \
+  -e TIANYAN_LLM_PROVIDER=deepseek \
+  -e DEEPSEEK_API_KEY=sk-your-key \
+  mokangmedical/tianyan:latest</pre>
+        </div>
+
+        <div class="integration-card">
+            <div class="integration-header">
+                <span class="integration-icon">☁️</span>
+                <span class="integration-name">云平台部署</span>
+            </div>
+            <p class="integration-desc">支持主流云平台部署。</p>
+            <pre># AWS ECS
+aws ecs create-service --cluster tianyan --task-definition tianyan:1
+
+# 阿里云 ACK
+kubectl apply -f k8s/deployment.yaml
+
+# Render
+render deploy --service tianyan</pre>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div><strong>天眼 Tianyan</strong><p>Integrations</p></div>
+        <div class="footer-links">
+            <a href="../index.html">主页</a>
+            <a href="api.html">API文档</a>
+            <a href="https://github.com/MoKangMedical/tianyan">GitHub</a>
+        </div>
+    </footer>
+</body>
+</html>
