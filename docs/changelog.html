@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Changelog · 天眼 Tianyan</title>
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/github-pages.css">
+    <style>
+        .changelog { max-width: 800px; margin: 0 auto; padding: 40px 24px 100px; }
+        .changelog h1 { font-size: 2.5rem; margin-bottom: 8px; }
+        .changelog .subtitle { color: var(--muted); margin-bottom: 48px; }
+        .version-block { margin-bottom: 48px; position: relative; padding-left: 32px; }
+        .version-block:before {
+            content: "";
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: -48px;
+            width: 2px;
+            background: var(--line);
+        }
+        .version-block:last-child:before { display: none; }
+        .version-dot {
+            position: absolute;
+            left: 0;
+            top: 6px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent-3);
+            border: 3px solid var(--bg);
+        }
+        .version-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .version-tag {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-3);
+        }
+        .version-date { font-size: 0.85rem; color: var(--muted); }
+        .version-badge {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .badge-latest { background: rgba(74, 222, 128, 0.15); color: #4ade80; }
+        .badge-major { background: rgba(129, 140, 248, 0.15); color: #818cf8; }
+        .change-list { list-style: none; padding: 0; }
+        .change-list li {
+            padding: 6px 0;
+            font-size: 0.9rem;
+            color: var(--muted);
+            display: flex;
+            gap: 8px;
+        }
+        .change-type {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .type-feat { background: rgba(74, 222, 128, 0.15); color: #4ade80; }
+        .type-fix { background: rgba(239, 125, 115, 0.15); color: #ef7d73; }
+        .type-docs { background: rgba(129, 140, 248, 0.15); color: #818cf8; }
+        .type-chore { background: rgba(150, 169, 188, 0.15); color: #96a9bc; }
+    </style>
+</head>
+<body>
+    <header class="site-nav site-nav-compact">
+        <a class="nav-brand" href="../index.html">
+            <span class="nav-brand-mark">◉</span>
+            <span><strong>天眼 Tianyan</strong><em>Changelog</em></span>
+        </a>
+        <nav class="nav-links">
+            <a href="../index.html">主页</a>
+            <a href="api.html">API文档</a>
+        </nav>
+        <a class="nav-cta" href="../index.html">返回主页</a>
+    </header>
+
+    <main class="changelog">
+        <h1>Changelog</h1>
+        <p class="subtitle">天眼 Tianyan 版本历史</p>
+
+        <div class="version-block">
+            <div class="version-dot"></div>
+            <div class="version-header">
+                <span class="version-tag">v2.0.0</span>
+                <span class="version-date">2026-04-27</span>
+                <span class="version-badge badge-latest">Latest</span>
+                <span class="version-badge badge-major">Major</span>
+            </div>
+            <ul class="change-list">
+                <li><span class="change-type type-feat">feat</span> 生产级API服务器 (server.py) — 用户认证、任务队列、持久化</li>
+                <li><span class="change-type type-feat">feat</span> CLI命令行工具 (cli_v2.py) — predict/conversation/server/status</li>
+                <li><span class="change-type type-feat">feat</span> 统一LLM适配器 — 支持DeepSeek/MIMO/OpenAI/Mock四种模式</li>
+                <li><span class="change-type type-feat">feat</span> 数据集成层 — 统一静态/实时/LLM数据查询</li>
+                <li><span class="change-type type-feat">feat</span> 多轮对话式预测引擎 — 5阶段预测流程</li>
+                <li><span class="change-type type-feat">feat</span> OPC Platform集成模块</li>
+                <li><span class="change-type type-feat">feat</span> 3个完整案例报告 (MediSlim/LumiGlow/CloudDoc)</li>
+                <li><span class="change-type type-feat">feat</span> 交互式Demo (浏览器端预测+Chart.js图表)</li>
+                <li><span class="change-type type-feat">feat</span> Docker一键部署 (docker-compose.prod.yml)</li>
+                <li><span class="change-type type-feat">feat</span> API文档页面 (docs/api.html)</li>
+                <li><span class="change-type type-feat">feat</span> 定价区块 (Free/Pro/Enterprise)</li>
+                <li><span class="change-type type-feat">feat</span> FAQ区块 + Trust Bar + CTA + How It Works</li>
+                <li><span class="change-type type-fix">fix</span> report.js通用化 — 支持任意案例数据结构</li>
+                <li><span class="change-type type-fix">fix</span> 案例数据结构匹配MediSlim模板</li>
+                <li><span class="change-type type-fix">fix</span> 首页统计数据一致性</li>
+                <li><span class="change-type type-docs">docs</span> README_v2.md 完整使用文档</li>
+            </ul>
+        </div>
+
+        <div class="version-block">
+            <div class="version-dot" style="background: var(--muted);"></div>
+            <div class="version-header">
+                <span class="version-tag">v1.0.0</span>
+                <span class="version-date">2026-04-07</span>
+                <span class="version-badge badge-major">Major</span>
+            </div>
+            <ul class="change-list">
+                <li><span class="change-type type-feat">feat</span> 核心预测引擎 — 人群生成、场景推演、报告生成</li>
+                <li><span class="change-type type-feat">feat</span> 三眼产品矩阵 — ConsumerEye/PolicyEye/MarketEye</li>
+                <li><span class="change-type type-feat">feat</span> 中国特色场景 — KOL/直播/小红书/电商渠道</li>
+                <li><span class="change-type type-feat">feat</span> 合规检查器 — 政治敏感词/PII检测</li>
+                <li><span class="change-type type-feat">feat</span> 行业模板 — 5个预设行业模板</li>
+                <li><span class="change-type type-feat">feat</span> 数据源适配器 — 国家统计局/GLP-1市场/政策/A股</li>
+                <li><span class="change-type type-feat">feat</span> 实时数据集成 — A股/新闻/政策RSS</li>
+                <li><span class="change-type type-feat">feat</span> 持久化层 — SQLite + JSON + 文件系统</li>
+                <li><span class="change-type type-feat">feat</span> Demo服务器 (demo_server.py) — 17个API端点</li>
+                <li><span class="change-type type-feat">feat</span> GitHub Pages — 深色主题+动画+API Explorer</li>
+                <li><span class="change-type type-feat">feat</span> MediSlim案例报告</li>
+                <li><span class="change-type type-docs">docs</span> 方法论文档 + 商业计划 + 战略蓝图</li>
+            </ul>
+        </div>
+
+        <div class="version-block">
+            <div class="version-dot" style="background: var(--muted);"></div>
+            <div class="version-header">
+                <span class="version-tag">v0.3.0</span>
+                <span class="version-date">2026-03-15</span>
+            </div>
+            <ul class="change-list">
+                <li><span class="change-type type-feat">feat</span> Demo Server 14端点 + API文档</li>
+                <li><span class="change-type type-feat">feat</span> 算法备案材料</li>
+                <li><span class="change-type type-fix">fix</span> 测试补全 + 端到端演示</li>
+            </ul>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div><strong>天眼 Tianyan</strong><p>Changelog</p></div>
+        <div class="footer-links">
+            <a href="../index.html">主页</a>
+            <a href="https://github.com/MoKangMedical/tianyan">GitHub</a>
+        </div>
+    </footer>
+</body>
+</html>
