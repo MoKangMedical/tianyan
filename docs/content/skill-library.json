@@ -1,0 +1,74 @@
+{
+  "items": [
+    {
+      "displayName": "Algorithm Filing Readiness",
+      "category": "监管与合规",
+      "summary": "把算法备案、数据安全与合规红线转成可执行准备清单。",
+      "triggers": ["算法备案", "监管准备", "合规材料"],
+      "skillPath": "skills/algorithm-filing-readiness/SKILL.md",
+      "sourcePath": "docs/algorithm_filing.md"
+    },
+    {
+      "displayName": "Business Plan Positioning",
+      "category": "市场与业务",
+      "summary": "用于统一对外商业计划叙事、市场定位与中国适配策略。",
+      "triggers": ["商业计划书", "市场定位", "中国适配"],
+      "skillPath": "skills/business-plan-positioning/SKILL.md",
+      "sourcePath": "docs/business_plan.md"
+    },
+    {
+      "displayName": "Commercial Strategy Blueprint",
+      "category": "战略与国家发展",
+      "summary": "把战略蓝图、政策杠杆与品类创造沉淀成高层策略能力。",
+      "triggers": ["战略蓝图", "品类战略", "长期布局"],
+      "skillPath": "skills/commercial-strategy-blueprint/SKILL.md",
+      "sourcePath": "docs/strategic_blueprint.md"
+    },
+    {
+      "displayName": "Realistic Go-To-Market",
+      "category": "商业化与落地",
+      "summary": "把理想方案压回真实执行路径，适合 POC、销售周期与验证路线设计。",
+      "triggers": ["POC", "go-to-market", "落地策略"],
+      "skillPath": "skills/realistic-go-to-market/SKILL.md",
+      "sourcePath": "docs/realistic_strategy.md"
+    },
+    {
+      "displayName": "Investor Narrative",
+      "category": "融资与叙事",
+      "summary": "面向投资方的一页纸与融资叙事框架。",
+      "triggers": ["融资材料", "投资人叙事", "一页纸"],
+      "skillPath": "skills/investor-narrative/SKILL.md",
+      "sourcePath": "docs/investor_deck.md"
+    },
+    {
+      "displayName": "McKinsey Report Delivery",
+      "category": "方法论",
+      "summary": "将麦肯锡式报告结构、图表逻辑和报告生成器结合为标准交付能力。",
+      "triggers": ["麦肯锡报告", "报告结构", "执行摘要"],
+      "skillPath": "skills/mckinsey-report-delivery/SKILL.md",
+      "sourcePath": "docs/mckinsey_methodology.md"
+    },
+    {
+      "displayName": "MediSlim Launch Case",
+      "category": "案例研究",
+      "summary": "把 GLP-1 上市预测案例沉淀成可复用的产品上市分析 skill。",
+      "triggers": ["GLP-1", "产品上市预测", "案例样板"],
+      "skillPath": "skills/medislim-launch-case/SKILL.md",
+      "sourcePath": "cases/medislim/results/full_analysis.json",
+      "sourceLabel": "分析结果",
+      "secondaryPath": "cases/medislim/report.html",
+      "secondaryLabel": "案例页面"
+    },
+    {
+      "displayName": "VirtualCell Benchmark Analysis",
+      "category": "生物计算与基准测试",
+      "summary": "把单细胞基础模型 benchmark 结果转成对外可讲的比较、结论与方法说明。",
+      "triggers": ["benchmark", "单细胞模型", "模型比较"],
+      "skillPath": "skills/virtualcell-benchmark-analysis/SKILL.md",
+      "sourcePath": "虚拟细胞/docs/benchmark_report.md",
+      "sourceLabel": "Benchmark 报告",
+      "secondaryPath": "虚拟细胞/docs/benchmark_report.json",
+      "secondaryLabel": "原始 JSON"
+    }
+  ]
+}
