@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glossary · 天眼 Tianyan</title>
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/github-pages.css">
+    <style>
+        .glossary { max-width: 800px; margin: 0 auto; padding: 40px 24px 100px; }
+        .glossary h1 { font-size: 2.5rem; margin-bottom: 8px; }
+        .glossary .subtitle { color: var(--muted); margin-bottom: 48px; }
+        .term-card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        .term-name { font-size: 1.1rem; font-weight: 600; color: var(--accent-3); margin-bottom: 8px; }
+        .term-en { font-size: 0.85rem; color: var(--muted); margin-bottom: 8px; }
+        .term-desc { font-size: 0.9rem; color: var(--text); line-height: 1.6; }
+        .letter-header {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 32px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--line);
+        }
+    </style>
+</head>
+<body>
+    <header class="site-nav site-nav-compact">
+        <a class="nav-brand" href="../index.html">
+            <span class="nav-brand-mark">◉</span>
+            <span><strong>天眼 Tianyan</strong><em>Glossary</em></span>
+        </a>
+        <nav class="nav-links">
+            <a href="../index.html">主页</a>
+            <a href="api.html">API文档</a>
+        </nav>
+        <a class="nav-cta" href="../index.html">返回主页</a>
+    </header>
+
+    <main class="glossary">
+        <h1>Glossary</h1>
+        <p class="subtitle">天眼核心术语表</p>
+
+        <div class="letter-header">A</div>
+        <div class="term-card">
+            <div class="term-name">Agent</div>
+            <div class="term-en">智能体</div>
+            <div class="term-desc">天眼中的虚拟消费者。每个Agent拥有独立的人格、偏好和决策逻辑，能够模拟真实消费者的购买、评价、分享等行为。</div>
+        </div>
+
+        <div class="letter-header">C</div>
+        <div class="term-card">
+            <div class="term-name">ConsumerEye (消费眼)</div>
+            <div class="term-en">消费者洞察引擎</div>
+            <div class="term-desc">天眼三眼产品矩阵之一，专注于产品上市预测、广告创意测试、定价策略优化和用户流失预测。</div>
+        </div>
+        <div class="term-card">
+            <div class="term-name">合成人群</div>
+            <div class="term-en">Synthetic Population</div>
+            <div class="term-desc">基于国家统计局公开数据生成的虚拟消费者群体。100%合成数据，不涉及任何真实个人信息。</div>
+        </div>
+
+        <div class="letter-header">K</div>
+        <div class="term-card">
+            <div class="term-name">KOL预测</div>
+            <div class="term-en">KOL Effect Prediction</div>
+            <div class="term-desc">预测不同类型KOL（头部主播、中腰部博主、素人种草号等）的带货效果，包括ROI、转化率和建议。</div>
+        </div>
+
+        <div class="letter-header">L</div>
+        <div class="term-card">
+            <div class="term-name">LLM适配器</div>
+            <div class="term-en">LLM Adapter</div>
+            <div class="term-desc">统一的LLM接入层，支持DeepSeek、MIMO、OpenAI三种提供商，自动降级为规则引擎。</div>
+        </div>
+
+        <div class="letter-header">M</div>
+        <div class="term-card">
+            <div class="term-name">MarketEye (市场眼)</div>
+            <div class="term-en">市场洞察引擎</div>
+            <div class="term-desc">天眼三眼产品矩阵之一，专注于行业趋势预测、竞品动态分析和投资风向判断。</div>
+        </div>
+        <div class="term-card">
+            <div class="term-name">麦肯锡式报告</div>
+            <div class="term-en">McKinsey-style Report</div>
+            <div class="term-desc">天眼自动生成的专业报告格式，包含Executive Summary、风险矩阵、执行计划等完整结构。</div>
+        </div>
+
+        <div class="letter-header">P</div>
+        <div class="term-card">
+            <div class="term-name">PolicyEye (政策眼)</div>
+            <div class="term-en">政策洞察引擎</div>
+            <div class="term-desc">天眼三眼产品矩阵之一，专注于政策影响评估、民意温度计和经济趋势研判（严格去政治化）。</div>
+        </div>
+
+        <div class="letter-header">S</div>
+        <div class="term-card">
+            <div class="term-name">场景推演</div>
+            <div class="term-en">Scenario Simulation</div>
+            <div class="term-desc">将产品、定价、渠道、KOL、直播等变量放入同一套推演，模拟真实市场反应的过程。</div>
+        </div>
+
+        <div class="letter-header">T</div>
+        <div class="term-card">
+            <div class="term-name">TAM/SAM/SOM</div>
+            <div class="term-en">Total/Service/Obtainable Market</div>
+            <div class="term-desc">市场分层分析框架。TAM是总潜在市场，SAM是可服务市场，SOM是可获得市场。</div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div><strong>天眼 Tianyan</strong><p>Glossary</p></div>
+        <div class="footer-links">
+            <a href="../index.html">主页</a>
+            <a href="https://github.com/MoKangMedical/tianyan">GitHub</a>
+        </div>
+    </footer>
+</body>
+</html>
