@@ -1,57 +1,90 @@
-# 🤝 贡献指南
+# Contributing to Tianyan
 
-感谢你对本项目的关注！我们欢迎所有形式的贡献。
+Thank you for your interest in contributing to Tianyan! This document provides guidelines and information for contributors.
 
-## 如何贡献
+## How to Contribute
 
-### 报告 Bug
-使用 [Bug Report](https://github.com/MoKangMedical/tianyan/issues/new?template=bug_report.md) 模板提交问题。
+### Reporting Bugs
 
-### 功能建议
-使用 [Feature Request](https://github.com/MoKangMedical/tianyan/issues/new?template=feature_request.md) 模板提出建议。
+1. Check existing issues to avoid duplicates
+2. Use the bug report template
+3. Include:
+   - Steps to reproduce
+   - Expected behavior
+   - Actual behavior
+   - Environment info (OS, Python version, etc.)
 
-### 代码贡献
+### Suggesting Features
 
-1. Fork 项目
-2. 创建功能分支 (`git checkout -b feature/amazing-feature`)
-3. 提交更改 (`git commit -m 'feat: add amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
-5. 创建 Pull Request
+1. Check existing feature requests
+2. Use the feature request template
+3. Explain:
+   - The problem you're trying to solve
+   - Your proposed solution
+   - Alternative solutions considered
 
-## 开发规范
+### Submitting Code
 
-### 提交信息格式
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature`
+3. Make your changes
+4. Run tests: `python -m pytest tests/ -v`
+5. Commit with clear messages: `git commit -m "feat: add your feature"`
+6. Push to your fork: `git push origin feature/your-feature`
+7. Create a Pull Request
+
+## Development Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/MoKangMedical/tianyan.git
+cd tianyan
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run tests
+python -m pytest tests/ -v
+
+# Start development server
+python demo_server.py
 ```
-<type>(<scope>): <subject>
 
-类型：
-- feat: 新功能
-- fix: 修复 Bug
-- docs: 文档更新
-- style: 代码格式（不影响功能）
-- refactor: 重构
-- test: 测试相关
-- chore: 构建/工具相关
-```
+## Code Style
 
-### 代码风格
-- Python: PEP 8 / Black 格式化
-- TypeScript: ESLint + Prettier
-- 提交前运行 `lint` 检查
+- Follow PEP 8 for Python code
+- Use type hints for all function signatures
+- Write docstrings for all public functions
+- Keep functions small and focused
+- Write tests for new features
 
-### 分支策略
-- `main`: 稳定版本
-- `develop`: 开发分支
-- `feature/*`: 功能分支
-- `fix/*`: 修复分支
+## Commit Messages
 
-## 社区准则
+Use conventional commits:
 
-- 尊重所有参与者
-- 建设性讨论
-- 不接受任何形式的骚扰
+- `feat:` for new features
+- `fix:` for bug fixes
+- `docs:` for documentation
+- `test:` for tests
+- `refactor:` for code refactoring
+- `chore:` for maintenance tasks
 
-## 联系方式
+## Pull Request Process
 
-- GitHub Issues: 提交问题
-- Email: MoKangMedical@users.noreply.github.com
+1. Update documentation if needed
+2. Add tests for new functionality
+3. Ensure all tests pass
+4. Request review from maintainers
+5. Address review comments
+
+## Code of Conduct
+
+Please read our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
+
+## Questions?
+
+- Open a GitHub Issue for bugs/features
+- Join our discussions for questions
+- Email: contribute@tianyan.dev
+
+Thank you for contributing! 🎉
