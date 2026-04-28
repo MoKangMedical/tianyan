@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact · 天眼 Tianyan</title>
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/github-pages.css">
+    <style>
+        .contact { max-width: 800px; margin: 0 auto; padding: 40px 24px 100px; }
+        .contact h1 { font-size: 2.5rem; margin-bottom: 8px; }
+        .contact .subtitle { color: var(--muted); margin-bottom: 48px; }
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .contact-card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-sm);
+            padding: 24px;
+        }
+        .contact-card h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--accent-3); }
+        .contact-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; margin-bottom: 12px; }
+        .contact-card a { color: var(--accent-3); text-decoration: none; }
+        .contact-card a:hover { text-decoration: underline; }
+        .contact-form { margin-top: 48px; }
+        .contact-form h2 { font-size: 1.5rem; margin-bottom: 24px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 6px; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+        .form-group textarea { min-height: 120px; resize: vertical; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-3);
+        }
+        @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header class="site-nav site-nav-compact">
+        <a class="nav-brand" href="../index.html">
+            <span class="nav-brand-mark">◉</span>
+            <span><strong>天眼 Tianyan</strong><em>Contact</em></span>
+        </a>
+        <nav class="nav-links">
+            <a href="../index.html">主页</a>
+            <a href="api.html">API文档</a>
+            <a href="about.html">关于我们</a>
+        </nav>
+        <a class="nav-cta" href="../index.html">返回主页</a>
+    </header>
+
+    <main class="contact">
+        <h1>联系我们</h1>
+        <p class="subtitle">我们很乐意听到你的声音</p>
+
+        <div class="contact-grid">
+            <div class="contact-card">
+                <h3>GitHub</h3>
+                <p>提交Issue、查看源码、参与开发。</p>
+                <a href="https://github.com/MoKangMedical/tianyan">MoKangMedical/tianyan</a>
+            </div>
+            <div class="contact-card">
+                <h3>邮箱</h3>
+                <p>商务合作、技术支持、媒体采访。</p>
+                <a href="mailto:contact@tianyan.dev">contact@tianyan.dev</a>
+            </div>
+            <div class="contact-card">
+                <h3>文档</h3>
+                <p>API文档、使用指南、最佳实践。</p>
+                <a href="api.html">查看文档</a>
+            </div>
+            <div class="contact-card">
+                <h3>反馈</h3>
+                <p>功能建议、Bug报告、体验改进。</p>
+                <a href="https://github.com/MoKangMedical/tianyan/issues">提交反馈</a>
+            </div>
+        </div>
+
+        <div class="contact-form">
+            <h2>发送消息</h2>
+            <form action="mailto:contact@tianyan.dev" method="post" enctype="text/plain">
+                <div class="form-group">
+                    <label>姓名</label>
+                    <input type="text" name="name" placeholder="你的姓名">
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" name="email" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>类型</label>
+                    <select name="type">
+                        <option value="general">一般咨询</option>
+                        <option value="technical">技术支持</option>
+                        <option value="business">商务合作</option>
+                        <option value="media">媒体采访</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>消息</label>
+                    <textarea name="message" placeholder="请描述你的需求或问题..."></textarea>
+                </div>
+                <button type="submit" class="button button-primary">发送消息</button>
+            </form>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div><strong>天眼 Tianyan</strong><p>Contact</p></div>
+        <div class="footer-links">
+            <a href="../index.html">主页</a>
+            <a href="https://github.com/MoKangMedical/tianyan">GitHub</a>
+        </div>
+    </footer>
+</body>
+</html>
