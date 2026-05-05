@@ -37,6 +37,21 @@ class SimulationRun:
     created_at: str
     report_md: str = ""
     report_json: str = ""
+    
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "scenario_name": self.scenario_name,
+            "scenario_type": self.scenario_type,
+            "population_size": self.population_size,
+            "population_params": self.population_params,
+            "parameters": self.parameters,
+            "result_summary": self.result_summary,
+            "confidence": self.confidence,
+            "execution_time_ms": self.execution_time_ms,
+            "created_at": self.created_at,
+            "report_md": self.report_md[:500] + "..." if len(self.report_md) > 500 else self.report_md,
+        }
 
 
 class PersistenceLayer:
@@ -189,6 +204,19 @@ class PersistenceLayer:
                 ).fetchall()
             return [self._row_to_simulation(r) for r in rows]
 
+    def stats(self) -> dict[str, Any]:
+        """get_stats的别名（兼容server.py v2.0）。"""
+        return self.get_stats()
+
+    def list_runs(self, limit: int = 50) -> list[dict]:
+        """list_simulations的别名，返回字典列表。"""
+        runs = self.list_simulations(limit=limit)
+        return [r.to_dict() for r in runs]
+
+    def get_run(self, run_id: int):
+        """get_simulation的别名。"""
+        return self.get_simulation(run_id)
+
     def get_stats(self) -> dict[str, Any]:
         """获取平台统计。"""
         with self._conn() as conn:
@@ -223,6 +251,8 @@ class PersistenceLayer:
             report_md=row["report_md"],
             report_json=row["report_json"],
         )
+    
+    # to_dict别名（在SimulationRun上添加）
 
     # ================================================================
     # PredictionResult CRUD

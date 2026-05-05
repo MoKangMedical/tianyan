@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>历史记录 — 天眼 Tianyan</title>
+<style>
+  :root {
+    --bg: #0c0c1d; --surface: rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.08); --text: #e0e0e0;
+    --dim: #94a3b8; --accent: #818cf8; --accent2: #c084fc;
+    --green: #4ade80; --red: #f87171;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(135deg, #0c0c1d 0%, #1a1a3e 50%, #2d1b69 100%);
+    color: var(--text); min-height: 100vh;
+  }
+  header {
+    background: rgba(12,12,29,0.95); border-bottom: 1px solid var(--border);
+    padding: 12px 24px; display: flex; align-items: center; justify-content: space-between;
+    backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100;
+  }
+  header h1 {
+    font-size: 1.3rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  header .nav { display: flex; gap: 16px; }
+  header .nav a { color: var(--dim); text-decoration: none; font-size: 0.9rem; }
+  header .nav a.active { color: var(--accent); }
+  .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+  .panel {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px; margin-bottom: 20px;
+  }
+  .panel h2 { font-size: 1rem; color: var(--accent2); margin-bottom: 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { color: var(--dim); font-weight: 500; }
+  tr:hover { background: rgba(255,255,255,0.03); cursor: pointer; }
+  .btn {
+    padding: 6px 14px; border: 1px solid var(--accent); border-radius: 6px;
+    background: transparent; color: var(--accent); font-size: 0.8rem; cursor: pointer;
+    margin-right: 6px;
+  }
+  .btn:hover { background: rgba(129,140,248,0.1); }
+  .detail-panel { display: none; }
+  .detail-panel.show { display: block; }
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .detail-card {
+    background: rgba(255,255,255,0.03); border-radius: 8px; padding: 12px;
+  }
+  .detail-card h4 { font-size: 0.8rem; color: var(--dim); margin-bottom: 8px; }
+  .detail-card pre {
+    font-size: 0.75rem; color: var(--text); max-height: 200px; overflow-y: auto;
+    white-space: pre-wrap;
+  }
+  .empty { text-align: center; padding: 40px; color: var(--dim); }
+</style>
+</head>
+<body>
+<header>
+  <h1>👁️ 天眼 Tianyan v2.0</h1>
+  <div class="nav">
+    <a href="/dashboard">仪表盘</a>
+    <a href="/dashboard/history" class="active">历史记录</a>
+    <a href="/docs" target="_blank">API文档</a>
+  </div>
+</header>
+
+<div class="container">
+  <div class="panel">
+    <h2>📋 仿真历史</h2>
+    <div style="margin-bottom:12px">
+      <button class="btn" onclick="loadHistory()">🔄 刷新</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>ID</th><th>场景名称</th><th>类型</th><th>人群规模</th><th>置信度</th><th>耗时</th><th>时间</th><th>操作</th></tr>
+        </thead>
+        <tbody id="history-tbody"></tbody>
+      </table>
+    </div>
+    <div id="history-empty" class="empty">暂无仿真记录</div>
+  </div>
+
+  <div class="panel detail-panel" id="detail-panel">
+    <h2>📄 仿真详情 <button class="btn" onclick="document.getElementById('detail-panel').classList.remove('show')">✕ 关闭</button></h2>
+    <div id="detail-content"></div>
+  </div>
+</div>
+
+<script>
+async function loadHistory() {
+  try {
+    const r = await fetch('/api/v2/history?limit=50');
+    const d = await r.json();
+    const tbody = document.getElementById('history-tbody');
+    const empty = document.getElementById('history-empty');
+    if (!d.runs || d.runs.length === 0) {
+      tbody.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+    tbody.innerHTML = d.runs.map(run => `
+      <tr onclick="showDetail(${run.id})">
+        <td>#${run.id}</td>
+        <td>${run.scenario_name || '--'}</td>
+        <td>${run.scenario_type || '--'}</td>
+        <td>${run.population_size || 0}</td>
+        <td>${((run.confidence||0)*100).toFixed(1)}%</td>
+        <td>${(run.execution_time_ms||0).toFixed(0)}ms</td>
+        <td>${run.created_at || '--'}</td>
+        <td>
+          <button class="btn" onclick="event.stopPropagation();exportReport(${run.id},'markdown')">导出MD</button>
+          <button class="btn" onclick="event.stopPropagation();exportReport(${run.id},'json')">JSON</button>
+        </td>
+      </tr>
+    `).join('');
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+async function showDetail(id) {
+  try {
+    const r = await fetch(`/api/v2/history/${id}`);
+    const d = await r.json();
+    const panel = document.getElementById('detail-panel');
+    panel.classList.add('show');
+    const run = d.run || {};
+    const summary = run.result_summary || {};
+    document.getElementById('detail-content').innerHTML = `
+      <div class="detail-grid">
+        <div class="detail-card">
+          <h4>基本信息</h4>
+          <pre>场景: ${run.scenario_name}
+类型: ${run.scenario_type}
+人群规模: ${run.population_size}
+置信度: ${((run.confidence||0)*100).toFixed(1)}%
+执行时间: ${(run.execution_time_ms||0).toFixed(0)}ms
+创建时间: ${run.created_at}</pre>
+        </div>
+        <div class="detail-card">
+          <h4>关键指标</h4>
+          <pre>${JSON.stringify(summary, null, 2)}</pre>
+        </div>
+        <div class="detail-card">
+          <h4>仿真参数</h4>
+          <pre>${JSON.stringify(run.parameters || {}, null, 2)}</pre>
+        </div>
+        <div class="detail-card">
+          <h4>报告内容</h4>
+          <pre>${run.report_md || '无报告'}</pre>
+        </div>
+      </div>
+    `;
+    panel.scrollIntoView({ behavior: 'smooth' });
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+async function exportReport(id, format) {
+  try {
+    const r = await fetch('/api/v2/export', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ run_id: id, format }),
+    });
+    if (format === 'markdown') {
+      const d = await r.json();
+      const blob = new Blob([d.report], {type: 'text/markdown'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `tianyan-report-${id}.md`;
+      a.click();
+    } else {
+      const d = await r.json();
+      const blob = new Blob([JSON.stringify(d.data, null, 2)], {type: 'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `tianyan-report-${id}.json`;
+      a.click();
+    }
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+loadHistory();
+</script>
+</body>
+</html>

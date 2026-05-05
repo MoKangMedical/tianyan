@@ -2,20 +2,25 @@
 多Agent人群模拟引擎
 
 每个合成人口生成一个SimulationAgent，该Agent根据其画像做出决策。
-支持LLM驱动决策（MIMO API）和规则引擎降级。
+支持LLM驱动决策（DeepSeek API / MIMO API）和规则引擎降级。
+v2.0: 默认使用DeepSeek适配器。
 """
 
 from __future__ import annotations
 
 import asyncio
 import json
+import logging
 from dataclasses import dataclass, field
-from typing import Any, Optional, TYPE_CHECKING
+from typing import Any, Optional, TYPE_CHECKING, Union
 
 from .population import PopulationProfile
 
 if TYPE_CHECKING:
     from .mimo_adapter import MIMOAdapter
+    from .deepseek_adapter import DeepSeekAdapter, MockDeepSeekAdapter
+
+logger = logging.getLogger("tianyan.agents")
 
 
 @dataclass
@@ -96,16 +101,16 @@ class SimulationAgent:
     async def evaluate_async(
         self,
         scenario_prompt: str,
-        mimo_adapter: "MIMOAdapter",
+        adapter: Union["MIMOAdapter", "DeepSeekAdapter", "MockDeepSeekAdapter"],
     ) -> AgentDecision:
         """
-        异步评估场景 — 使用MIMO LLM进行深度推理。
+        异步评估场景 — 使用 LLM 进行深度推理（DeepSeek/MIMO）。
 
-        如果MIMO调用失败，自动降级到规则引擎。
+        如果LLM调用失败，自动降级到规则引擎。
 
         Args:
             scenario_prompt: 场景描述prompt。
-            mimo_adapter: MIMO API适配器实例。
+            adapter: LLM适配器实例（DeepSeekAdapter 或 MIMOAdapter）。
 
         Returns:
             AgentDecision决策结果。
@@ -113,7 +118,7 @@ class SimulationAgent:
         llm_prompt = self.get_llm_prompt(scenario_prompt)
 
         try:
-            result = await mimo_adapter.generate(
+            result = await adapter.generate(
                 prompt=llm_prompt,
                 system="你是一个模拟消费者的AI助手。请严格按照JSON格式回答。",
             )
@@ -136,12 +141,13 @@ class SimulationAgent:
             )
         except Exception as e:
             # 降级到规则引擎
+            logger.debug("Agent %s LLM调用失败: %s，降级到规则引擎", self.profile.agent_id, e)
             decision, confidence, reasoning = self._rule_based_decide(scenario_prompt)
             agent_decision = AgentDecision(
                 agent_id=self.profile.agent_id,
                 decision=decision,
                 confidence=confidence,
-                reasoning=f"[规则引擎降级] {reasoning} (MIMO错误: {e})",
+                reasoning=f"[规则引擎降级] {reasoning} (LLM错误: {e})",
             )
 
         self.decisions.append(agent_decision)
@@ -152,18 +158,18 @@ class SimulationAgent:
         cls,
         agents: list[SimulationAgent],
         scenario_prompt: str,
-        mimo_adapter: "MIMOAdapter",
+        adapter: Union["MIMOAdapter", "DeepSeekAdapter", "MockDeepSeekAdapter"],
         batch_size: int = 10,
     ) -> list[AgentDecision]:
         """
         批量评估多个Agent的决策。
 
-        使用分批并发策略，控制MIMO API的并发量。
+        使用分批并发策略，控制API的并发量。
 
         Args:
             agents: Agent列表。
             scenario_prompt: 场景描述。
-            mimo_adapter: MIMO适配器实例。
+            adapter: LLM适配器实例（DeepSeekAdapter 或 MIMOAdapter）。
             batch_size: 每批处理数量。
 
         Returns:
@@ -174,7 +180,7 @@ class SimulationAgent:
         for i in range(0, len(agents), batch_size):
             batch = agents[i:i + batch_size]
             tasks = [
-                agent.evaluate_async(scenario_prompt, mimo_adapter)
+                agent.evaluate_async(scenario_prompt, adapter)
                 for agent in batch
             ]
             batch_decisions = await asyncio.gather(*tasks, return_exceptions=True)

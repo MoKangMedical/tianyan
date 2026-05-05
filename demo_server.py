@@ -975,6 +975,28 @@ async def preview_operation(req: DryRunRequest):
 
 
 # ============================================================
+# Dashboard 路由 (v2.0)
+# ============================================================
+
+@app.get("/dashboard", response_class=HTMLResponse)
+async def dashboard():
+    """交互式仪表盘。"""
+    dashboard_path = Path(__file__).parent / "dashboard" / "index.html"
+    if dashboard_path.exists():
+        return dashboard_path.read_text(encoding="utf-8")
+    return HTMLResponse("<h1>Dashboard not found</h1>", status_code=404)
+
+
+@app.get("/dashboard/history", response_class=HTMLResponse)
+async def dashboard_history():
+    """仿真历史浏览器。"""
+    history_path = Path(__file__).parent / "dashboard" / "history.html"
+    if history_path.exists():
+        return history_path.read_text(encoding="utf-8")
+    return HTMLResponse("<h1>History not found</h1>", status_code=404)
+
+
+# ============================================================
 # 启动入口
 # ============================================================
 
