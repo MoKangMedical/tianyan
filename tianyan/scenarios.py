@@ -3,10 +3,13 @@
 
 定义和执行模拟场景，协调多Agent交互。
 支持基于图论的社交网络传播模型（SIR类扩散）。
+v2.0: 支持 LLM 驱动决策（DeepSeek API）。
 """
 
 from __future__ import annotations
 
+import asyncio
+import logging
 import random
 import time
 from collections import Counter, defaultdict
@@ -15,6 +18,8 @@ from typing import Any, Optional
 
 from .agents import SimulationAgent, AgentDecision
 from .population import SyntheticPopulation
+
+logger = logging.getLogger("tianyan.scenarios")
 
 
 @dataclass
@@ -120,6 +125,8 @@ class ScenarioEngine:
         scenario: Scenario,
         rounds: int = 1,
         social_propagation: bool = True,
+        use_llm: bool = False,
+        llm_batch_size: int = 10,
     ) -> SimulationResult:
         """
         执行模拟。
@@ -128,6 +135,8 @@ class ScenarioEngine:
             scenario: 模拟场景。
             rounds: 模拟轮数。
             social_propagation: 是否模拟社交传播。
+            use_llm: 是否使用 LLM（DeepSeek）进行深度推理。
+            llm_batch_size: LLM 推理时的批次大小。
 
         Returns:
             模拟结果。
@@ -135,11 +144,14 @@ class ScenarioEngine:
         start_time = time.time()
 
         # Phase 1: 独立决策
-        decisions = []
-        for agent in self.agents:
-            prompt = self._build_scenario_prompt(scenario, agent)
-            decision = agent.evaluate(prompt)
-            decisions.append(decision)
+        if use_llm:
+            decisions = self._run_llm_decision(scenario, llm_batch_size)
+        else:
+            decisions = []
+            for agent in self.agents:
+                prompt = self._build_scenario_prompt(scenario, agent)
+                decision = agent.evaluate(prompt)
+                decisions.append(decision)
 
         # Phase 2: 社交传播
         if social_propagation and rounds > 1:
@@ -530,3 +542,127 @@ class ScenarioEngine:
                     }
 
         return segments
+
+    # ---- LLM 驱动决策 (v2.0) ----
+
+    def _run_llm_decision(
+        self,
+        scenario: Scenario,
+        batch_size: int = 10,
+    ) -> list[AgentDecision]:
+        """
+        使用 LLM（DeepSeek）进行 Agent 决策。
+
+        内部同步执行 asyncio 事件循环。
+        如果 DeepSeek 不可用，自动降级到规则引擎。
+        """
+        try:
+            from .deepseek_adapter import get_shared_adapter
+            adapter = get_shared_adapter()
+
+            from .deepseek_adapter import MockDeepSeekAdapter, DeepSeekAdapter
+            if adapter is None or isinstance(adapter, MockDeepSeekAdapter) or not isinstance(adapter, DeepSeekAdapter):
+                logger.info("LLM模式启用但使用Mock适配器或适配器不可用，降级到规则引擎")
+                return self._fallback_rule_decisions(scenario)
+
+            # 运行异步事件循环
+            try:
+                loop = asyncio.get_event_loop()
+                if loop.is_running():
+                    # 如果已在事件循环中，使用 nest_asyncio 或同步降级
+                    logger.warning("检测到运行中的事件循环，LLM模式下使用同步规则引擎")
+                    return self._fallback_rule_decisions(scenario)
+                decisions = loop.run_until_complete(
+                    SimulationAgent.batch_evaluate(
+                        self.agents,
+                        self._build_scenario_prompt(scenario, self.agents[0]) if self.agents else scenario.description,
+                        adapter,
+                        batch_size=batch_size,
+                    )
+                )
+                return decisions
+            except RuntimeError:
+                # 创建新事件循环
+                decisions = asyncio.run(
+                    SimulationAgent.batch_evaluate(
+                        self.agents,
+                        self._build_scenario_prompt(scenario, self.agents[0]) if self.agents else scenario.description,
+                        adapter,
+                        batch_size=batch_size,
+                    )
+                )
+                return decisions
+        except Exception as e:
+            logger.warning("LLM决策失败: %s，降级到规则引擎", e)
+            return self._fallback_rule_decisions(scenario)
+
+    def _fallback_rule_decisions(self, scenario: Scenario) -> list[AgentDecision]:
+        """降级到规则引擎决策。"""
+        decisions = []
+        for agent in self.agents:
+            prompt = self._build_scenario_prompt(scenario, agent)
+            decision = agent.evaluate(prompt)
+            decisions.append(decision)
+        return decisions
+
+    async def run_async(
+        self,
+        scenario: Scenario,
+        rounds: int = 1,
+        social_propagation: bool = True,
+        use_llm: bool = False,
+        llm_batch_size: int = 10,
+    ) -> SimulationResult:
+        """
+        异步执行模拟（用于FastAPI服务器）。
+
+        与 run() 功能相同，但在 async 上下文中运行。
+        LLM模式下真正异步调用DeepSeek API。
+        """
+        import time as _time
+        start_time = _time.time()
+
+        # Phase 1: 独立决策
+        if use_llm:
+            try:
+                from .deepseek_adapter import get_shared_adapter
+                adapter = get_shared_adapter()
+                decisions = await SimulationAgent.batch_evaluate(
+                    self.agents,
+                    self._build_scenario_prompt(scenario, self.agents[0]) if self.agents else scenario.description,
+                    adapter,
+                    batch_size=llm_batch_size,
+                )
+            except Exception as e:
+                logger.warning("LLM异步决策失败: %s，降级到规则引擎", e)
+                decisions = self._fallback_rule_decisions(scenario)
+        else:
+            decisions = []
+            for agent in self.agents:
+                prompt = self._build_scenario_prompt(scenario, agent)
+                decision = agent.evaluate(prompt)
+                decisions.append(decision)
+
+        # Phase 2: 社交传播
+        if social_propagation and rounds > 1:
+            if not self._network_built:
+                self._build_social_network()
+                self._network_built = True
+
+            for round_num in range(1, rounds):
+                decisions = self._network_propagate(decisions, scenario, round_num)
+
+        # Phase 3: 汇聚结果
+        aggregate = self._aggregate(decisions, scenario)
+        segments = self._segment_analysis(decisions, scenario)
+
+        elapsed = (_time.time() - start_time) * 1000
+
+        return SimulationResult(
+            scenario=scenario,
+            population_size=len(self.agents),
+            decisions=decisions,
+            aggregate=aggregate,
+            segments=segments,
+            execution_time_ms=elapsed,
+        )

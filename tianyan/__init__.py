@@ -15,6 +15,10 @@ from .products import ConsumerEye, PolicyEye, MarketEye, PredictionResult
 from .compliance import ComplianceChecker, DataAuditLog, ComplianceError
 from .china_scenarios import ChineseScenarioEngine, KOLPredictionResult, LivestreamPredictionResult
 from .mimo_adapter import MIMOAdapter, MockMIMOAdapter, MIMOConfig
+from .deepseek_adapter import (
+    DeepSeekAdapter, MockDeepSeekAdapter, DeepSeekConfig,
+    create_deepseek_adapter, get_shared_adapter,
+)
 from .report_generator import McKinseyReportGenerator, McKinseyReport, ReportSection
 from .persistence import PersistenceLayer, SimulationRun
 from .realtime_feeds import RealtimeFeedManager, StockFeedAdapter, NewsFeedAdapter, PolicyFeedAdapter
@@ -59,6 +63,12 @@ __all__ = [
     "MIMOAdapter",
     "MockMIMOAdapter",
     "MIMOConfig",
+    # DeepSeek引擎
+    "DeepSeekAdapter",
+    "MockDeepSeekAdapter",
+    "DeepSeekConfig",
+    "create_deepseek_adapter",
+    "get_shared_adapter",
     # 报告生成
     "McKinseyReportGenerator",
     "McKinseyReport",
