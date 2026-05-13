@@ -232,6 +232,52 @@ docker build -t tianyan .
 docker run -d -p 8000:8000 -e OPENAI_API_KEY=your-key tianyan
 ```
 
+### 微信小程序与多媒体演示
+
+当前仓库已经包含：
+
+- `miniprogram/`：微信小程序前端
+- `mock_backend/`：本地演示后端与静态音视频资产
+
+正式后端对外接口：
+
+- `GET /api/health`
+- `POST /api/v1/report/generate`
+- `POST /api/v1/media/audio`
+- `POST /api/v1/media/video`
+
+本地开发可直接启动：
+
+```bash
+python3 demo_server.py
+```
+
+然后让小程序连接：
+
+```text
+http://127.0.0.1:8000
+```
+
+如果未配置 `DEEPSEEK_API_KEY` 或 `COMFYUI_BASE_URL`，服务会自动回退到本地演示资产，但接口格式保持不变。
+
+### GitHub Pages
+
+仓库已经包含 GitHub Pages 发布链路：
+
+- `scripts/build_github_pages.py`
+- `.github/workflows/ci.yml`
+
+行为是：
+
+- Pull Request 和 push 都先跑测试
+- 只有 `main` 分支 push 且测试通过后，才会自动发布 Pages
+
+启用方法：
+
+1. 推送当前改动到 GitHub
+2. 打开仓库 `Settings -> Pages`
+3. 将 Source 设为 `GitHub Actions`
+
 ### 本地部署
 
 ```bash

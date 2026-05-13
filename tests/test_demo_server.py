@@ -14,6 +14,10 @@ class TestHealthAndInfo:
         d = r.json()
         assert d["status"] == "healthy"
         assert d["version"] == "1.0.0"
+        assert d["llm"]["provider"] == "deepseek"
+        assert d["llm"]["model"] == "deepseek-v4-pro"
+        assert "audio" in d["media"]
+        assert "video" in d["media"]
 
     def test_dashboard(self):
         r = client.get("/api/v1/dashboard")
@@ -167,10 +171,46 @@ class TestReport:
         assert r.status_code == 200
         d = r.json()
         assert d["success"] is True
+        assert d["provider"] == "deepseek"
+        assert d["model"] == "deepseek-v4-pro"
         assert "title" in d
+        assert "summary" in d
         assert "sections" in d
         assert "markdown" in d
         assert len(d["markdown"]) > 100
+
+
+class TestMedia:
+    def test_generate_audio(self):
+        r = client.post("/api/v1/media/audio", json={
+            "text": "测试旁白",
+            "voice": "default_zh",
+            "audio_format": "mp3",
+        })
+        assert r.status_code == 200
+        d = r.json()
+        assert d["success"] is True
+        assert d["provider"] == "mimo"
+        assert d["audio_url"].endswith("/mock/audio/demo.mp3")
+        assert d["audio_base64"]
+
+    def test_generate_video(self):
+        r = client.post("/api/v1/media/video", json={
+            "prompt": "生成一个 20 秒案例视频",
+            "voice": "default_zh",
+            "audio_format": "mp3",
+            "video_provider": "comfyui",
+            "video_mode": "narrated-brief",
+        })
+        assert r.status_code == 200
+        d = r.json()
+        assert d["success"] is True
+        assert d["provider"] == "deepseek"
+        assert d["audio_provider"] == "mimo"
+        assert d["video_provider"] == "comfyui"
+        assert d["audio_url"].endswith("/mock/audio/demo.mp3")
+        assert d["video_url"].endswith("/mock/video/demo.mp4")
+        assert d["poster_url"].endswith("/mock/video/demo.jpg")
 
 
 class TestTemplateRun:

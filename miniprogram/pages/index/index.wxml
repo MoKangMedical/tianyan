@@ -1,0 +1,92 @@
+<view class="page-shell">
+  <view class="hero-card">
+    <text class="eyebrow">China Research Engine</text>
+    <view class="hero-title">天眼微信小程序</view>
+    <view class="hero-copy">
+      把现有的市场预测、行业研究、案例报告和旁白生成能力，收敛成一个可在微信里直接演示和交付的入口。
+    </view>
+    <view class="metric-grid">
+      <view class="metric-chip">
+        <text class="metric-label">版本</text>
+        <text class="metric-value">{{version}}</text>
+      </view>
+      <view class="metric-chip">
+        <text class="metric-label">文本模型</text>
+        <text class="metric-value">{{textProviderLabel}}</text>
+      </view>
+      <view class="metric-chip">
+        <text class="metric-label">音频模型</text>
+        <text class="metric-value">{{audioProviderLabel}}</text>
+      </view>
+      <view class="metric-chip">
+        <text class="metric-label">案例</text>
+        <text class="metric-value">Medislim</text>
+      </view>
+      <view class="metric-chip">
+        <text class="metric-label">部署目标</text>
+        <text class="metric-value">微信小程序</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="panel">
+    <view class="row-between">
+      <view class="panel-title">API 状态</view>
+      <text class="status-pill status-{{healthState}}">{{healthLabel}}</text>
+    </view>
+    <view class="panel-copy">{{healthNote}}</view>
+
+    <text class="label">API Base</text>
+    <input
+      class="input"
+      value="{{apiBaseInput}}"
+      placeholder="https://api.yourdomain.com"
+      bindinput="onApiBaseInput"
+    />
+
+    <view class="button-row">
+      <button class="button-primary" bindtap="onSaveApiBase">保存地址</button>
+      <button class="button-secondary" bindtap="onProbeHealth">检测状态</button>
+    </view>
+  </view>
+
+  <view class="panel">
+    <view class="panel-title">能力映射</view>
+    <view class="capability-grid">
+      <view class="capability-card">
+        <text class="capability-label">研究展示</text>
+        <text class="capability-value">首页卡片流</text>
+      </view>
+      <view class="capability-card">
+        <text class="capability-label">项目案例</text>
+        <text class="capability-value">案例详情页</text>
+      </view>
+      <view class="capability-card">
+        <text class="capability-label">报告交付</text>
+        <text class="capability-value">DeepSeek V4 Pro</text>
+      </view>
+      <view class="capability-card">
+        <text class="capability-label">旁白生成</text>
+        <text class="capability-value">Mimo 音频接口</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="panel">
+    <view class="panel-title">下一步入口</view>
+    <view class="section-list">
+      <view class="section-item">
+        <view class="row-between">
+          <view>
+            <view>案例展示页</view>
+            <view class="muted">查看 Medislim 项目样板和旁白工作台</view>
+          </view>
+          <button class="button-primary" bindtap="goCase">打开</button>
+        </view>
+      </view>
+      <view class="section-item">
+        <view>准备正式后端域名后，这里继续接入 DeepSeek 报告生成、项目留存和用户登录。</view>
+      </view>
+    </view>
+  </view>
+</view>

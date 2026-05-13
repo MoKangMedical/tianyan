@@ -6,6 +6,7 @@ __pycache__/
 *.egg
 dist/
 build/
+.site/
 
 # Virtual environments
 .venv/
@@ -26,7 +27,6 @@ htmlcov/
 # Data
 data/*.db
 *.log
-.github/workflows/
 
 # Environment — Hermes安全规则
 .env
