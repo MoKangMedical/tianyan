@@ -7,10 +7,13 @@
 
 from __future__ import annotations
 
+import base64
 import logging
+import os
 import time
 import traceback
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Any, Optional
 
 # 日志配置
@@ -24,6 +27,7 @@ logger = logging.getLogger("tianyan.server")
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from tianyan import (
@@ -46,7 +50,20 @@ from tianyan import (
     dry_run_prediction,
     OperationAudit,
     audit_log,
+    create_deepseek_adapter,
 )
+
+
+APP_VERSION = "1.0.0"
+APP_ROOT = Path(__file__).resolve().parent
+MOCK_ASSETS_ROOT = APP_ROOT / "mock_backend" / "assets"
+MOCK_AUDIO_PATH = MOCK_ASSETS_ROOT / "audio" / "demo.mp3"
+MOCK_VIDEO_PATH = MOCK_ASSETS_ROOT / "video" / "demo.mp4"
+MOCK_POSTER_PATH = MOCK_ASSETS_ROOT / "video" / "demo.jpg"
+DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-v4-pro")
+MIMO_AUDIO_MODEL = os.environ.get("MIMO_AUDIO_MODEL", "local-voiceover-demo")
+COMFYUI_VIDEO_MODEL = os.environ.get("COMFYUI_VIDEO_MODEL", "comfyui-local-demo")
+COMFYUI_BASE_URL = os.environ.get("COMFYUI_BASE_URL", "").rstrip("/")
 
 # ============================================================
 # Pydantic 请求/响应模型
@@ -109,20 +126,36 @@ class SeedingRequest(BaseModel):
     dry_run: bool = Field(default=False, description="仅预览，不实际执行")
 
 
+class AudioGenerationRequest(BaseModel):
+    """旁白音频生成请求。"""
+    text: str = Field(..., min_length=1, description="旁白文本")
+    voice: str = Field(default="default_zh", description="音色")
+    audio_format: str = Field(default="mp3", description="输出音频格式")
+
+
+class VideoGenerationRequest(BaseModel):
+    """视频生成请求。"""
+    prompt: str = Field(..., min_length=1, description="视频脚本或提示词")
+    voice: str = Field(default="default_zh", description="音色")
+    audio_format: str = Field(default="mp3", description="输出音频格式")
+    video_provider: str = Field(default="comfyui", description="视频提供方")
+    video_mode: str = Field(default="narrated-brief", description="视频工作流模式")
+
+
 # ============================================================
 # FastAPI 应用
 # ============================================================
 
 @asynccontextmanager
 async def _lifespan(app):
-    logger.info("天眼 Tianyan v0.3.0 启动, 端点数: 14")
+    logger.info("天眼 Tianyan v%s 启动", APP_VERSION)
     yield
     logger.info("天眼 Tianyan 已关闭")
 
 app = FastAPI(
     title="天眼 Tianyan",
     description="中国版商业预测平台 — 基于多Agent人群模拟的商业预测引擎",
-    version="0.3.0",
+    version=APP_VERSION,
     lifespan=_lifespan,
 )
 
@@ -134,6 +167,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+if MOCK_ASSETS_ROOT.exists():
+    app.mount("/mock", StaticFiles(directory=str(MOCK_ASSETS_ROOT)), name="mock-assets")
 
 # ============================================================
 # 中间件
@@ -187,6 +223,83 @@ def _serialize_prediction(result) -> dict[str, Any]:
         "recommendations": result.recommendations,
         "confidence": result.confidence,
     }
+
+
+def _asset_url(asset_path: str) -> str:
+    base_url = os.environ.get("PUBLIC_BASE_URL", "http://127.0.0.1:8000").rstrip("/")
+    return f"{base_url}{asset_path}"
+
+
+def _read_mock_audio_base64() -> str:
+    if not MOCK_AUDIO_PATH.exists():
+        return ""
+    return base64.b64encode(MOCK_AUDIO_PATH.read_bytes()).decode("utf-8")
+
+
+def _deepseek_status() -> dict[str, Any]:
+    configured = bool(os.environ.get("DEEPSEEK_API_KEY"))
+    return {
+        "provider": "deepseek",
+        "model": DEEPSEEK_MODEL,
+        "configured": configured,
+        "available": True,
+        "mode": "api" if configured else "fallback",
+    }
+
+
+def _media_status() -> dict[str, Any]:
+    comfyui_configured = bool(COMFYUI_BASE_URL) or MOCK_VIDEO_PATH.exists()
+    audio_configured = bool(os.environ.get("MIMO_API_KEY")) or MOCK_AUDIO_PATH.exists()
+    return {
+        "audio": {
+            "provider": "mimo",
+            "model": MIMO_AUDIO_MODEL,
+            "configured": audio_configured,
+            "available": audio_configured,
+            "reason": "" if audio_configured else "MIMO_API_KEY 未配置且本地音频资产不存在",
+        },
+        "video": {
+            "provider": "comfyui",
+            "model": COMFYUI_VIDEO_MODEL,
+            "configured": comfyui_configured,
+            "available": comfyui_configured,
+            "reason": "" if comfyui_configured else "COMFYUI_BASE_URL 未配置且本地视频资产不存在",
+        },
+    }
+
+
+def _generate_deepseek_brief(product_name: str, objective: str, materials: list[str] | None = None) -> dict[str, Any]:
+    adapter = create_deepseek_adapter(model=DEEPSEEK_MODEL, temperature=0.4, max_tokens=900)
+    fallback = {
+        "summary": (
+            f"{product_name} 当前建议先用结构化研究确认市场空间、渠道排序和风险优先级，"
+            f"再把核心摘要交给旁白和视频链路形成客户可直接观看的交付物。"
+        ),
+        "script": (
+            f"{product_name} 的下一阶段建议是先确认目标客群和价格带，"
+            "然后围绕医生教育、内容种草和私域承接，形成分阶段上市路径。"
+        ),
+    }
+
+    try:
+        result = adapter.generate_sync(
+            prompt=(
+                "请输出 JSON，字段仅包含 summary 和 script。"
+                f"产品: {product_name}。目标: {objective}。"
+                f"材料: {', '.join(materials or ['市场研究摘要', '竞品价格带', '渠道假设'])}。"
+                "summary 用于研究摘要，script 用于 20 秒视频旁白。"
+            ),
+            system="你是商业研究分析师，请用中文输出紧凑、专业、可执行的结论。",
+        )
+        if isinstance(result, dict) and result.get("summary") and result.get("script"):
+            return {
+                "summary": str(result["summary"]),
+                "script": str(result["script"]),
+            }
+    except Exception as exc:
+        logger.warning("DeepSeek 生成失败，使用回退文案: %s", exc)
+
+    return fallback
 
 
 # ============================================================
@@ -446,9 +559,17 @@ async def health_check():
     return {
         "status": "healthy",
         "service": "tianyan",
-        "version": "1.0.0",
+        "version": APP_VERSION,
         "timestamp": time.time(),
+        "llm": _deepseek_status(),
+        "media": _media_status(),
     }
+
+
+@app.get("/health")
+async def legacy_health_check():
+    """兼容旧测试与旧接入方。"""
+    return await health_check()
 
 
 @app.post("/api/population")
@@ -831,11 +952,59 @@ async def generate_report(req: FullPredictionRequest):
         sim_result = se.run(scenario, rounds=3, social_propagation=True)
         gen = McKinseyReportGenerator()
         report = gen.generate_product_launch_report(product_name=req.product_name, simulation_result=sim_result)
-        return {"success": True, "title": report.title, "sections": [s.to_dict() for s in report.sections], "markdown": report.to_markdown()}
+        deepseek_brief = _generate_deepseek_brief(req.product_name, "launch")
+        return {
+            "success": True,
+            "provider": "deepseek",
+            "model": DEEPSEEK_MODEL,
+            "title": report.title,
+            "summary": deepseek_brief["summary"],
+            "sections": [s.to_dict() for s in report.sections],
+            "markdown": report.to_markdown(),
+        }
     except ComplianceError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/v1/media/audio")
+async def generate_audio(req: AudioGenerationRequest):
+    """生成旁白音频。当前默认返回本地可访问资产 URL，并附带 base64 方便小程序直接播放。"""
+    if not MOCK_AUDIO_PATH.exists():
+        raise HTTPException(status_code=500, detail="本地音频资产不存在，请先准备 mock_backend/assets/audio/demo.mp3")
+
+    return {
+        "success": True,
+        "provider": "mimo",
+        "model": MIMO_AUDIO_MODEL,
+        "voice": req.voice,
+        "format": req.audio_format,
+        "audio_url": _asset_url("/mock/audio/demo.mp3"),
+        "audio_base64": _read_mock_audio_base64(),
+    }
+
+
+@app.post("/api/v1/media/video")
+async def generate_video(req: VideoGenerationRequest):
+    """生成视频演示链路。当前使用 DeepSeek 文案 + 本地音频 + 本地视频资产回退。"""
+    if not MOCK_VIDEO_PATH.exists():
+        raise HTTPException(status_code=500, detail="本地视频资产不存在，请先准备 mock_backend/assets/video/demo.mp4")
+
+    brief = _generate_deepseek_brief("天眼案例", req.video_mode, materials=[req.prompt])
+    return {
+        "success": True,
+        "provider": "deepseek",
+        "model": DEEPSEEK_MODEL,
+        "audio_provider": "mimo",
+        "video_provider": req.video_provider,
+        "video_model": COMFYUI_VIDEO_MODEL,
+        "script": brief["script"],
+        "audio_url": _asset_url("/mock/audio/demo.mp3"),
+        "video_url": _asset_url("/mock/video/demo.mp4"),
+        "poster_url": _asset_url("/mock/video/demo.jpg"),
+        "voice": req.voice,
+    }
 
 
 @app.get("/api/v1/templates")
@@ -882,10 +1051,10 @@ async def dashboard():
     """仪表盘概览。"""
     keys = get_all_template_keys()
     return {
-        "success": True, "platform": "天眼 Tianyan", "version": "1.0.0",
-        "stats": {"synthetic_population": "1-50000人", "industry_templates": len(keys), "compliance": "PIPL+数安法", "ai_engine": "MIMO API"},
+        "success": True, "platform": "天眼 Tianyan", "version": APP_VERSION,
+        "stats": {"synthetic_population": "1-50000人", "industry_templates": len(keys), "compliance": "PIPL+数安法", "ai_engine": "DeepSeek + Mimo + ComfyUI"},
         "products": [{"name": "消费眼", "status": "active"}, {"name": "政策眼", "status": "active"}, {"name": "市场眼", "status": "active"}],
-        "industry_templates": keys, "total_endpoints": 14,
+        "industry_templates": keys, "total_endpoints": 16,
     }
 
 

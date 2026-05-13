@@ -5,7 +5,14 @@ services:
     ports:
       - "8000:8000"
     environment:
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - DEEPSEEK_MODEL=${DEEPSEEK_MODEL:-deepseek-v4-pro}
       - MIMO_API_KEY=${MIMO_API_KEY}
+      - MIMO_AUDIO_MODEL=${MIMO_AUDIO_MODEL:-local-voiceover-demo}
+      - COMFYUI_BASE_URL=${COMFYUI_BASE_URL:-}
+      - COMFYUI_VIDEO_MODEL=${COMFYUI_VIDEO_MODEL:-comfyui-local-demo}
+      - PUBLIC_BASE_URL=${PUBLIC_BASE_URL:-http://127.0.0.1:8000}
     volumes:
       - ./data:/app/data
+      - ./mock_backend/assets:/app/mock_backend/assets:ro
     restart: unless-stopped

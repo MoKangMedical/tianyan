@@ -1,0 +1,94 @@
+<view class="page-shell">
+  <view class="hero-card">
+    <text class="eyebrow">Case Delivery</text>
+    <view class="hero-title">{{caseData.name}}</view>
+    <view class="hero-copy">{{caseData.summary}}</view>
+  </view>
+
+  <view class="case-card">
+    <view class="panel-title">项目预期</view>
+    <view class="section-list">
+      <view class="section-item" wx:for="{{caseData.highlights}}" wx:key="*this">
+        {{item}}
+      </view>
+    </view>
+  </view>
+
+  <view class="case-card">
+    <view class="panel-title">模型分工</view>
+    <view class="section-list">
+      <view class="section-item">文本研究与报告：{{reportProviderLabel}}</view>
+      <view class="section-item">音频旁白：{{audioProviderLabel}}</view>
+      <view class="section-item">视频生成：{{videoProviderLabel}}</view>
+    </view>
+  </view>
+
+  <view class="case-card">
+    <view class="row-between">
+      <view class="panel-title">Narration Studio</view>
+      <text class="status-pill status-{{healthState}}">{{healthLabel}}</text>
+    </view>
+    <view class="panel-copy">{{healthNote}}</view>
+
+    <text class="label">选择脚本</text>
+    <picker range="{{scriptOptions}}" range-key="label" bindchange="onScriptChange">
+      <view class="input">{{selectedScriptLabel}}</view>
+    </picker>
+
+    <text class="label">自定义旁白</text>
+    <textarea
+      class="textarea"
+      value="{{scriptText}}"
+      placeholder="输入要生成旁白的内容"
+      bindinput="onScriptInput"
+    />
+
+    <view class="button-row">
+      <button class="button-primary" bindtap="onGenerateAudio" disabled="{{isGeneratingAudio || healthState !== 'available'}}">
+        {{isGeneratingAudio ? "生成中..." : "生成旁白"}}
+      </button>
+      <button class="button-secondary" bindtap="onGenerateVideo" disabled="{{isGeneratingVideo || healthState !== 'available'}}">
+        {{isGeneratingVideo ? "处理中..." : "生成视频"}}
+      </button>
+    </view>
+
+    <audio
+      wx:if="{{audioUrl}}"
+      class="audio-player"
+      controls
+      src="{{audioUrl}}"
+    ></audio>
+    <view wx:if="{{audioMeta}}" class="muted">音色：{{audioMeta.voice}} | 格式：{{audioMeta.format}}</view>
+    <view wx:if="{{remoteAudioUrl}}" class="asset-box">
+      <view class="asset-label">音频 URL</view>
+      <view class="asset-url">{{remoteAudioUrl}}</view>
+    </view>
+    <view wx:if="{{videoUrl}}" class="asset-box">
+      <view class="asset-label">视频 URL</view>
+      <view class="asset-url">{{videoUrl}}</view>
+    </view>
+    <view wx:if="{{posterUrl}}" class="asset-box">
+      <view class="asset-label">封面 URL</view>
+      <view class="asset-url">{{posterUrl}}</view>
+    </view>
+    <video
+      wx:if="{{videoUrl}}"
+      class="video-player"
+      controls
+      src="{{videoUrl}}"
+      poster="{{posterUrl}}"
+    ></video>
+    <view wx:if="{{videoMeta}}" class="muted">
+      视频提供方：{{videoMeta.videoProvider}} | 模型：{{videoMeta.videoModel}} | 音频提供方：{{videoMeta.audioProvider}}
+    </view>
+  </view>
+
+  <view class="case-card">
+    <view class="panel-title">标准交付物</view>
+    <view class="section-list">
+      <view class="section-item" wx:for="{{caseData.deliverables}}" wx:key="*this">
+        {{item}}
+      </view>
+    </view>
+  </view>
+</view>
