@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天眼线索管道看板</title>
+    <meta name="description" content="天眼线索管道看板，按状态查看项目推进。">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/github-pages.css">
+</head>
+<body>
+    <div class="page-aura page-aura-one"></div>
+    <div class="page-aura page-aura-two"></div>
+    <header class="site-nav site-nav-compact">
+        <a class="nav-brand" href="leads.html">
+            <span class="nav-brand-mark">◉</span>
+            <span>
+                <strong>线索管道看板</strong>
+                <em>Lead Pipeline Board</em>
+            </span>
+        </a>
+        <nav class="nav-links">
+            <a href="contact.html">合作咨询</a>
+            <a href="leads.html">线索列表</a>
+            <a href="index.html">增长中心</a>
+        </nav>
+        <a class="nav-cta" href="../index.html">返回首页</a>
+    </header>
+    <main class="report-main">
+        <section class="report-hero reveal is-visible">
+            <div class="report-panel">
+                <p class="section-kicker">Pipeline Board</p>
+                <h1>按状态看线索推进，不再只看长列表。</h1>
+                <p class="hero-text">这页给运营和销售一个更直观的视图，快速看到哪些线索还在 `new`，哪些已经进入 `proposal` 或 `won`。</p>
+            </div>
+            <div class="report-panel">
+                <p class="section-kicker">Status</p>
+                <p class="section-body" id="pipeline-status">等待连接后端...</p>
+            </div>
+        </section>
+
+        <section class="section reveal is-visible">
+            <div class="section-head">
+                <p class="section-kicker">Board</p>
+                <h2>最小 CRM 管道看板。</h2>
+            </div>
+            <div class="course-grid" id="pipeline-board"></div>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <div><strong>线索管道看板</strong><p>new · contacted · proposal · won · lost</p></div>
+        <div class="footer-links"><a href="leads.html">线索列表</a><a href="contact.html">合作咨询</a></div>
+    </footer>
+    <script src="../assets/pipeline.js" defer></script>
+</body>
+</html>

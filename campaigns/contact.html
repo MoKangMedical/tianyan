@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天眼合作咨询</title>
+    <meta name="description" content="天眼合作咨询：套餐目录、项目留资与合作承接。">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/github-pages.css">
+</head>
+<body>
+    <div class="page-aura page-aura-one"></div>
+    <div class="page-aura page-aura-two"></div>
+    <header class="site-nav site-nav-compact">
+        <a class="nav-brand" href="index.html">
+            <span class="nav-brand-mark">◉</span>
+            <span>
+                <strong>合作咨询</strong>
+                <em>Offer Catalog and Lead Intake</em>
+            </span>
+        </a>
+        <nav class="nav-links">
+            <a href="index.html">增长中心</a>
+            <a href="leads.html">线索列表</a>
+            <a href="pipeline.html">管道看板</a>
+            <a href="../index.html">首页</a>
+        </nav>
+        <a class="nav-cta" href="../cases/medislim/report.html">看案例</a>
+    </header>
+    <main class="report-main">
+        <section class="report-hero reveal is-visible">
+            <div class="report-panel">
+                <p class="section-kicker">Offers</p>
+                <h1>从首单 POC 到增长代运营，把合作模式和留资入口放在同一页。</h1>
+                <p class="hero-text">这页不只是展示套餐，还承担项目承接。用户看完案例和宣传内容后，可以直接选择适合的合作模式并提交项目线索。</p>
+            </div>
+            <div class="report-panel">
+                <p class="section-kicker">Lead Intake</p>
+                <div class="bullet-stack">
+                    <span>先判断是 POC、模板包、月费顾问还是增长代运营</span>
+                    <span>再提交项目目标、预算和联系渠道</span>
+                    <span>后端会记录线索，供后续跟进</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="section reveal is-visible">
+            <div class="section-head">
+                <p class="section-kicker">Offer Catalog</p>
+                <h2>把商业模式真正做成可选套餐。</h2>
+            </div>
+            <div class="course-grid" id="offer-grid"></div>
+        </section>
+
+        <section class="section reveal is-visible">
+            <div class="section-head">
+                <p class="section-kicker">Project Intake</p>
+                <h2>项目咨询表单。</h2>
+            </div>
+            <article class="report-panel">
+                <form class="studio-form" id="lead-form">
+                    <label class="studio-field"><span>公司名称</span><input class="studio-input" name="company_name" required></label>
+                    <label class="studio-field"><span>联系人</span><input class="studio-input" name="contact_name" required></label>
+                    <label class="studio-field"><span>联系渠道</span><input class="studio-input" name="contact_channel" placeholder="微信 / 邮箱 / 手机" required></label>
+                    <label class="studio-field"><span>项目类型</span><input class="studio-input" name="project_type" placeholder="减重 / 保健品 / 数字健康 / 其他" required></label>
+                    <label class="studio-field"><span>预算范围</span><input class="studio-input" name="budget_range" placeholder="¥1-3万 / ¥3-10万 / ¥10万+" required></label>
+                    <label class="studio-field"><span>意向套餐</span><input class="studio-input" name="preferred_offer" placeholder="诊断式 POC / 模板包 / 月费顾问 / 代运营"></label>
+                    <label class="studio-field"><span>项目目标</span><textarea class="studio-input studio-textarea" name="goals" placeholder="你想解决什么问题、想看什么判断、想做什么宣传" required></textarea></label>
+                    <div class="studio-actions">
+                        <button class="button button-primary" type="submit">提交咨询</button>
+                    </div>
+                    <p class="studio-status" id="lead-status">填写后将提交到 Tianyan 后端。</p>
+                </form>
+            </article>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <div><strong>合作咨询</strong><p>套餐目录 · 项目留资 · 后续跟进</p></div>
+        <div class="footer-links"><a href="index.html">增长中心</a><a href="../index.html">首页</a></div>
+    </footer>
+    <script src="../assets/contact.js" defer></script>
+</body>
+</html>

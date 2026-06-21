@@ -1,10 +1,9 @@
 """天眼Demo Server API测试。"""
 
 import pytest
-from fastapi.testclient import TestClient
-from demo_server import app
+from conftest import create_test_client
 
-client = TestClient(app)
+client = create_test_client()
 
 
 class TestHealthAndInfo:
@@ -34,6 +33,92 @@ class TestHealthAndInfo:
         assert d["count"] >= 5
         names = [t["name"] for t in d["templates"]]
         assert any("GLP" in n for n in names)
+
+    def test_campaign_assets(self):
+        r = client.get("/api/v1/campaigns/assets")
+        assert r.status_code == 200
+        d = r.json()
+        assert d["success"] is True
+        assert "xiaohongshu" in d["channels"]
+        assert "douyin" in d["channels"]
+        assert "digitalHuman" in d["channels"]
+        assert "assets" in d
+        assert d["assets"]["xiaohongshu"]["calendar"]
+
+    def test_offers_catalog(self):
+        r = client.get("/api/v1/offers/catalog")
+        assert r.status_code == 200
+        d = r.json()
+        assert d["success"] is True
+        assert len(d["offers"]) >= 4
+
+    def test_lead_intake(self):
+        r = client.post("/api/v1/leads/intake", json={
+            "company_name": "示例公司",
+            "contact_name": "张三",
+            "contact_channel": "wechat:demo",
+            "project_type": "减重",
+            "budget_range": "¥3-10万",
+            "goals": "想验证商业模式并启动宣传",
+            "preferred_offer": "诊断式 POC",
+        })
+        assert r.status_code == 200
+        d = r.json()
+        assert d["success"] is True
+        assert d["lead_id"].startswith("lead-")
+        assert "notifications" in d
+
+    def test_list_leads(self):
+        r = client.get("/api/v1/leads")
+        assert r.status_code == 200
+        d = r.json()
+        assert d["success"] is True
+        assert "leads" in d
+        assert d["count"] >= 1
+
+    def test_lead_pipeline_summary(self):
+        r = client.get("/api/v1/leads/pipeline/summary")
+        assert r.status_code == 200
+        d = r.json()
+        assert d["success"] is True
+        assert "summary" in d
+
+    def test_lead_detail_and_status_update(self):
+        create = client.post("/api/v1/leads/intake", json={
+            "company_name": "跟进公司",
+            "contact_name": "赵六",
+            "contact_channel": "wechat:zhaoliu",
+            "project_type": "护肤",
+            "budget_range": "¥3-10万",
+            "goals": "想做内容和代运营",
+            "preferred_offer": "增长与数字人代运营",
+        }).json()
+        lead_id = create["lead_id"]
+
+        detail = client.get(f"/api/v1/leads/{lead_id}")
+        assert detail.status_code == 200
+        assert detail.json()["lead"]["lead_id"] == lead_id
+
+        update = client.post(f"/api/v1/leads/{lead_id}/status", json={
+            "status": "proposal",
+            "owner": "Alice",
+            "note": "已发送方案",
+        })
+        assert update.status_code == 200
+        assert update.json()["update"]["status"] == "proposal"
+
+        history = client.get(f"/api/v1/leads/{lead_id}/history")
+        assert history.status_code == 200
+        assert len(history.json()["history"]) >= 1
+
+    def test_leads_filtered_and_export_csv(self):
+        filtered = client.get("/api/v1/leads", params={"status": "proposal"})
+        assert filtered.status_code == 200
+        assert "leads" in filtered.json()
+
+        exported = client.get("/api/v1/leads/export.csv")
+        assert exported.status_code == 200
+        assert "lead_id" in exported.text
 
     def test_landing_page(self):
         r = client.get("/")

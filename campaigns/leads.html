@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天眼线索列表</title>
+    <meta name="description" content="天眼最近线索列表与合作跟进页。">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/github-pages.css">
+</head>
+<body>
+    <div class="page-aura page-aura-one"></div>
+    <div class="page-aura page-aura-two"></div>
+    <header class="site-nav site-nav-compact">
+        <a class="nav-brand" href="contact.html">
+            <span class="nav-brand-mark">◉</span>
+            <span>
+                <strong>线索列表</strong>
+                <em>Recent Leads</em>
+            </span>
+        </a>
+        <nav class="nav-links">
+            <a href="contact.html">合作咨询</a>
+            <a href="pipeline.html">管道看板</a>
+            <a href="index.html">增长中心</a>
+            <a href="../index.html">首页</a>
+        </nav>
+        <a class="nav-cta" href="../cases/medislim/report.html">看案例</a>
+    </header>
+    <main class="report-main">
+        <section class="report-hero reveal is-visible">
+            <div class="report-panel">
+                <p class="section-kicker">Lead Management</p>
+                <h1>最近提交的项目线索。</h1>
+                <p class="hero-text">这页用于查看近期留资记录，确认宣传内容已经开始承接真实项目机会。</p>
+                <div class="hero-meta">
+                    <span id="lead-list-count">0 leads</span>
+                </div>
+            </div>
+            <div class="report-panel">
+                <p class="section-kicker">Status</p>
+                <p class="section-body" id="lead-list-status">等待连接后端...</p>
+            </div>
+        </section>
+
+        <section class="section reveal is-visible">
+            <div class="section-head">
+                <p class="section-kicker">Pipeline Summary</p>
+                <h2>线索状态摘要。</h2>
+            </div>
+            <div class="metric-grid" id="lead-summary-grid"></div>
+        </section>
+
+        <section class="section reveal is-visible">
+            <div class="section-head">
+                <p class="section-kicker">Filters</p>
+                <h2>按状态、负责人和关键词筛选，并导出 CSV。</h2>
+            </div>
+            <article class="report-panel">
+                <form class="studio-form" id="lead-filter-form">
+                    <label class="studio-field">
+                        <span>状态</span>
+                        <select class="studio-input" id="lead-filter-status">
+                            <option value="">全部</option>
+                            <option value="new">new</option>
+                            <option value="contacted">contacted</option>
+                            <option value="proposal">proposal</option>
+                            <option value="won">won</option>
+                            <option value="lost">lost</option>
+                        </select>
+                    </label>
+                    <label class="studio-field">
+                        <span>负责人</span>
+                        <input class="studio-input" id="lead-filter-owner" placeholder="如 Alice">
+                    </label>
+                    <label class="studio-field">
+                        <span>关键词</span>
+                        <input class="studio-input" id="lead-filter-query" placeholder="公司名 / 联系人 / 项目类型 / 目标">
+                    </label>
+                    <div class="studio-actions">
+                        <button class="button button-primary" type="submit">应用筛选</button>
+                        <a class="button button-secondary" id="lead-export-link" href="http://127.0.0.1:8000/api/v1/leads/export.csv" target="_blank" rel="noreferrer">导出 CSV</a>
+                    </div>
+                </form>
+            </article>
+        </section>
+
+        <section class="section reveal is-visible">
+            <div class="section-head">
+                <p class="section-kicker">Recent Leads</p>
+                <h2>宣传之后的项目承接记录与跟进动作。</h2>
+            </div>
+            <div class="library-grid" id="lead-list-grid"></div>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <div><strong>线索列表</strong><p>留资记录 · 套餐意向 · 跟进基础</p></div>
+        <div class="footer-links"><a href="contact.html">合作咨询</a><a href="index.html">增长中心</a></div>
+    </footer>
+    <script src="../assets/leads.js" defer></script>
+</body>
+</html>

@@ -269,8 +269,132 @@ const endpointCatalog = [
   "stats": {
     "industry_templates": 5,
     "ai_engine": "MIMO API",
-    "total_endpoints": 16
+    "total_endpoints": 17
   }
+}`
+  },
+  {
+    tag: "growth",
+    method: "GET",
+    path: "/api/v1/campaigns/assets",
+    label: "宣传资产库",
+    description: "返回商业模式、小红书、抖音和数字人宣传所需的排期、脚本和内容包。",
+    useCase: "给增长中心页面、小程序、内容生产工具和后续自动化链路提供统一宣传资产源。",
+    returns: "channels, assets",
+    request: "curl http://localhost:8000/api/v1/campaigns/assets",
+    response: `{
+  "success": true,
+  "channels": ["xiaohongshu", "douyin", "digitalHuman"],
+  "assets": {
+    "xiaohongshu": {"calendar": []},
+    "douyin": {"scripts": []},
+    "digitalHuman": {"packs": []}
+  }
+}`
+  },
+  {
+    tag: "growth",
+    method: "GET",
+    path: "/api/v1/offers/catalog",
+    label: "套餐目录",
+    description: "返回 POC、模板包、月费顾问和增长代运营的合作套餐目录。",
+    useCase: "给合作咨询页和销售侧页面展示明确的商业模式与报价结构。",
+    returns: "offers[]",
+    request: "curl http://localhost:8000/api/v1/offers/catalog",
+    response: `{
+  "success": true,
+  "offers": [
+    {"key": "poc_diagnostic", "price": "¥9,900 起"},
+    {"key": "growth_operator", "price": "¥49,900 / 月起"}
+  ]
+}`
+  },
+  {
+    tag: "growth",
+    method: "POST",
+    path: "/api/v1/leads/intake",
+    label: "项目留资",
+    description: "接收合作咨询线索并落盘，形成宣传后的项目承接闭环。",
+    useCase: "让用户在看完案例和宣传方案后，直接提交项目目标、预算和联系渠道。",
+    returns: "lead_id, message",
+    request: `curl -X POST http://localhost:8000/api/v1/leads/intake \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "company_name":"示例公司",
+    "contact_name":"张三",
+    "contact_channel":"wechat:demo",
+    "project_type":"减重",
+    "budget_range":"¥3-10万",
+    "goals":"想验证商业模式并启动小红书和抖音宣传"
+  }'`,
+    response: `{
+  "success": true,
+  "lead_id": "lead-1748448000000",
+  "message": "线索已接收"
+}`
+  },
+  {
+    tag: "growth",
+    method: "GET",
+    path: "/api/v1/leads",
+    label: "线索列表",
+    description: "返回最近提交的项目线索，用于销售跟进和宣传效果验收。",
+    useCase: "给线索列表页、内部跟进页和后续 CRM 同步使用。",
+    returns: "count, leads[]",
+    request: "curl http://localhost:8000/api/v1/leads",
+    response: `{
+  "success": true,
+  "count": 2,
+  "leads": [
+    {"company_name": "示例公司", "project_type": "减重"},
+    {"company_name": "验收公司", "project_type": "数字健康"}
+  ]
+}`
+  },
+  {
+    tag: "growth",
+    method: "GET",
+    path: "/api/v1/leads/pipeline/summary",
+    label: "线索摘要",
+    description: "按状态汇总线索数量，用于快速查看当前项目承接进度。",
+    useCase: "给线索管理页和内部销售看板展示 new/contacted/proposal/won/lost 状态数量。",
+    returns: "summary, total",
+    request: "curl http://localhost:8000/api/v1/leads/pipeline/summary",
+    response: `{
+  "success": true,
+  "summary": {"new": 1, "proposal": 1, "won": 1},
+  "total": 3
+}`
+  },
+  {
+    tag: "growth",
+    method: "GET",
+    path: "/api/v1/leads/{lead_id}",
+    label: "线索详情",
+    description: "返回单条线索详情和当前状态。",
+    useCase: "给跟进页、后续 CRM 页面或单条详情弹层使用。",
+    returns: "lead",
+    request: "curl http://localhost:8000/api/v1/leads/lead-123",
+    response: `{
+  "success": true,
+  "lead": {"lead_id": "lead-123", "status": "contacted"}
+}`
+  },
+  {
+    tag: "growth",
+    method: "POST",
+    path: "/api/v1/leads/{lead_id}/status",
+    label: "更新线索",
+    description: "更新线索状态、负责人和备注，形成最小跟进管理能力。",
+    useCase: "给线索管理页直接更新 new/contacted/proposal/won/lost 及跟进备注。",
+    returns: "lead_id, update",
+    request: `curl -X POST http://localhost:8000/api/v1/leads/lead-123/status \\
+  -H "Content-Type: application/json" \\
+  -d '{"status":"proposal","owner":"Alice","note":"已发方案"}'`,
+    response: `{
+  "success": true,
+  "lead_id": "lead-123",
+  "update": {"status": "proposal", "owner": "Alice"}
 }`
   },
   {
@@ -659,6 +783,141 @@ const defaultDeliverables = [
   }
 ];
 
+const academyPhases = [
+  {
+    phase: "Phase 01",
+    title: "宏观框架导入",
+    description: "先建立政策、经济、文化、国家发展四条主线，再决定一个项目该从哪里切入。",
+    bullets: ["研究边界", "问题定义", "项目切口", "学习地图"]
+  },
+  {
+    phase: "Phase 02",
+    title: "材料拆解与证据归档",
+    description: "把客户给的行业报告、政策文件、访谈纪要和财务材料转为结构化研究输入。",
+    bullets: ["材料分层", "证据评级", "信号抽取", "研究笔记"]
+  },
+  {
+    phase: "Phase 03",
+    title: "课程研判与案例推演",
+    description: "按课程模块做情景推演、方法演练和案例复盘，把概念变成可判断未来预期的能力。",
+    bullets: ["情景树", "案例拆解", "方法模块", "语音导读"]
+  },
+  {
+    phase: "Phase 04",
+    title: "客户交付与汇报口径",
+    description: "最终输出董事会摘要、项目建议、行动计划和可复用的标准化交付模板。",
+    bullets: ["客户汇报", "交付模板", "风险清单", "行动路线"]
+  }
+];
+
+const academyOutcomes = [
+  "客户能快速理解项目未来预期与阶段目标。",
+  "研究团队能用同一套课程结构复用方法与报告。",
+  "平台既能做展示，也能承接真实项目的材料流和语音流。",
+  "每个模块都能落回报告、Skill、案例页或 API。"
+];
+
+const voiceModes = [
+  {
+    title: "导学旁白",
+    meta: "适合首页、课程首页和模块引导",
+    description: "先用 60-90 秒的语音把课程意图、问题框架和学习顺序讲清楚。"
+  },
+  {
+    title: "章节精讲",
+    meta: "适合政策、经济、文化、国家发展四大主修",
+    description: "每一章只讲一个核心判断，保持麦肯锡式结构化口径，方便客户和学员快速吸收。"
+  },
+  {
+    title: "案例复盘",
+    meta: "适合产品上市、融资叙事和项目落地场景",
+    description: "把案例拆成背景、关键问题、推演过程、结论和执行计划五段式语音。"
+  },
+  {
+    title: "客户汇报口径",
+    meta: "适合对外提案、董事会摘要和投委会材料",
+    description: "统一为稳、短、清楚的汇报语气，不做主播化夸张表达。"
+  }
+];
+
+const voicePlaybook = [
+  {
+    phase: "Step 01",
+    action: "DeepSeek 生成课程讲稿与摘要",
+    kpi: "结构化 4 段式脚本",
+    budget: 0
+  },
+  {
+    phase: "Step 02",
+    action: "Mimo 生成统一口径中文旁白",
+    kpi: "音色统一、语速稳定",
+    budget: 0
+  },
+  {
+    phase: "Step 03",
+    action: "ComfyUI 输出课程视频或案例片段",
+    kpi: "返回 audio_url / video_url",
+    budget: 0
+  },
+  {
+    phase: "Step 04",
+    action: "页面端回显课程卡、音频和视频链接",
+    kpi: "学员可直接播放与复盘",
+    budget: 0
+  }
+];
+
+const monetizationLadders = [
+  {
+    tier: "Tier 01",
+    title: "诊断式 POC",
+    description: "用 1 个案例、1 个目标产品、1 轮完整推演快速换取客户信任，控制交付周期在 5-10 个工作日。",
+    bullets: ["适合首单", "按项目收费", "输出案例样板与决策摘要", "目标是转长期合作"]
+  },
+  {
+    tier: "Tier 02",
+    title: "行业模板报告",
+    description: "把减重、保健品、护肤、数字健康等场景模板化，做成标准包销售，降低每单交付成本。",
+    bullets: ["标准套餐", "固定报价", "可复用模板", "适合批量获客"]
+  },
+  {
+    tier: "Tier 03",
+    title: "策略月费服务",
+    description: "客户按月购买研究更新、市场监测、内容选题、渠道复盘与新项目评估，形成持续现金流。",
+    bullets: ["月费制", "周会 + 月报", "持续策略支持", "提升复购"]
+  },
+  {
+    tier: "Tier 04",
+    title: "媒体与数字人代运营",
+    description: "把报告、课程、语音、短视频和数字人口播串成完整代运营链路，变成更高客单价服务。",
+    bullets: ["小红书 / 抖音", "数字人口播", "短视频脚本", "内容复盘和投放建议"]
+  }
+];
+
+const launchpadChannels = [
+  {
+    title: "小红书宣传",
+    path: "campaigns/xiaohongshu.html",
+    focus: "种草 / 人群教育 / 信任建立",
+    description: "先用笔记、测评、对比和用户故事建立认知，再导入私域、直播或购买承接。",
+    bullets: ["内容矩阵", "选题周历", "爆文结构", "KOL与素人组合"]
+  },
+  {
+    title: "抖音宣传",
+    path: "campaigns/douyin.html",
+    focus: "短视频引流 / 直播转化 / 信息流测试",
+    description: "围绕前 3 秒钩子、利益点拆解、直播承接和广告测试做完整闭环。",
+    bullets: ["短视频脚本", "直播节奏", "信息流测试", "转化漏斗复盘"]
+  },
+  {
+    title: "数字人宣传",
+    path: "campaigns/digital-human.html",
+    focus: "统一讲解口径 / 高频更新 / 降低真人拍摄依赖",
+    description: "把课程、案例、汇报和产品介绍统一成数字人口播模式，支持旁白、镜头脚本和视频链路。",
+    bullets: ["数字人口播", "课程讲解", "视频脚本", "音频视频联动"]
+  }
+];
+
 let capabilityDomains = [];
 let materialPipelines = [];
 let deliverables = [];
@@ -881,6 +1140,108 @@ function renderDeliverables() {
   `).join("");
 }
 
+function renderAcademyPhases() {
+  const grid = document.getElementById("academy-phase-grid");
+  const outcomeList = document.getElementById("academy-outcome-list");
+  if (!grid || !outcomeList) return;
+
+  grid.innerHTML = academyPhases.map((item) => `
+    <article class="academy-phase-card">
+      <span class="panel-label">${item.phase}</span>
+      <h3>${item.title}</h3>
+      <p>${item.description}</p>
+      <div class="academy-chip-row">
+        ${item.bullets.map((bullet) => `<span>${bullet}</span>`).join("")}
+      </div>
+    </article>
+  `).join("");
+
+  outcomeList.innerHTML = academyOutcomes.map((item) => `<span>${item}</span>`).join("");
+}
+
+function renderMonetization() {
+  const grid = document.getElementById("monetization-grid");
+  if (!grid) return;
+
+  grid.innerHTML = monetizationLadders.map((item) => `
+    <article class="course-card monetization-card">
+      <span class="panel-label">${item.tier}</span>
+      <h3>${item.title}</h3>
+      <p>${item.description}</p>
+      <div class="academy-chip-row">
+        ${item.bullets.map((bullet) => `<span>${bullet}</span>`).join("")}
+      </div>
+    </article>
+  `).join("");
+}
+
+function renderLaunchpad() {
+  const grid = document.getElementById("launchpad-grid");
+  if (!grid) return;
+
+  grid.innerHTML = launchpadChannels.map((item) => `
+    <article class="course-card launchpad-card">
+      <span class="panel-label">${item.focus}</span>
+      <h3>${item.title}</h3>
+      <p>${item.description}</p>
+      <div class="academy-chip-row">
+        ${item.bullets.map((bullet) => `<span>${bullet}</span>`).join("")}
+      </div>
+      <a class="text-link" href="${item.path}">打开执行页面</a>
+    </article>
+  `).join("");
+}
+
+function renderCourseTracks() {
+  const courseCount = document.getElementById("course-library-count");
+  const courseGrid = document.getElementById("course-library-grid");
+  const studioCount = document.getElementById("studio-library-count");
+  const studioGrid = document.getElementById("studio-library-grid");
+
+  if (!courseCount || !courseGrid || !studioCount || !studioGrid) return;
+
+  const courseModules = reportLibrary.slice(0, 6);
+  const studioModules = skillLibrary.slice(0, 6);
+
+  courseCount.textContent = `${courseModules.length} modules`;
+  courseGrid.innerHTML = courseModules.map((item, index) => `
+    <article class="course-card">
+      <span class="panel-label">Module ${String(index + 1).padStart(2, "0")}</span>
+      <h3>${item.title}</h3>
+      <p>${item.summary}</p>
+      <div class="course-meta">
+        <span>${item.category}</span>
+        <span>${item.deliverable}</span>
+      </div>
+      <a class="text-link" href="${buildContentHref(item.path, "report", {
+        title: item.title,
+        category: item.category,
+        summary: item.summary,
+        meta: item.deliverable
+      })}">进入课程材料</a>
+    </article>
+  `).join("");
+
+  studioCount.textContent = `${studioModules.length} studios`;
+  studioGrid.innerHTML = studioModules.map((item, index) => `
+    <article class="course-card course-card-studio">
+      <span class="panel-label">Studio ${String(index + 1).padStart(2, "0")}</span>
+      <h3>${item.displayName}</h3>
+      <p>${item.summary}</p>
+      <div class="course-meta">
+        <span>${item.category}</span>
+        <span>${item.triggers.join(" / ")}</span>
+      </div>
+      <a class="text-link" href="${buildContentHref(item.skillPath, "skill", {
+        title: item.displayName,
+        category: item.category,
+        summary: item.summary,
+        meta: `触发：${item.triggers.join(" / ")}`
+      })}">进入执行单元</a>
+    </article>
+  `).join("");
+}
+
 function renderReportLibrary() {
   const count = document.getElementById("report-library-count");
   const grid = document.getElementById("report-library-grid");
@@ -941,6 +1302,30 @@ function renderSkillLibrary() {
         })}">${item.secondaryLabel || "附加材料"}</a>` : ""}
       </div>
     </article>
+  `).join("");
+}
+
+function renderVoiceModes() {
+  const grid = document.getElementById("voice-mode-grid");
+  const list = document.getElementById("voice-playbook-list");
+  if (!grid || !list) return;
+
+  grid.innerHTML = voiceModes.map((item) => `
+    <article class="voice-card">
+      <span class="panel-label">${item.meta}</span>
+      <h3>${item.title}</h3>
+      <p>${item.description}</p>
+    </article>
+  `).join("");
+
+  list.innerHTML = voicePlaybook.map((item) => `
+    <div class="timeline-item">
+      <div class="timeline-phase">${item.phase}</div>
+      <div class="timeline-content">
+        <strong>${item.action}</strong>
+        <p>${item.kpi}</p>
+      </div>
+    </div>
   `).join("");
 }
 
@@ -1031,6 +1416,9 @@ function bindMaterialInteractions() {
 
 async function init() {
   await loadContentCatalogs();
+  renderAcademyPhases();
+  renderMonetization();
+  renderLaunchpad();
   renderEndpointMenu();
   renderEndpoint(0);
   bindEndpointInteractions();
@@ -1042,8 +1430,10 @@ async function init() {
   bindMaterialInteractions();
   renderTemplates();
   renderDeliverables();
+  renderCourseTracks();
   renderReportLibrary();
   renderSkillLibrary();
+  renderVoiceModes();
   setupReveal();
 
   try {

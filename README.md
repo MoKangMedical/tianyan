@@ -238,6 +238,7 @@ docker run -d -p 8000:8000 -e OPENAI_API_KEY=your-key tianyan
 
 - `miniprogram/`：微信小程序前端
 - `mock_backend/`：本地演示后端与静态音视频资产
+- `campaigns/`：商业模式、小红书、抖音、数字人宣传页面
 
 正式后端对外接口：
 

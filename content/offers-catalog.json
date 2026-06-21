@@ -1,0 +1,56 @@
+{
+  "offers": [
+    {
+      "key": "poc_diagnostic",
+      "name": "诊断式 POC",
+      "price": "¥9,900 起",
+      "timeline": "5-10 个工作日",
+      "fit": "首单验证 / 招商前判断 / 单产品策略",
+      "deliverables": [
+        "执行摘要",
+        "渠道排序",
+        "内容方向",
+        "案例级汇报材料"
+      ]
+    },
+    {
+      "key": "industry_template",
+      "name": "行业模板包",
+      "price": "¥19,900 起",
+      "timeline": "7-14 个工作日",
+      "fit": "减重 / 保健品 / 护肤 / 数字健康",
+      "deliverables": [
+        "模板化行业报告",
+        "风险清单",
+        "Go-to-market 建议",
+        "脚本建议"
+      ]
+    },
+    {
+      "key": "strategy_retainer",
+      "name": "策略月费顾问",
+      "price": "¥29,900 / 月起",
+      "timeline": "按月续约",
+      "fit": "持续研究 / 每月复盘 / 新项目评估",
+      "deliverables": [
+        "周度研究更新",
+        "月度复盘会",
+        "内容建议",
+        "项目评估支持"
+      ]
+    },
+    {
+      "key": "growth_operator",
+      "name": "增长与数字人代运营",
+      "price": "¥49,900 / 月起",
+      "timeline": "按月续约",
+      "fit": "小红书 / 抖音 / 数字人持续输出",
+      "deliverables": [
+        "内容排期",
+        "脚本与封面",
+        "数字人口播视频",
+        "月度增长复盘"
+      ]
+    }
+  ]
+}

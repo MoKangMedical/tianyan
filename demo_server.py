@@ -8,10 +8,12 @@
 from __future__ import annotations
 
 import base64
+import json
 import logging
 import os
 import time
 import traceback
+import urllib.request
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any, Optional
@@ -26,7 +28,7 @@ logger = logging.getLogger("tianyan.server")
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -64,6 +66,12 @@ DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-v4-pro")
 MIMO_AUDIO_MODEL = os.environ.get("MIMO_AUDIO_MODEL", "local-voiceover-demo")
 COMFYUI_VIDEO_MODEL = os.environ.get("COMFYUI_VIDEO_MODEL", "comfyui-local-demo")
 COMFYUI_BASE_URL = os.environ.get("COMFYUI_BASE_URL", "").rstrip("/")
+GROWTH_CAMPAIGNS_PATH = APP_ROOT / "content" / "growth-campaigns.json"
+OFFERS_CATALOG_PATH = APP_ROOT / "content" / "offers-catalog.json"
+LEADS_STORE_PATH = APP_ROOT / "data" / "leads.jsonl"
+LEAD_UPDATES_STORE_PATH = APP_ROOT / "data" / "lead_updates.jsonl"
+WECOM_WEBHOOK_URL = os.environ.get("WECOM_WEBHOOK_URL", "").strip()
+FEISHU_WEBHOOK_URL = os.environ.get("FEISHU_WEBHOOK_URL", "").strip()
 
 # ============================================================
 # Pydantic 请求/响应模型
@@ -140,6 +148,22 @@ class VideoGenerationRequest(BaseModel):
     audio_format: str = Field(default="mp3", description="输出音频格式")
     video_provider: str = Field(default="comfyui", description="视频提供方")
     video_mode: str = Field(default="narrated-brief", description="视频工作流模式")
+
+
+class LeadIntakeRequest(BaseModel):
+    company_name: str = Field(..., min_length=1)
+    contact_name: str = Field(..., min_length=1)
+    contact_channel: str = Field(..., min_length=1)
+    project_type: str = Field(..., min_length=1)
+    budget_range: str = Field(..., min_length=1)
+    goals: str = Field(..., min_length=1)
+    preferred_offer: str = Field(default="")
+
+
+class LeadStatusUpdateRequest(BaseModel):
+    status: str = Field(..., min_length=1, description="new/contacted/proposal/won/lost")
+    owner: str = Field(default="", description="跟进负责人")
+    note: str = Field(default="", description="跟进备注")
 
 
 # ============================================================
@@ -234,6 +258,164 @@ def _read_mock_audio_base64() -> str:
     if not MOCK_AUDIO_PATH.exists():
         return ""
     return base64.b64encode(MOCK_AUDIO_PATH.read_bytes()).decode("utf-8")
+
+
+def _load_growth_campaigns() -> dict[str, Any]:
+    if not GROWTH_CAMPAIGNS_PATH.exists():
+        return {}
+    return json.loads(GROWTH_CAMPAIGNS_PATH.read_text(encoding="utf-8"))
+
+
+def _load_offers_catalog() -> dict[str, Any]:
+    if not OFFERS_CATALOG_PATH.exists():
+        return {"offers": []}
+    return json.loads(OFFERS_CATALOG_PATH.read_text(encoding="utf-8"))
+
+
+def _append_lead_record(payload: dict[str, Any]) -> str:
+    lead_id = f"lead-{int(time.time() * 1000)}"
+    record = {
+        "lead_id": lead_id,
+        "created_at": int(time.time()),
+        **payload,
+    }
+    LEADS_STORE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with LEADS_STORE_PATH.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(record, ensure_ascii=False) + "\n")
+    return lead_id
+
+
+def _load_lead_records(limit: int = 50) -> list[dict[str, Any]]:
+    if not LEADS_STORE_PATH.exists():
+        return []
+    records = [
+        json.loads(line)
+        for line in LEADS_STORE_PATH.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    return list(reversed(records[-limit:]))
+
+
+def _append_lead_update(payload: dict[str, Any]) -> None:
+    LEAD_UPDATES_STORE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with LEAD_UPDATES_STORE_PATH.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(payload, ensure_ascii=False) + "\n")
+
+
+def _load_lead_updates() -> dict[str, dict[str, Any]]:
+    if not LEAD_UPDATES_STORE_PATH.exists():
+        return {}
+    updates: dict[str, dict[str, Any]] = {}
+    for line in LEAD_UPDATES_STORE_PATH.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        record = json.loads(line)
+        updates[record["lead_id"]] = record
+    return updates
+
+
+def _load_lead_update_history() -> dict[str, list[dict[str, Any]]]:
+    if not LEAD_UPDATES_STORE_PATH.exists():
+        return {}
+    history: dict[str, list[dict[str, Any]]] = {}
+    for line in LEAD_UPDATES_STORE_PATH.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        record = json.loads(line)
+        history.setdefault(record["lead_id"], []).append(record)
+    return history
+
+
+def _merge_lead_records(limit: int = 50) -> list[dict[str, Any]]:
+    updates = _load_lead_updates()
+    leads = _load_lead_records(limit)
+    merged = []
+    for lead in leads:
+        update = updates.get(lead["lead_id"], {})
+        merged.append({
+            **lead,
+            "status": update.get("status", "new"),
+            "owner": update.get("owner", ""),
+            "note": update.get("note", ""),
+            "updated_at": update.get("updated_at"),
+        })
+    return merged
+
+
+def _filter_leads(
+    leads: list[dict[str, Any]],
+    status: str = "",
+    owner: str = "",
+    query: str = "",
+) -> list[dict[str, Any]]:
+    result = leads
+    if status:
+        result = [lead for lead in result if lead.get("status", "new") == status]
+    if owner:
+        owner_lower = owner.lower()
+        result = [lead for lead in result if owner_lower in (lead.get("owner", "").lower())]
+    if query:
+        query_lower = query.lower()
+        result = [
+            lead for lead in result
+            if query_lower in lead.get("company_name", "").lower()
+            or query_lower in lead.get("contact_name", "").lower()
+            or query_lower in lead.get("project_type", "").lower()
+            or query_lower in lead.get("goals", "").lower()
+        ]
+    return result
+
+
+def _lead_csv(leads: list[dict[str, Any]]) -> str:
+    headers = [
+        "lead_id", "company_name", "contact_name", "contact_channel",
+        "project_type", "budget_range", "preferred_offer", "status",
+        "owner", "note", "created_at", "updated_at", "goals",
+    ]
+    rows = [",".join(headers)]
+    for lead in leads:
+        row = []
+        for key in headers:
+            value = str(lead.get(key, "") or "")
+            escaped = value.replace('"', '""')
+            row.append(f'"{escaped}"')
+        rows.append(",".join(row))
+    return "\n".join(rows)
+
+
+def _send_webhook_notification(url: str, payload: dict[str, Any]) -> bool:
+    if not url:
+        return False
+    body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+    request = urllib.request.Request(url, data=body, headers={"Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(request, timeout=5) as response:
+            return 200 <= response.status < 300
+    except Exception as exc:
+        logger.warning("Webhook 通知失败: %s", exc)
+        return False
+
+
+def _notify_new_lead(lead_id: str, payload: dict[str, Any]) -> dict[str, bool]:
+    text = (
+        f"新线索 {lead_id}\n"
+        f"公司: {payload['company_name']}\n"
+        f"联系人: {payload['contact_name']}\n"
+        f"渠道: {payload['contact_channel']}\n"
+        f"项目: {payload['project_type']}\n"
+        f"预算: {payload['budget_range']}\n"
+        f"意向套餐: {payload.get('preferred_offer') or '未填写'}\n"
+        f"目标: {payload['goals']}"
+    )
+    wecom_ok = _send_webhook_notification(
+        WECOM_WEBHOOK_URL,
+        {"msgtype": "text", "text": {"content": text}},
+    )
+    feishu_ok = _send_webhook_notification(
+        FEISHU_WEBHOOK_URL,
+        {"msg_type": "text", "content": {"text": text}},
+    )
+    return {"wecom": wecom_ok, "feishu": feishu_ok}
 
 
 def _deepseek_status() -> dict[str, Any]:
@@ -1054,8 +1236,110 @@ async def dashboard():
         "success": True, "platform": "天眼 Tianyan", "version": APP_VERSION,
         "stats": {"synthetic_population": "1-50000人", "industry_templates": len(keys), "compliance": "PIPL+数安法", "ai_engine": "DeepSeek + Mimo + ComfyUI"},
         "products": [{"name": "消费眼", "status": "active"}, {"name": "政策眼", "status": "active"}, {"name": "市场眼", "status": "active"}],
-        "industry_templates": keys, "total_endpoints": 16,
+        "industry_templates": keys, "total_endpoints": 23,
     }
+
+
+@app.get("/api/v1/campaigns/assets")
+async def campaign_assets():
+    """返回商业化与宣传资产。"""
+    assets = _load_growth_campaigns()
+    return {
+        "success": True,
+        "version": APP_VERSION,
+        "channels": list(assets.keys()),
+        "assets": assets,
+    }
+
+
+@app.get("/api/v1/offers/catalog")
+async def offers_catalog():
+    """返回合作套餐目录。"""
+    catalog = _load_offers_catalog()
+    return {
+        "success": True,
+        "version": APP_VERSION,
+        "offers": catalog.get("offers", []),
+    }
+
+
+@app.post("/api/v1/leads/intake")
+async def lead_intake(req: LeadIntakeRequest):
+    """接收合作咨询线索。"""
+    payload = req.model_dump()
+    lead_id = _append_lead_record(payload)
+    notifications = _notify_new_lead(lead_id, payload)
+    return {
+        "success": True,
+        "lead_id": lead_id,
+        "message": "线索已接收",
+        "notifications": notifications,
+    }
+
+
+@app.get("/api/v1/leads")
+async def list_leads(limit: int = 50, status: str = "", owner: str = "", q: str = ""):
+    """列出最近线索。"""
+    leads = _filter_leads(_merge_lead_records(limit), status=status, owner=owner, query=q)
+    return {
+        "success": True,
+        "count": len(leads),
+        "leads": leads,
+    }
+
+
+@app.get("/api/v1/leads/pipeline/summary")
+async def leads_pipeline_summary():
+    """返回线索管道摘要。"""
+    leads = _merge_lead_records(500)
+    summary: dict[str, int] = {}
+    for lead in leads:
+        status = lead.get("status", "new")
+        summary[status] = summary.get(status, 0) + 1
+    return {"success": True, "summary": summary, "total": len(leads)}
+
+
+@app.get("/api/v1/leads/export.csv", response_class=PlainTextResponse)
+async def export_leads_csv(status: str = "", owner: str = "", q: str = ""):
+    """导出线索 CSV。"""
+    leads = _filter_leads(_merge_lead_records(500), status=status, owner=owner, query=q)
+    return PlainTextResponse(_lead_csv(leads), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v1/leads/{lead_id}")
+async def get_lead_detail(lead_id: str):
+    """返回单条线索详情。"""
+    leads = _merge_lead_records(500)
+    for lead in leads:
+        if lead["lead_id"] == lead_id:
+            return {"success": True, "lead": lead}
+    raise HTTPException(status_code=404, detail="线索不存在")
+
+
+@app.get("/api/v1/leads/{lead_id}/history")
+async def get_lead_history(lead_id: str):
+    """返回单条线索的跟进历史。"""
+    history = _load_lead_update_history().get(lead_id, [])
+    if not history and not any(lead["lead_id"] == lead_id for lead in _merge_lead_records(500)):
+        raise HTTPException(status_code=404, detail="线索不存在")
+    return {"success": True, "lead_id": lead_id, "history": history}
+
+
+@app.post("/api/v1/leads/{lead_id}/status")
+async def update_lead_status(lead_id: str, req: LeadStatusUpdateRequest):
+    """更新线索状态与备注。"""
+    leads = _merge_lead_records(500)
+    if not any(lead["lead_id"] == lead_id for lead in leads):
+        raise HTTPException(status_code=404, detail="线索不存在")
+    payload = {
+        "lead_id": lead_id,
+        "updated_at": int(time.time()),
+        "status": req.status,
+        "owner": req.owner,
+        "note": req.note,
+    }
+    _append_lead_update(payload)
+    return {"success": True, "lead_id": lead_id, "update": payload}
 
 
 class CompareRequest(BaseModel):
